@@ -12,8 +12,8 @@ angular.module('GraphES')
 
     $scope.menus = [
       {'title': 'Home', 'href': '/'},
-      {'title': 'Dash', 'href': '/dash'},
       {'title': 'Workbench', 'href': '/workbench'},
+      {'title': 'Dash', 'href': '/dash'},
       {'title': 'Profile', 'href': '/profile'},
       {'title': 'Shell', 'href': '/shell'},
     ];
