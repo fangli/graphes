@@ -1,0 +1,18 @@
+    <!-- Fixed navbar -->
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" ng-href="#">GraphES</a>
+        </div>
+        <div class="navbar-collapse collapse" ng-controller="MainCtrl">
+          <ul class="nav navbar-nav">
+
+            <li ng-repeat="menu in menus" ng-class="{ active: isActive(menu.href)}"><a ng-href="#{{ menu.href }}">{{ menu.title }}</a></li>
+            
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li ng-class="{ active: isActive('/about')}"><a ng-href="#/about"><i class="glyphicon glyphicon-question-sign"></i> About</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
