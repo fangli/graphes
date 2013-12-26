@@ -2,11 +2,11 @@
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" ng-app="GraphES"> <!--<![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" ng-app="graphEsApp"> <!--<![endif]-->
   <head ng-controller="MainCtrl">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>{{ Head.title() }}</title>
+    <title ng-bind="Head.title()">GraphES Loading...</title>
     <meta name="description" content="A time-serials visualization tool for ElasticSearch">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -46,9 +46,10 @@
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <script src="bower_components/highcharts/highcharts.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/momentjs/moment.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
-
+ 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/services/head.js"></script>
@@ -60,6 +61,7 @@
         <script src="scripts/controllers/shell.js"></script>
         <script src="scripts/controllers/about.js"></script>
         <script src="scripts/directives/main.js"></script>
+        <script src="http://localhost:35729/livereload.js"></script>
         <!-- endbuild -->
 </body>
 </html>

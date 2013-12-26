@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('GraphES')
+angular.module('graphEsApp')
 
   .controller('WorkbenchCtrl', function(Head) {
     Head.setTitle('Workbench');

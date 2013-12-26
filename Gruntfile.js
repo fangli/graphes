@@ -6,6 +6,7 @@
 // 'test/spec/{,*/}*.js'
 // use this if you want to recursively match all subfolders:
 // 'test/spec/**/*.js'
+var request = require('request');
 
 module.exports = function (grunt) {
 
@@ -15,18 +16,39 @@ module.exports = function (grunt) {
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
 
+  var reloadPort = 35729, files;
+
+
   // Define the configuration for all the tasks
   grunt.initConfig({
 
     // Project settings
     yeoman: {
       // configurable paths
-      app: require('./bower.json').appPath || 'app',
-      dist: 'dist'
+      app: require('./bower.json').appPath || 'public',
+      dist: 'dist/public',
+      expressdist: 'dist'
+    },
+
+    develop: {
+      server: {
+        file: 'app.js'
+      }
     },
 
     // Watches files for changes and runs tasks based on the changed files
     watch: {
+      options: {
+        nospawn: true,
+        livereload: reloadPort
+      },
+      server: {
+        files: [
+          'app.js',
+          'routes/*.js'
+        ],
+        tasks: ['develop', 'delayed-livereload']
+      },
       js: {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
         tasks: ['newer:jshint:all'],
@@ -47,47 +69,13 @@ module.exports = function (grunt) {
       },
       livereload: {
         options: {
-          livereload: '<%= connect.options.livereload %>'
+          livereload: reloadPort
         },
         files: [
           '<%= yeoman.app %>/{,*/}*.html',
           '.tmp/styles/{,*/}*.css',
           '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
         ]
-      }
-    },
-
-    // The actual grunt server settings
-    connect: {
-      options: {
-        port: 9000,
-        // Change this to '0.0.0.0' to access the server from outside.
-        hostname: 'localhost',
-        livereload: 35729
-      },
-      livereload: {
-        options: {
-          open: true,
-          base: [
-            '.tmp',
-            '<%= yeoman.app %>'
-          ]
-        }
-      },
-      test: {
-        options: {
-          port: 9001,
-          base: [
-            '.tmp',
-            'test',
-            '<%= yeoman.app %>'
-          ]
-        }
-      },
-      dist: {
-        options: {
-          base: '<%= yeoman.dist %>'
-        }
       }
     },
 
@@ -254,6 +242,16 @@ module.exports = function (grunt) {
         },
         {
           expand: true,
+          // flatten: true,
+          cwd: '.',
+          src: [
+            'app.js',
+            'routes/*'
+          ],
+          dest: '<%= yeoman.expressdist %>'
+        },
+        {
+          expand: true,
           dot: true,
           cwd: '<%= yeoman.app %>',
           dest: '<%= yeoman.dist %>',
@@ -332,17 +330,33 @@ module.exports = function (grunt) {
   });
 
 
-  grunt.registerTask('serve', function (target) {
-    if (target === 'dist') {
-      return grunt.task.run(['build', 'connect:dist:keepalive']);
-    }
+  grunt.config.requires('watch.server.files');
+  files = grunt.config('watch.server.files');
+  files = grunt.file.expand(files);
 
+  grunt.registerTask('delayed-livereload', 'Live reload after the node server has restarted.', function () {
+    var done = this.async();
+    setTimeout(function () {
+      request.get('http://localhost:' + reloadPort + '/changed?files=' + files.join(','),  function (err, res) {
+          var reloaded = !err && res.statusCode === 200;
+          if (reloaded) {
+            grunt.log.ok('Delayed live reload successful.');
+          } else {
+            grunt.log.error('Unable to make a delayed live reload.');
+          }
+          done(reloaded);
+        });
+    }, 1000);
+  });
+
+
+  grunt.registerTask('serve', function () {
     grunt.task.run([
       'clean:server',
       'bower-install',
       'concurrent:server',
       'autoprefixer',
-      'connect:livereload',
+      'develop',
       'watch'
     ]);
   });
@@ -356,7 +370,6 @@ module.exports = function (grunt) {
     'clean:server',
     'concurrent:test',
     'autoprefixer',
-    'connect:test',
     'karma'
   ]);
 
@@ -380,6 +393,7 @@ module.exports = function (grunt) {
   grunt.registerTask('default', [
     'newer:jshint',
     'test',
+    'develop',
     'build'
   ]);
 };

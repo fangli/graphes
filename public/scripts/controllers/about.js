@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('GraphES')
+angular.module('graphEsApp')
 
   .controller('AboutCtrl', function(Head) {
     Head.setTitle('About');

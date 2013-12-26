@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('GraphES')
+angular.module('graphEsApp')
 
   .controller('MainCtrl', function ($scope, $location, Head) {
 
@@ -12,9 +12,9 @@ angular.module('GraphES')
 
     $scope.menus = [
       {'title': 'Home', 'href': '/'},
+      {'title': 'Profiles', 'href': '/profile'},
       {'title': 'Workbench', 'href': '/workbench'},
       {'title': 'Dash', 'href': '/dash'},
-      {'title': 'Profile', 'href': '/profile'},
       {'title': 'Shell', 'href': '/shell'},
     ];
 

@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('GraphES', [
+var app = angular.module('graphEsApp', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
