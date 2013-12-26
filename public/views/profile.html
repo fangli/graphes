@@ -1,27 +1,66 @@
-<h4>All Profiles <a ng-href="#"><i class="text-muted fa fa-plus-square-o"></i></a></h4>
-
-<div class="table-responsive">
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-        <th width="5%">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><i class="fa fa-file-text-o"></i> <a href="#">my-test-file</a></td>
-        <td>tdwsklfjdklg dsklgj dkl</td>
-        <td align="center">
-          <a href="#"><i class="fa fa-copy"></i></a> 
-          <a href="#"><i class="fa fa-trash-o"></i></a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<div ng-show="!showingCurrent">
+  <h3>All Profiles <a href="" ng-click="newCurrent()"><i class="text-muted fa fa-plus-square-o"></i></a></h3>
+  <hr>
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Index</th>
+          <th>Dimension</th>
+          <th>Description</th>
+          <th width="5%">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="(name, profile) in profiles">
+          <td><i class="fa fa-file-text-o"></i> <a href="#">{{ name }}</a></td>
+          <td>{{ profile.pattern }}</td>
+          <td>
+            <span ng-repeat="(name, dimension) in profile.dimensions">
+              <span class="label label-info">{{ name }}</span>&nbsp;
+            </span>
+          </td>
+          <td>{{ profile.description }}</td>
+          <td align="center">
+            <a href ng-click="showCurrent(name)"><i class="fa fa-edit"></i></a> 
+            <a href ng-click="removeSelect(name)"><i class="fa fa-trash-o"></i></a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
-<h4>{{ currentProfile.name|uppercase }}</h4>
+<div ng-show='showingCurrent'>
+  <h3>Editing <span class="text-muted">{{currentProfile.name}}</span></h3>
+  <hr>
+  <form role="form">
+    <div class="form-group">
+      <label for="inputName">Name</label>
+      <input type="text" class="form-control" id="inputName" placeholder="Enter the profile name" name="name" ng-model="currentProfile.name" ng-required="true">
+    </div>
+    <div class="form-group">
+      <label for="inputPattern">Index Pattern</label>
+      <input type="text" class="form-control" id="inputPattern" placeholder="Enter the target index pattern" name="pattern" ng-model="currentProfile.pattern" ng-required="true">
+    </div>
+    <div class="form-group">
+      <label for="inputDescription">Description</label>
+      <input type="text" class="form-control" id="inputDescription" placeholder="The description of profile" name="description" ng-model="currentProfile.description">
+    </div>
 
+      <label>Filtering Dimensions</label>
+      <h4 class="bs-example">
+        <span ng-repeat="(name, dimension) in currentProfile.dimensions"><a href><span class="label label-default">{{ name }}</span></a>&nbsp;</span>
+      </h4>
+      <div class="highlight">
 
+      </div>
+
+    <button type="submit" class="btn btn-primary">
+      <span ng-show="profiles[currentProfile.name] === undefined">Add</span>
+      <span ng-hide="profiles[currentProfile.name] === undefined">Update</span>
+    </button>
+    <a class="btn btn-default" ng-click="cancelCurrent()">Cancel</a>
+  </form>
+</div>

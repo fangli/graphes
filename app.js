@@ -5,6 +5,7 @@
 
 var express = require('express'),
   es = require('./routes/es'),
+  profile = require('./routes/profile'),
   http = require('http'),
   path = require('path');
  
@@ -25,6 +26,10 @@ app.configure(function(){
 
 
 // app.get('/', routes.index);
+app.get('/api/db/profiles', profile.getProfile);
+app.post('/api/db/profiles', profile.postProfile);
+app.del('/api/db/profiles', profile.delProfile);
+
 app.get('/api/es/getindices', es.getindices);
 
 http.createServer(app).listen(app.get('port'), function(){
