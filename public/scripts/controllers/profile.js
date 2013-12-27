@@ -5,17 +5,21 @@ angular.module('graphEsApp')
   .controller('ProfileCtrl', function($scope, Head, $http) {
     Head.setTitle('Profiles');
 
-    $scope.profiles = {};
-
-    $http.get('/api/db/profiles')
-      .success(function(data) {
-        $scope.profiles = data;
-        // For test
-        // $scope.showCurrent("farm");
-      })
-      .error(function(data) {
-        alert('We got an error');
-      });
+    $scope.loadProfiles = function() {
+      $scope.profiles = {};
+      $scope.isLoading = true;
+      $http.get('/api/db/profiles')
+        .success(function(data) {
+          $scope.profiles = data;
+          $scope.isLoading = false;
+          // For test
+          // $scope.showCurrent("farm");
+        })
+        .error(function(data) {
+          $scope.isLoading = false;
+          alert('We got an error');
+        });
+    };
 
     $scope.removeDimension = function (index) {
       $scope.currentProfile.dimensions.splice(index, 1);
@@ -65,6 +69,9 @@ angular.module('graphEsApp')
           alert('We got an error');
         });
     };
+
+
+    $scope.loadProfiles();
 
   }
 );
