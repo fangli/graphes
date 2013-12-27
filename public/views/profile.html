@@ -2,12 +2,12 @@
   <h3>All Profiles <a href="" ng-click="newCurrent()"><i class="text-muted fa fa-plus-square-o"></i></a></h3>
   <hr>
   <div class="table-responsive">
-    <table class="table table-bordered">
+    <table class="table">
       <thead>
         <tr>
           <th>Name</th>
-          <th>Index</th>
-          <th>Dimension</th>
+          <th>ES Index</th>
+          <th>Dimensions</th>
           <th>Description</th>
           <th width="5%">Actions</th>
         </tr>
@@ -17,8 +17,8 @@
           <td><i class="fa fa-file-text-o"></i> <a href="#">{{ name }}</a></td>
           <td>{{ profile.pattern }}</td>
           <td>
-            <span ng-repeat="(name, dimension) in profile.dimensions">
-              <span class="label label-info">{{ name }}</span>&nbsp;
+            <span ng-repeat="dimension in profile.dimensions">
+              <span tooltip-placement="top" tooltip-trigger="mouseenter" tooltip="{{ dimension.pattern }}" class="label label-info">{{ dimension.name }}</span>&nbsp;
             </span>
           </td>
           <td>{{ profile.description }}</td>
@@ -35,7 +35,7 @@
 <div ng-show='showingCurrent'>
   <h3>Editing <span class="text-muted">{{currentProfile.name}}</span></h3>
   <hr>
-  <form role="form">
+  <form role="form" ng-submit="saveCurrentProfile()">
     <div class="form-group">
       <label for="inputName">Name</label>
       <input type="text" class="form-control" id="inputName" placeholder="Enter the profile name" name="name" ng-model="currentProfile.name" ng-required="true">
@@ -49,12 +49,23 @@
       <input type="text" class="form-control" id="inputDescription" placeholder="The description of profile" name="description" ng-model="currentProfile.description">
     </div>
 
-      <label>Filtering Dimensions</label>
-      <h4 class="bs-example">
-        <span ng-repeat="(name, dimension) in currentProfile.dimensions"><a href><span class="label label-default">{{ name }}</span></a>&nbsp;</span>
-      </h4>
+      <hr>
+      <h5 class="bs-example">
+        Filtering Dimensions <a ng-click="addNewDimension()" class="btn btn-default btn-xs"><i class="fa fa-plus-square"></i> Add</a>
+      </h5>
       <div class="highlight">
-
+        <div ng-repeat="(id, dimension) in currentProfile.dimensions">
+          <div class="row">
+            <div class="col-xs-2">
+              <input type="text" class="form-control" placeholder="Name" ng-model="dimension.name" ng-required="true">
+            </div>
+            <div class="col-xs-6">
+              <input type="text" class="form-control" placeholder="Dimension Pattern, standard ES syntax supported", ng-model="dimension.pattern" ng-required="true">
+            </div>
+            <a ng-click="removeDimension(id)" class="btn btn-default"><i class="fa fa-trash-o"></i></a>
+          </div>
+          <p></p>
+        </div>
       </div>
 
     <button type="submit" class="btn btn-primary">

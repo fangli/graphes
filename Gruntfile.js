@@ -246,7 +246,8 @@ module.exports = function (grunt) {
           cwd: '.',
           src: [
             'app.js',
-            'routes/*'
+            'routes/*',
+            'routes/**/*'
           ],
           dest: '<%= yeoman.expressdist %>'
         },

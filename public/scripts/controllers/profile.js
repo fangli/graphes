@@ -10,12 +10,20 @@ angular.module('graphEsApp')
     $http.get('/api/db/profiles')
       .success(function(data) {
         $scope.profiles = data;
+        // For test
+        // $scope.showCurrent("farm");
       })
       .error(function(data) {
         alert('We got an error');
       });
 
-    
+    $scope.removeDimension = function (index) {
+      $scope.currentProfile.dimensions.splice(index, 1);
+    };
+
+    $scope.addNewDimension = function () {
+      $scope.currentProfile.dimensions.push({name:'', pattern:[]});
+    };
 
     $scope.showCurrent = function(name) {
       $scope.currentProfile = angular.copy($scope.profiles[name]);
@@ -28,8 +36,24 @@ angular.module('graphEsApp')
     };
 
     $scope.newCurrent = function() {
-      $scope.currentProfile = {};
+      $scope.currentProfile = {
+        name: '',
+        description: '',
+        pattern: '',
+        dimensions: [],
+      };
       $scope.showingCurrent = true;
+    };
+
+    $scope.saveCurrentProfile = function() {
+      $http.post('/api/db/profiles', $scope.currentProfile)
+        .success(function(data) {
+          $scope.profiles[$scope.currentProfile['name']] = angular.copy($scope.currentProfile);
+          $scope.cancelCurrent();
+        })
+        .error(function(){
+          alert("We are unable to submit your request.");
+        });
     };
 
     $scope.removeSelect = function(name) {
