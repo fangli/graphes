@@ -2,24 +2,8 @@
 
 angular.module('graphEsApp')
 
-  .controller('ProfileCtrl', function($scope, Head, $http) {
+  .controller('ProfileCtrl', function($scope, Head, $http, $rootScope) {
     Head.setTitle('Profiles');
-
-    $scope.loadProfiles = function() {
-      $scope.profiles = {};
-      $scope.isLoading = true;
-      $http.get('/api/db/profiles')
-        .success(function(data) {
-          $scope.profiles = data;
-          $scope.isLoading = false;
-          // For test
-          // $scope.showCurrent("farm");
-        })
-        .error(function(data) {
-          $scope.isLoading = false;
-          alert('We got an error');
-        });
-    };
 
     $scope.removeDimension = function (index) {
       $scope.currentProfile.dimensions.splice(index, 1);
@@ -30,7 +14,7 @@ angular.module('graphEsApp')
     };
 
     $scope.showCurrent = function(name) {
-      $scope.currentProfile = angular.copy($scope.profiles[name]);
+      $scope.currentProfile = angular.copy($rootScope.config.profiles[name]);
       $scope.showingCurrent = true;
     };
 
@@ -49,10 +33,19 @@ angular.module('graphEsApp')
       $scope.showingCurrent = true;
     };
 
+    $scope.fixCurrentProfileConfig = function() {
+      if ($rootScope.config.profiles[$rootScope.config.currentProfile.name] !== undefined) {
+        $rootScope.config.currentProfile = $rootScope.config.profiles[$rootScope.config.currentProfile.name];
+      } else {
+        $rootScope.config.currentProfile = {};
+      }
+    };
+
     $scope.saveCurrentProfile = function() {
       $http.post('/api/db/profiles', $scope.currentProfile)
         .success(function(data) {
-          $scope.profiles[$scope.currentProfile['name']] = angular.copy($scope.currentProfile);
+          $rootScope.config.profiles[$scope.currentProfile.name] = angular.copy($scope.currentProfile);
+          $scope.fixCurrentProfileConfig();
           $scope.cancelCurrent();
         })
         .error(function(){
@@ -63,15 +56,28 @@ angular.module('graphEsApp')
     $scope.removeSelect = function(name) {
       $http.delete('/api/db/profiles', {data: {name: name}})
         .success(function() {
-          delete $scope.profiles[name];
+          delete $rootScope.config.profiles[name];
+          $scope.fixCurrentProfileConfig();
         })
         .error(function() {
           alert('We got an error');
         });
     };
 
-
-    $scope.loadProfiles();
+    $scope.reloadProfiles = function() {
+      $rootScope.config.profiles = {};
+      $scope.isLoading = true;
+      $http.get('/api/db/profiles')
+        .success(function(data) {
+          $scope.isLoading = false;
+          $rootScope.config.profiles = data;
+          $scope.fixCurrentProfileConfig();
+        })
+        .error(function(data) {
+          $scope.isLoading = false;
+          alert('Error: Unable to get profiles');
+        });
+    };
 
   }
 );

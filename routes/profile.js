@@ -33,6 +33,7 @@ exports.getProfile = function(req, res){
       for (var k in keys) {
         keys[k] = JSON.parse(keys[k]);
       }
+      if (keys === null) {keys = {};}
       res.send(JSON.stringify(keys));
     }
   });

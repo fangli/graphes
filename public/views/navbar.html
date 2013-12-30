@@ -11,6 +11,18 @@
             
           </ul>
           <ul class="nav navbar-nav navbar-right">
+            <li ng-class="{ active: isActive('/profile'), dropdown: true}">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <span ng-show="$root.config.currentProfile.name === undefined">{{ strProfile }}</span>
+                <span ng-hide="$root.config.currentProfile.name === undefined">{{ $root.config.currentProfile.name }}</span>
+                <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+                <li ng-repeat="(name, profile) in $root.config.profiles"><a href ng-click="setProfile(name)">{{ name }}</a></li>
+                <li class="divider"></li>
+                <li><a href ng-href="#/profile">Manage Profiles...</a></li>
+              </ul>
+            </li>
             <li ng-class="{ active: isActive('/about')}"><a ng-href="#/about"><i class="fa fa-question-circle"></i> About</a></li>
           </ul>
         </div><!--/.nav-collapse -->

@@ -1,7 +1,11 @@
 <div ng-show="!showingCurrent">
   <div>
     <h3>All Profiles</h3>
-    <a href class="btn btn-default btn-xs" ng-click="newCurrent()"><i class="text-muted fa fa-plus-square-o"></i> Add</a> | <a href class="btn btn-default btn-xs" ng-click="loadProfiles()"><i class="text-muted fa fa-refresh"></i> Refresh</a>
+    <a href class="btn btn-default btn-xs" ng-click="newCurrent()"><i class="text-muted fa fa-plus-square-o"></i> Add</a>
+     | 
+    <a href class="btn btn-default btn-xs" ng-click="reloadProfiles()"><i class="text-muted fa fa-refresh"></i> Refresh</a>
+     | 
+    <span class="text-muted">Current Profile: {{ $root.config.currentProfile.name }}</span>
   </div>
   <hr>
   <div class="table-responsive">
@@ -16,7 +20,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="(name, profile) in profiles">
+        <tr ng-repeat="(name, profile) in $root.config.profiles">
           <td><i class="fa fa-file-text-o"></i> <a href="#">{{ name }}</a></td>
           <td>{{ profile.pattern }}</td>
           <td>
@@ -40,8 +44,8 @@
 
 <div ng-show="showingCurrent">
   <h3>
-    <span ng-show="profiles[currentProfile.name] === undefined">New Profile </span>
-    <span ng-hide="profiles[currentProfile.name] === undefined">Editing </span> <span class="text-muted">{{currentProfile.name}}</span>
+    <span ng-show="$root.config.profiles[currentProfile.name] === undefined">New Profile </span>
+    <span ng-hide="$root.config.profiles[currentProfile.name] === undefined">Editing </span> <span class="text-muted">{{currentProfile.name}}</span>
   </h3>
   <hr>
   <form role="form" ng-submit="saveCurrentProfile()">
@@ -80,8 +84,8 @@
       </div>
 
     <button type="submit" class="btn btn-primary">
-      <span ng-show="profiles[currentProfile.name] === undefined">Add</span>
-      <span ng-hide="profiles[currentProfile.name] === undefined">Update</span>
+      <span ng-show="$root.config.profiles[currentProfile.name] === undefined">Add</span>
+      <span ng-hide="$root.config.profiles[currentProfile.name] === undefined">Update</span>
     </button>
     <a class="btn btn-default" ng-click="cancelCurrent()">Cancel</a>
   </form>
