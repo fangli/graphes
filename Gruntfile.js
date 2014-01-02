@@ -45,7 +45,11 @@ module.exports = function (grunt) {
       server: {
         files: [
           'app.js',
-          'routes/*.js'
+          'routes.js',
+          'controllers/*.js',
+          'controllers/**/*.js',
+          'models/*.js',
+          'models/**/*.js',
         ],
         tasks: ['develop', 'delayed-livereload']
       },
@@ -246,8 +250,11 @@ module.exports = function (grunt) {
           cwd: '.',
           src: [
             'app.js',
-            'routes/*',
-            'routes/**/*'
+            'routes.js',
+            'controllers/*',
+            'controllers/**/*',
+            'models/*',
+            'models/**/*',
           ],
           dest: '<%= yeoman.expressdist %>'
         },

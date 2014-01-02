@@ -2,7 +2,10 @@
 
 angular.module('graphEsApp')
 
-  .controller('WorkbenchCtrl', function(Head) {
+  .controller('WorkbenchCtrl', function($scope, Head) {
     Head.setTitle('Workbench');
+
+    $scope.toggleChecked = {};
+
   }
 );

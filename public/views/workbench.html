@@ -6,21 +6,32 @@
         <!-- model start -->
         <div class="container row">
           <div class="col-md-3">
-            <div ng-repeat="dimension in $root.config.currentProfile.dimensions" class="wellbox">
+            <div ng-click="toggleChecked($index)" ng-repeat="dimension in $root.config.currentProfile.dimensions" class="wellbox">
               <div class="checkbox">
-                  <label>
-                    <input type="checkbox"> {{ dimension.name }}
-                  </label>
-                </div>
+                <label>
+                  <input type="checkbox" ng-model="isChecked[$]"> {{ dimension.name }}
+                </label>
+              </div>
             </div>
           </div>
           <div class="col-md-9">
             <div class="form-horizontal">
               <div class="form-group">
                 <label class="col-sm-1 control-label">Search</label>
-                <div class="col-sm-10">
+                <div class="col-sm-11">
                   <input type="text" class="form-control">
                 </div>
+              </div>
+            </div>
+            <hr>
+            <div class="well">
+              <div class="container">
+                <div class="col-md-3">
+                  <h4>Release and project</h4>
+                  <hr>
+                  <span class="text-muted">release="%release%"</span>
+                </div>
+                <div class="col-md-9">test</div>
               </div>
             </div>
           </div>

@@ -78,14 +78,6 @@
 .bs-example-type .table tr:first-child td {
   border-top: 0;
 }
-.bs-example-type h1,
-.bs-example-type h2,
-.bs-example-type h3,
-.bs-example-type h4,
-.bs-example-type h5,
-.bs-example-type h6 {
-  margin: 0;
-}
 
 /* Images */
 .bs-example > .img-circle,
@@ -267,10 +259,9 @@
 .wellbox {
   padding: 1px 16px;
   margin-bottom: 3px;
-  /*background-color: #f7f7f9;*/
   border: 1px solid #e1e1e8;
 }
 
-.wellbox-active {
+.wellbox:hover {
   background-color: #f7f7f9;
 }
