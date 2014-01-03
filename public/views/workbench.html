@@ -6,34 +6,46 @@
         <!-- model start -->
         <div class="container row">
           <div class="col-md-3">
-            <div ng-click="toggleChecked($index)" ng-repeat="dimension in $root.config.currentProfile.dimensions" class="wellbox">
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" ng-model="isChecked[$]"> {{ dimension.name }}
-                </label>
+            <div style="cursor:pointer;"
+              ng-click="_tmpDimensions[dimension.name] = !_tmpDimensions[dimension.name]"
+              ng-repeat="dimension in $root.config.currentProfile.dimensions"
+              ng-class="{'wellbox': true, 'wellbox-active': _tmpDimensions[dimension.name]}">
+              <div class="checkbox" style="padding-left:10px;">
+                  <i ng-show="_tmpDimensions[dimension.name]" class="fa fa-check-square-o"></i> <i ng-hide="_tmpDimensions[dimension.name]" class="fa fa-square-o"></i> {{ dimension.name }}
               </div>
             </div>
           </div>
           <div class="col-md-9">
             <div class="form-horizontal">
               <div class="form-group">
-                <label class="col-sm-1 control-label">Search</label>
+                <label class="col-sm-1 control-label">Query</label>
                 <div class="col-sm-11">
-                  <input type="text" class="form-control">
+                  <input type="text" class="form-control" placeholder="search for time-serials..." ng-model="page.model.query">
                 </div>
               </div>
             </div>
             <hr>
-            <div class="well">
-              <div class="container">
-                <div class="col-md-3">
-                  <h4>Release and project</h4>
-                  <hr>
-                  <span class="text-muted">release="%release%"</span>
+
+            <div ng-repeat="dimension in page.model.dimensions" class="">
+              <div class="bs-example">
+                  <h4>{{ dimension.name }} <small> | <i class="text-muted" ng-bind-html='dimension.pattern | pattern'></i></small></h4><hr>
+                  <span ng-repeat="(list, ena) in dimension.lists">
+                    <button ng-click="dimension.lists[list] = !ena" ng-class="{btn: true, 'btn-default': !ena, 'btn-success': ena, 'btn-xs': true, active: ena}">{{ list }}</button>&nbsp;
+                  </span>
+              </div>
+              <div class="highlight">
+                <div class="pull-right">
+                  Select
+                  <button ng-click="toggleAll(dimension.lists, true)" class="btn btn-xs btn-default">All</button>
+                  <button ng-click="toggleAll(dimension.lists, false)" class="btn btn-xs btn-default">None</button>
+                  <button ng-click="toggleAll(dimension.lists)" class="btn btn-xs btn-default">Toggle</button> | 
+                  <button class="btn btn-xs btn-default">Reload</button> 
                 </div>
-                <div class="col-md-9">test</div>
+                <div>&nbsp;</div>
               </div>
             </div>
+            <div ng-show="page.model.dimensions.length === 0"><i class="text-warning"><i class="fa fa-warning"></i> No filter applied, please select them on the left side</i></div>
+
           </div>
         </div>
         <!-- model end -->

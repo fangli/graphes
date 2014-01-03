@@ -6,3 +6,9 @@ body {
 a {
   cursor: pointer;
 }
+
+button:focus {
+  outline: 0 !important;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+}

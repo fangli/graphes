@@ -2,11 +2,11 @@
 
 angular.module('graphEsApp')
 
-  .controller('MainCtrl', function ($cookies, $http, $scope, $location, Head, $rootScope) {
+  .controller('MainCtrl', function ($route, $cookies, $scope, $location, Head, $rootScope, Profile) {
 
-    $scope.strProfile = "Loading...";
+    $scope.strProfile = 'Loading...';
 
-    $rootScope.config = {'profiles': {}, 'currentProfile': {}};
+    $rootScope.config = {'profiles': [], 'currentProfile': {}};
 
     $scope.isActive = function (viewLocation) {
       return viewLocation === $location.path();
@@ -21,22 +21,27 @@ angular.module('graphEsApp')
       {'title': 'Shell', 'href': '/shell'},
     ];
 
-    $http.get('/api/db/profiles')
+    Profile.query()
       .success(function(data) {
-        $scope.strProfile = "Profile";
+        $scope.strProfile = 'Profile';
         $rootScope.config.profiles = data;
-        if (data[$cookies.currentProfile] !== undefined) {
-          $rootScope.config.currentProfile = $rootScope.config.profiles[$cookies.currentProfile];
-        };
+        if (angular.isInList('name', $cookies.currentProfileName, data)) {
+          $rootScope.config.currentProfile = angular.getInList('name', $cookies.currentProfileName, $rootScope.config.profiles);
+        }
       })
-      .error(function(data) {
-        alert('Error: Unable to get profiles');
+      .error(function() {
+        window.alert('Err: Unable to get configurations from GraphES server, please reload the page and try again!');
       });
 
     $scope.setProfile = function(name) {
-      $cookies.currentProfile = name;
-      $rootScope.config.currentProfile = $rootScope.config.profiles[name];
-    }    
+      $cookies.currentProfileName = name;
+      $rootScope.config.currentProfile = angular.getInList('name', name, $rootScope.config.profiles);
+
+      if ($location.path() === '/workbench') {
+        $route.reload();
+      }
+
+    };
 
   });
 

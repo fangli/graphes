@@ -2,8 +2,18 @@
 
 angular.module('graphEsApp')
 
-  .controller('ProfileCtrl', function($scope, Head, $http, $rootScope) {
+  .controller('ProfileCtrl', function($scope, $rootScope, Head, Profile) {
     Head.setTitle('Profiles');
+
+    $scope.currentProfile = {};
+
+    $scope.isNew = function() {
+      if (angular.isInList('name', $scope.currentProfile.name, $rootScope.config.profiles)) {
+        return false;
+      } else {
+        return true;
+      }
+    };
 
     $scope.removeDimension = function (index) {
       $scope.currentProfile.dimensions.splice(index, 1);
@@ -13,8 +23,8 @@ angular.module('graphEsApp')
       $scope.currentProfile.dimensions.push({name:'', pattern:[]});
     };
 
-    $scope.showCurrent = function(name) {
-      $scope.currentProfile = angular.copy($rootScope.config.profiles[name]);
+    $scope.showCurrent = function(index) {
+      $scope.currentProfile = angular.copy($rootScope.config.profiles[index]);
       $scope.showingCurrent = true;
     };
 
@@ -34,50 +44,55 @@ angular.module('graphEsApp')
     };
 
     $scope.fixCurrentProfileConfig = function() {
-      if ($rootScope.config.profiles[$rootScope.config.currentProfile.name] !== undefined) {
-        $rootScope.config.currentProfile = $rootScope.config.profiles[$rootScope.config.currentProfile.name];
+      if (angular.isInList('name', $rootScope.config.currentProfile.name, $rootScope.config.profiles)) {
+        $rootScope.config.currentProfile = angular.getInList('name', $rootScope.config.currentProfile.name, $rootScope.config.profiles);
       } else {
         $rootScope.config.currentProfile = {};
       }
     };
 
     $scope.saveCurrentProfile = function() {
-      $http.post('/api/db/profiles', $scope.currentProfile)
-        .success(function(data) {
-          $rootScope.config.profiles[$scope.currentProfile.name] = angular.copy($scope.currentProfile);
+      Profile.save($scope.currentProfile)
+        .success(function() {
+          if (angular.isInList('name', $scope.currentProfile.name, $rootScope.config.profiles)) {
+            $rootScope.config.profiles[angular.posInList('name', $scope.currentProfile.name, $rootScope.config.profiles)] = angular.copy($scope.currentProfile);
+          } else {
+            $rootScope.config.profiles.push(angular.copy($scope.currentProfile));
+          }
           $scope.fixCurrentProfileConfig();
           $scope.cancelCurrent();
         })
         .error(function(){
-          alert("We are unable to submit your request.");
+          window.alert('We are unable to submit your request.');
         });
     };
 
-    $scope.removeSelect = function(name) {
-      $http.delete('/api/db/profiles', {data: {name: name}})
+    $scope.removeSelect = function(index) {
+      Profile.remove($rootScope.config.profiles[index].name)
         .success(function() {
-          delete $rootScope.config.profiles[name];
+          $rootScope.config.profiles.splice(index, 1);
           $scope.fixCurrentProfileConfig();
         })
         .error(function() {
-          alert('We got an error');
+          window.alert('We got an error');
         });
     };
 
     $scope.reloadProfiles = function() {
       $rootScope.config.profiles = {};
       $scope.isLoading = true;
-      $http.get('/api/db/profiles')
+
+      Profile.query()
         .success(function(data) {
           $scope.isLoading = false;
           $rootScope.config.profiles = data;
           $scope.fixCurrentProfileConfig();
         })
-        .error(function(data) {
+        .error(function() {
           $scope.isLoading = false;
-          alert('Error: Unable to get profiles');
+          window.alert('Error: Unable to reload the profiles, please reload the page and try again!');
         });
     };
 
-  }
-);
+
+  });

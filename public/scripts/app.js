@@ -9,7 +9,11 @@ var app = angular.module('graphEsApp', [
 ]);
 
 
-app.config(function ($routeProvider, $httpProvider) {
+app.config(function ($routeProvider, $httpProvider, $locationProvider) {
+    
+    $httpProvider.defaults.headers.common['Content-Type'] = 'application/json';
+    $locationProvider.html5Mode(true);
+
     $routeProvider
       .when('/', {
         templateUrl: 'views/index.html',
@@ -44,8 +48,6 @@ app.config(function ($routeProvider, $httpProvider) {
       .otherwise({
         redirectTo: '/'
       });
-
-    $httpProvider.defaults.headers.common['Content-Type'] = 'application/json';
 
   });
 

@@ -5,6 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" ng-app="graphEsApp"> <!--<![endif]-->
   <head ng-controller="MainCtrl">
     <meta charset="utf-8">
+    <base href="/">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title ng-bind="Head.title()">GraphES Loading...</title>
     <meta name="description" content="A time-serials visualization tool for ElasticSearch">
@@ -52,8 +53,13 @@
     <!-- endbuild -->
  
     <!-- build:js({.tmp,public}) scripts/scripts.js -->
+    <script src="scripts/commons/functions.js"></script>
     <script src="scripts/app.js"></script>
     <script src="scripts/services/head.js"></script>
+    <script src="scripts/services/profile.js"></script>
+    <script src="scripts/services/list.js"></script>
+    <script src="scripts/services/escape.js"></script>
+    <script src="scripts/filters/pattern.js"></script>
     <script src="scripts/controllers/main.js"></script>
     <script src="scripts/controllers/index.js"></script>
     <script src="scripts/controllers/dash.js"></script>

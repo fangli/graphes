@@ -2,7 +2,7 @@
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
-          <a class="navbar-brand" ng-href="#">GraphES</a>
+          <a class="navbar-brand" ng-href="#/">GraphES</a>
         </div>
         <div class="navbar-collapse collapse" ng-controller="MainCtrl">
           <ul class="nav navbar-nav">
@@ -12,15 +12,15 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li ng-class="{ active: isActive('/profile'), dropdown: true}">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <a href class="dropdown-toggle" data-toggle="dropdown">
                 <span ng-show="$root.config.currentProfile.name === undefined">{{ strProfile }}</span>
                 <span ng-hide="$root.config.currentProfile.name === undefined">{{ $root.config.currentProfile.name }}</span>
                 <b class="caret"></b>
               </a>
               <ul class="dropdown-menu">
-                <li ng-repeat="(name, profile) in $root.config.profiles"><a href ng-click="setProfile(name)">{{ name }}</a></li>
+                <li ng-repeat="profile in $root.config.profiles"><a href ng-click="setProfile(profile.name)">{{ profile.name }}</a></li>
                 <li class="divider"></li>
-                <li><a href ng-href="#/profile">Manage Profiles...</a></li>
+                <li><a ng-href="#/profile">Manage Profiles...</a></li>
               </ul>
             </li>
             <li ng-class="{ active: isActive('/about')}"><a ng-href="#/about"><i class="fa fa-question-circle"></i> About</a></li>

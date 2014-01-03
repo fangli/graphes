@@ -20,8 +20,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="(name, profile) in $root.config.profiles">
-          <td><i class="fa fa-file-text-o"></i> <a href="#">{{ name }}</a></td>
+        <tr ng-repeat="profile in $root.config.profiles">
+          <td><i class="fa fa-file-text-o"></i> <a href>{{ profile.name }}</a></td>
           <td>{{ profile.pattern }}</td>
           <td>
             <span ng-repeat="dimension in profile.dimensions">
@@ -30,8 +30,8 @@
           </td>
           <td>{{ profile.description }}</td>
           <td align="center">
-            <a href ng-click="showCurrent(name)"><i class="fa fa-edit"></i></a> 
-            <a href ng-click="removeSelect(name)"><i class="fa fa-trash-o"></i></a>
+            <a href ng-click="showCurrent($index)"><i class="fa fa-edit"></i></a> 
+            <a href ng-click="removeSelect($index)"><i class="fa fa-trash-o"></i></a>
           </td>
         </tr>
       </tbody>
@@ -44,8 +44,8 @@
 
 <div ng-show="showingCurrent">
   <h3>
-    <span ng-show="$root.config.profiles[currentProfile.name] === undefined">New Profile </span>
-    <span ng-hide="$root.config.profiles[currentProfile.name] === undefined">Editing </span> <span class="text-muted">{{currentProfile.name}}</span>
+    <span ng-show="isNew()">New Profile </span>
+    <span ng-hide="isNew()">Editing </span> <span class="text-muted">{{currentProfile.name}}</span>
   </h3>
   <hr>
   <form role="form" ng-submit="saveCurrentProfile()">
@@ -84,8 +84,8 @@
       </div>
 
     <button type="submit" class="btn btn-primary">
-      <span ng-show="$root.config.profiles[currentProfile.name] === undefined">Add</span>
-      <span ng-hide="$root.config.profiles[currentProfile.name] === undefined">Update</span>
+      <span ng-show="isNew()">Add</span>
+      <span ng-hide="isNew()">Update</span>
     </button>
     <a class="btn btn-default" ng-click="cancelCurrent()">Cancel</a>
   </form>

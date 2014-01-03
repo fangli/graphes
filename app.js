@@ -21,6 +21,10 @@ app.configure(function(){
 require('./controllers/profileController')(app);
 require('./controllers/listController')(app);
 
+app.use(function(req, res){
+  res.sendfile(__dirname + '/public/index.html');
+});
+
 http.createServer(app).listen(app.get('port'), function(){
   console.log('GraphES server listening on port ' + app.get('port'));
 });
