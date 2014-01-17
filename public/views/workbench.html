@@ -1,13 +1,15 @@
 <div class="bs-example">
   <tabset>
+
+      <!-- Model Tab Start -->
       <tab>
         <tab-heading><i class="fa fa-wrench"></i> Model</tab-heading>
         <p>&nbsp;</p>
         <!-- model start -->
         <div class="container row">
-          <div class="col-md-3">
+          <div class="col-xs-3">
             <div style="cursor:pointer;"
-              ng-click="_tmpDimensions[dimension.name] = !_tmpDimensions[dimension.name]"
+              ng-click="toggleDimension(dimension.name)"
               ng-repeat="dimension in $root.config.currentProfile.dimensions"
               ng-class="{'wellbox': true, 'wellbox-active': _tmpDimensions[dimension.name]}">
               <div class="checkbox" style="padding-left:10px;">
@@ -15,11 +17,11 @@
               </div>
             </div>
           </div>
-          <div class="col-md-9">
+          <div class="col-xs-9">
             <div class="form-horizontal">
               <div class="form-group">
-                <label class="col-sm-1 control-label">Query</label>
-                <div class="col-sm-11">
+                <label class="col-xs-1 control-label">Query</label>
+                <div class="col-xs-11">
                   <input type="text" class="form-control" placeholder="search for time-serials..." ng-model="page.model.query">
                 </div>
               </div>
@@ -28,9 +30,9 @@
 
             <div ng-repeat="dimension in page.model.dimensions" class="">
               <div class="bs-example">
-                  <h4>{{ dimension.name }} <small> | <i class="text-muted" ng-bind-html='dimension.pattern | pattern'></i></small></h4><hr>
-                  <span ng-repeat="(list, ena) in dimension.lists">
-                    <button ng-click="dimension.lists[list] = !ena" ng-class="{btn: true, 'btn-default': !ena, 'btn-success': ena, 'btn-xs': true, active: ena}">{{ list }}</button>&nbsp;
+                  <h4>{{ dimension.name }} <small> | <i class="text-muted" ng-bind-html="dimension.pattern | pattern"></i></small></h4><hr>
+                  <span ng-repeat="(name, ena) in dimension.lists">
+                    <button ng-click="toggleOne(dimension, name, ena)" ng-class="{btn: true, 'btn-default': !ena, 'btn-success': ena, 'btn-xs': true, active: ena}">{{ name }}</button>&nbsp;
                   </span>
               </div>
               <div class="highlight">
@@ -44,26 +46,213 @@
                 <div>&nbsp;</div>
               </div>
             </div>
+
             <div ng-show="page.model.dimensions.length === 0"><i class="text-warning"><i class="fa fa-warning"></i> No filter applied, please select them on the left side</i></div>
 
           </div>
         </div>
         <!-- model end -->
       </tab>
-      <tab>
+      <!-- Model Tab End -->
+
+      <!-- Periods Tab Start -->
+      <tab active="true">
         <tab-heading><i class="fa fa-clock-o"></i> Periods</tab-heading>
-        <p></p>
-        periods
+        <p>&nbsp;</p>
+        <div class="container row"><h4>Basic</h4><hr></div>
+
+        <div class="container row">
+          <div class="panel panel-info">
+            <div class="panel-heading">
+              <h3 class="panel-title">Fast Fill</h3>
+            </div>
+            <div class="panel-body">
+              
+              <button ng-click="fastFill('10 minutes ago', 'now')" class="btn btn-default btn-sm"><i><span class="text-muted">Last</span> <strong>10 min</strong></i></button>
+              <button ng-click="fastFill('30 minutes ago', 'now')" class="btn btn-default btn-sm"><i><span class="text-muted">Last</span> <strong>30 min</strong></i></button>
+              &nbsp;|&nbsp;
+              <button ng-click="fastFill('1 hour ago', 'now')" class="btn btn-default btn-sm"><i><span class="text-muted">Last</span> <strong>1 hour</strong></i></button>
+              <button ng-click="fastFill('3 hours ago', 'now')" class="btn btn-default btn-sm"><i><span class="text-muted">Last</span> <strong>3 hours</strong></i></button>
+              <button ng-click="fastFill('6 hours ago', 'now')" class="btn btn-default btn-sm"><i><span class="text-muted">Last</span> <strong>6 hours</strong></i></button>
+              <button ng-click="fastFill('12 hours ago', 'now')" class="btn btn-default btn-sm"><i><span class="text-muted">Last</span> <strong>12 hours</strong></i></button>
+              &nbsp;|&nbsp;
+              <button ng-click="fastFill('1 day ago', 'now')" class="btn btn-default btn-sm"><i><span class="text-muted">Last</span> <strong>1 day</strong></i></button>
+              <button ng-click="fastFill('3 days ago', 'now')" class="btn btn-default btn-sm"><i><span class="text-muted">Last</span> <strong>3 days</strong></i></button>
+              <button ng-click="fastFill('7 days ago', 'now')" class="btn btn-default btn-sm"><i><span class="text-muted">Last</span> <strong>7 days</strong></i></button>
+              &nbsp;|&nbsp;
+              <button ng-click="fastFill('today', 'now')" class="btn btn-default btn-sm"><i><strong>Today</strong></i></button>
+              <button ng-click="fastFill('yesterday', 'today')" class="btn btn-default btn-sm"><i><strong>Yesterday</strong></i></button>
+            
+            </div>
+          </div>
+        </div> <!-- container row -->
+
+        <div class="container row">
+          <div class="col-xs-7">
+            <div class="form-horizontal">
+              <div ng-class="{'form-group': true, 'has-error': status.invalidPagePeriodStart}">
+                <label class="col-xs-1 control-label">From</label>
+                <div class="col-xs-11">
+                  <div class="input-group">
+                    <input type="text" class="form-control" ng-model="page.period.start" ng-change="">
+                    <div class="input-group-btn">
+                      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Fast Fill <span class="caret"></span></button>
+                      <ul class="dropdown-menu pull-right">
+                        <li><a href ng-click="fastFill('5 minutes ago', null)">5 minutes ago</a></li>
+                        <li><a href ng-click="fastFill('15 minutes ago', null)">15 minutes ago</a></li>
+                        <li><a href ng-click="fastFill('30 minutes ago', null)">30 minutes ago</a></li>
+                        <li class="divider"></li>
+                        <li><a href ng-click="fastFill('1 hour ago', null)">1 hour ago</a></li>
+                        <li><a href ng-click="fastFill('3 hours ago', null)">3 hours ago</a></li>
+                        <li><a href ng-click="fastFill('6 hours ago', null)">6 hours ago</a></li>
+                        <li><a href ng-click="fastFill('12 hours ago', null)">12 hours ago</a></li>
+                        <li class="divider"></li>
+                        <li><a href ng-click="fastFill('1 day ago', null)">1 day ago</a></li>
+                        <li><a href ng-click="fastFill('3 days ago', null)">3 days ago</a></li>
+                        <li><a href ng-click="fastFill('7 days ago', null)">7 days ago</a></li>
+                        <li><a href ng-click="fastFill('15 days ago', null)">15 days ago</a></li>
+                        <li class="divider"></li>
+                        <li><a href ng-click="fastFill('1 month ago', null)">1 month ago</a></li>
+                      </ul>
+                    </div><!-- /btn-group -->
+                  </div><!-- /input-group -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-5">
+            <div class="form-horizontal" ng-show="status.invalidPagePeriodStart">
+              <p class="form-control-static"><span class="text-warning"><i class="fa fa-warning"></i> Invalid datetime</span></p>
+            </div>
+            <div class="form-horizontal" ng-show="(!status.invalidPagePeriodStart && status.isShowTimerStart)">
+              <p class="form-control-static"><span class="text-success"><i class="fa fa-calendar"></i> {{ pagePeriodStart |date:'yyyy-MM-dd HH:mm:ss Z' }}</span></p>
+            </div>
+          </div>
+        </div> <!-- container row -->
+        <div class="container row">
+          <div class="col-xs-7">
+            <div class="form-horizontal">
+              <div ng-class="{'form-group': true, 'has-error': status.invalidPagePeriodEnd}">
+                <label class="col-xs-1 control-label">To&nbsp;&nbsp;</label>
+                <div class="col-xs-11">
+                  <div class="input-group">
+                    <input type="text" class="form-control" ng-model="page.period.end">
+                    <div class="input-group-btn">
+                      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Fast Fill <span class="caret"></span></button>
+                      <ul class="dropdown-menu pull-right">
+                        <li><a href ng-click="fastFill(null, 'now')">Now</a></li>
+                        <li class="divider"></li>
+                        <li><a href ng-click="fastFill(null, '1 minute ago')">1 minute ago</a></li>
+                      </ul>
+                    </div><!-- /btn-group -->
+                  </div><!-- /input-group -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-5">
+            <div class="form-horizontal" ng-show="status.invalidPagePeriodEnd">
+              <p class="form-control-static"><span class="text-warning"><i class="fa fa-warning"></i> Invalid datetime</span></p>
+            </div>
+            <div class="form-horizontal" ng-show="(!status.invalidPagePeriodEnd && status.isShowTimerEnd)">
+              <p class="form-control-static"><span class="text-success"><i class="fa fa-calendar"></i> {{ pagePeriodEnd |date:'yyyy-MM-dd HH:mm:ss Z' }}</span></p>
+            </div>
+          </div>
+        </div> <!-- container row -->
+
+        <div class="container row"><h4>Comparison</h4><hr></div>
+
+
+        <div class="container row">
+
+            <div class="container row">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value=""> Enable trend compare with
+                </label>
+              </div>
+            </div>
+
+            <div class="container row">
+              <div class="col-xs-5">
+
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="optionComparison">
+                    Yesterday
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="optionComparison">
+                    Last Week
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="optionComparison">
+                    Last Month
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="optionComparison">
+                    User Defined
+                  </label>
+                </div>
+
+              </div>
+              <div class="col-xs-7">
+                <div class="form-group">
+                  <label>Offset by</label>
+
+                  <div>
+                    <label class="checkbox-inline">
+                      <input type="radio" name="offsetBy"> Start Time
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="radio" name="offsetBy"> End Time
+                    </label>
+                  </div>
+
+                  <label>for</label>
+
+                  <div class="row">
+                    <div class="col-xs-6">
+                      <div class="input-group input-group-sm">
+                        <input type="number" min="0" class="form-control">
+                        <span class="input-group-addon">seconds</span>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+        </div>
+
+
       </tab>
+      <!-- Periods Tab End -->
+
+      <!-- Visualization Tab Start -->
       <tab>
         <tab-heading><i class="fa fa-bar-chart-o"></i> Visualization</tab-heading>
         the graph
       </tab>
+      <!-- Visualization Tab End -->
+
   </tabset>
 </div>
+
 <div class="highlight">
+
+  <div class="pull-right">
+    <span class="text-muted" ng-pluralize count="status.graphCount" when="{'0': 'No chart will be shown', 'one': '1 chart will be shown', 'other': '{} individual charts will be shown'}"> </span>
+  </div>
+
   <button class="btn btn-sm btn-primary">Show !</button>
-  <button class="btn btn-sm btn-default">Restore</button>
   <span class="text-muted"> | </span>
   <button class="btn btn-sm btn-default">Save</button>
 </div>
