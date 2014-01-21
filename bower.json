@@ -16,7 +16,8 @@
     "components-font-awesome": "~4.0.3",
     "momentjs": "~2.5.0",
     "bootstrap": "~3.0.3",
-    "sugar": "~1.4.1"
+    "sugar": "~1.4.1",
+    "sugarjs-locale-chinese": "~0.0.1"
   },
   "devDependencies": {
     "angular-mocks": "1.2.6",

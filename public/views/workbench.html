@@ -56,7 +56,7 @@
       <!-- Model Tab End -->
 
       <!-- Periods Tab Start -->
-      <tab active="true">
+      <tab>
         <tab-heading><i class="fa fa-clock-o"></i> Periods</tab-heading>
         <p>&nbsp;</p>
         <div class="container row"><h4>Basic</h4><hr></div>
@@ -168,35 +168,35 @@
             <div class="container row">
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" value=""> Enable trend compare with
+                  <input type="checkbox" ng-model="page.period.compare"> Enable trend contrast with
                 </label>
               </div>
             </div>
 
-            <div class="container row">
+            <div class="container row" ng-show="page.period.compare">
               <div class="col-xs-5">
 
                 <div class="radio">
                   <label>
-                    <input type="radio" name="optionComparison">
-                    Yesterday
+                    <input type="radio" name="optionComparison" ng-model="page.period.offset" ng-value="-86400">
+                    One day before
                   </label>
                 </div>
                 <div class="radio">
                   <label>
-                    <input type="radio" name="optionComparison">
-                    Last Week
+                    <input type="radio" name="optionComparison" ng-model="page.period.offset" ng-value="-604800">
+                    One Week before
                   </label>
                 </div>
                 <div class="radio">
                   <label>
-                    <input type="radio" name="optionComparison">
-                    Last Month
+                    <input type="radio" name="optionComparison" ng-model="page.period.offset" ng-value="-2592000">
+                    A month before
                   </label>
                 </div>
                 <div class="radio">
                   <label>
-                    <input type="radio" name="optionComparison">
+                    <input type="radio" name="optionComparison" ng-model="page.period.userDefined" ng-value="true">
                     User Defined
                   </label>
                 </div>
@@ -208,10 +208,10 @@
 
                   <div>
                     <label class="checkbox-inline">
-                      <input type="radio" name="offsetBy"> Start Time
+                      <input type="radio" name="offsetBy" ng-model="page.period.offsetBy" ng-value="0">&nbsp;Start Time
                     </label>
                     <label class="checkbox-inline">
-                      <input type="radio" name="offsetBy"> End Time
+                      <input type="radio" name="offsetBy" ng-model="page.period.offsetBy" ng-value="1">&nbsp;End Time
                     </label>
                   </div>
 
@@ -220,7 +220,7 @@
                   <div class="row">
                     <div class="col-xs-6">
                       <div class="input-group input-group-sm">
-                        <input type="number" min="0" class="form-control">
+                        <input type="number" class="form-control" ng-model="page.period.offset">
                         <span class="input-group-addon">seconds</span>
                       </div>
                     </div>
@@ -237,8 +237,9 @@
       <!-- Periods Tab End -->
 
       <!-- Visualization Tab Start -->
-      <tab>
+      <tab active="true">
         <tab-heading><i class="fa fa-bar-chart-o"></i> Visualization</tab-heading>
+        <p>&nbsp;</p>
         the graph
       </tab>
       <!-- Visualization Tab End -->

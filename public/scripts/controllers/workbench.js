@@ -2,7 +2,7 @@
 
 angular.module('graphEsApp')
 
-  .controller('WorkbenchCtrl', function($rootScope, $scope, $timeout, Head, List) {
+  .controller('WorkbenchCtrl', function($rootScope, $scope, $timeout, Head, List, DateConv) {
     Head.setTitle('Workbench');
 
     $scope.status = {};
@@ -24,7 +24,10 @@ angular.module('graphEsApp')
       period: {
         start: '1 hour ago',
         end: 'now',
-        compare: 0,
+        compare: false,
+        offsetBy: 0,
+        offset: -86400,
+        userDefined: false,
       },
       visualization: {
       }
@@ -110,9 +113,9 @@ angular.module('graphEsApp')
     };
 
     $scope.$watch('page.period.start', function() {
-      if (Date.create($scope.page.period.start) > 0) {
+      if (DateConv.strtotime($scope.page.period.start) > 0) {
         $scope.status.invalidPagePeriodStart = false;
-        $scope.pagePeriodStart = Date.create($scope.page.period.start);
+        $scope.pagePeriodStart = DateConv.strtotime($scope.page.period.start);
         $scope.flashTimePeriodNotice('start');
       } else {
         $scope.status.invalidPagePeriodStart = true;
@@ -120,9 +123,9 @@ angular.module('graphEsApp')
     });
 
     $scope.$watch('page.period.end', function() {
-      if (Date.create($scope.page.period.end) > 0) {
+      if (DateConv.strtotime($scope.page.period.end) > 0) {
         $scope.status.invalidPagePeriodEnd = false;
-        $scope.pagePeriodEnd = Date.create($scope.page.period.end);
+        $scope.pagePeriodEnd = DateConv.strtotime($scope.page.period.end);
         $scope.flashTimePeriodNotice('end');
       } else {
         $scope.status.invalidPagePeriodEnd = true;
@@ -132,5 +135,13 @@ angular.module('graphEsApp')
     $scope.$watch('page.model.dimensions', function(){
       $scope.recalculateGraphCount();
     }, true);
+
+    $scope.$watch('page.period.offset', function() {
+      if ([-86400, -604800, -2592000].indexOf($scope.page.period.offset) === -1) {
+        $scope.page.period.userDefined = true;
+      } else {
+        $scope.page.period.userDefined = false;
+      }
+    });
 
   });
