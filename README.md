@@ -26,7 +26,7 @@ You should have the node.js/npm/grunt/bower configured properly before continue.
 ```
 # npm install
 # bower install
-# grunt serve    // Development mode, auto reload and listen on port 9000
+# grunt serve    // Development mode, auto reload and listen on port 3000
 # grunt build    // Compile and generate dist folder for production
 
 // After 'grunt build'...
