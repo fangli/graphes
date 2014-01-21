@@ -32,6 +32,7 @@ You should have the node.js/npm/grunt/bower configured properly before continue.
 // After 'grunt build'...
 # cd dist
 # node app.js
+```
 
 
 Resources
