@@ -6,6 +6,7 @@ var app = angular.module('graphEsApp', [
   'ngSanitize',
   'ngRoute',
   'ui.bootstrap',
+  'highcharts-ng',
 ]);
 
 

@@ -46,22 +46,29 @@
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-    <script src="bower_components/highcharts/highcharts.js"></script>
     <script src="bower_components/momentjs/moment.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <script src="bower_components/sugar/release/sugar.min.js"></script>
     <script src="bower_components/sugarjs-locale-chinese/lib/sugar.locale_zh-cn.js"></script>
+    <script src="bower_components/highcharts-ng/dist/highcharts-ng.js"></script>
+    <script src="bower_components/highcharts/js/highcharts.src.js"></script>
+    <script src="bower_components/highcharts/js/highcharts-more.src.js"></script>
+    <script src="bower_components/highcharts/js/modules/exporting.src.js"></script>
+    <script src="bower_components/funplus-highcharts-export-csv/export-csv.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
  
     <!-- build:js({.tmp,public}) scripts/scripts.js -->
+    <script src="scripts/commons/initial.js"></script>
     <script src="scripts/commons/functions.js"></script>
     <script src="scripts/app.js"></script>
+    <script src="scripts/services/dateconv.js"></script>
+    <script src="scripts/services/adapters/elasticsearch.js"></script>
     <script src="scripts/services/head.js"></script>
     <script src="scripts/services/profile.js"></script>
     <script src="scripts/services/list.js"></script>
     <script src="scripts/services/escape.js"></script>
-    <script src="scripts/services/dateconv.js"></script>
+    <script src="scripts/services/graph.js"></script>
     <script src="scripts/filters/pattern.js"></script>
     <script src="scripts/controllers/main.js"></script>
     <script src="scripts/controllers/index.js"></script>

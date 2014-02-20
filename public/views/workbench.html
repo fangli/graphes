@@ -22,18 +22,20 @@
               <div class="form-group">
                 <label class="col-xs-1 control-label">Query</label>
                 <div class="col-xs-11">
-                  <input type="text" class="form-control" placeholder="search for time-serials..." ng-model="page.model.query">
+                  <input type="text" class="form-control" placeholder="search for time-serials..." ng-model="settings.model.query">
                 </div>
               </div>
             </div>
             <hr>
 
-            <div ng-repeat="dimension in page.model.dimensions" class="">
+            <div ng-repeat="dimension in settings.model.dimensions" class="">
               <div class="bs-example">
                   <h4>{{ dimension.name }} <small> | <i class="text-muted" ng-bind-html="dimension.pattern | pattern"></i></small></h4><hr>
-                  <span ng-repeat="(name, ena) in dimension.lists">
-                    <button ng-click="toggleOne(dimension, name, ena)" ng-class="{btn: true, 'btn-default': !ena, 'btn-success': ena, 'btn-xs': true, active: ena}">{{ name }}</button>&nbsp;
-                  </span>
+                  <div ng-class="{'group-normal': true, 'group-active': dimension.enableGroup}">
+                    <span ng-repeat="(name, ena) in dimension.lists">
+                      <button ng-click="toggleOne(dimension, name, ena)" ng-class="{btn: true, 'btn-default': !ena, 'btn-success': ena, 'btn-xs': true, active: ena}">{{ name }}</button>&nbsp;
+                    </span>
+                  </div>
               </div>
               <div class="highlight">
                 <div class="pull-right">
@@ -41,13 +43,13 @@
                   <button ng-click="toggleAll(dimension.lists, true)" class="btn btn-xs btn-default">All</button>
                   <button ng-click="toggleAll(dimension.lists, false)" class="btn btn-xs btn-default">None</button>
                   <button ng-click="toggleAll(dimension.lists)" class="btn btn-xs btn-default">Toggle</button> | 
-                  <button class="btn btn-xs btn-default">Reload</button> 
+                  <button ng-click="toggleGroup(dimension)" class="btn btn-xs btn-default">Assemble</button>
                 </div>
                 <div>&nbsp;</div>
               </div>
             </div>
 
-            <div ng-show="page.model.dimensions.length === 0"><i class="text-warning"><i class="fa fa-warning"></i> No filter applied, please select them on the left side</i></div>
+            <div ng-show="settings.model.dimensions.length === 0"><i class="text-warning"><i class="fa fa-warning"></i> No filter applied, please select them on the left side</i></div>
 
           </div>
         </div>
@@ -94,7 +96,7 @@
                 <label class="col-xs-1 control-label">From</label>
                 <div class="col-xs-11">
                   <div class="input-group">
-                    <input type="text" class="form-control" ng-model="page.period.start" ng-change="">
+                    <input type="text" class="form-control" ng-model="settings.period.start" ng-change="">
                     <div class="input-group-btn">
                       <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Fast Fill <span class="caret"></span></button>
                       <ul class="dropdown-menu pull-right">
@@ -125,7 +127,7 @@
               <p class="form-control-static"><span class="text-warning"><i class="fa fa-warning"></i> Invalid datetime</span></p>
             </div>
             <div class="form-horizontal" ng-show="(!status.invalidPagePeriodStart && status.isShowTimerStart)">
-              <p class="form-control-static"><span class="text-success"><i class="fa fa-calendar"></i> {{ pagePeriodStart |date:'yyyy-MM-dd HH:mm:ss Z' }}</span></p>
+              <p class="form-control-static"><span class="text-success"><i class="fa fa-calendar"></i> {{ settingsPeriodStart |date:'yyyy-MM-dd HH:mm:ss Z' }}</span></p>
             </div>
           </div>
         </div> <!-- container row -->
@@ -136,7 +138,7 @@
                 <label class="col-xs-1 control-label">To&nbsp;&nbsp;</label>
                 <div class="col-xs-11">
                   <div class="input-group">
-                    <input type="text" class="form-control" ng-model="page.period.end">
+                    <input type="text" class="form-control" ng-model="settings.period.end">
                     <div class="input-group-btn">
                       <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Fast Fill <span class="caret"></span></button>
                       <ul class="dropdown-menu pull-right">
@@ -155,7 +157,7 @@
               <p class="form-control-static"><span class="text-warning"><i class="fa fa-warning"></i> Invalid datetime</span></p>
             </div>
             <div class="form-horizontal" ng-show="(!status.invalidPagePeriodEnd && status.isShowTimerEnd)">
-              <p class="form-control-static"><span class="text-success"><i class="fa fa-calendar"></i> {{ pagePeriodEnd |date:'yyyy-MM-dd HH:mm:ss Z' }}</span></p>
+              <p class="form-control-static"><span class="text-success"><i class="fa fa-calendar"></i> {{ settingsPeriodEnd |date:'yyyy-MM-dd HH:mm:ss Z' }}</span></p>
             </div>
           </div>
         </div> <!-- container row -->
@@ -168,35 +170,35 @@
             <div class="container row">
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" ng-model="page.period.compare"> Enable trend contrast with
+                  <input type="checkbox" ng-model="settings.period.compare"> Enable trend contrast with
                 </label>
               </div>
             </div>
 
-            <div class="container row" ng-show="page.period.compare">
+            <div class="container row" ng-show="settings.period.compare">
               <div class="col-xs-5">
 
                 <div class="radio">
                   <label>
-                    <input type="radio" name="optionComparison" ng-model="page.period.offset" ng-value="-86400">
+                    <input type="radio" name="optionComparison" ng-model="settings.period.offset" ng-value="-86400">
                     One day before
                   </label>
                 </div>
                 <div class="radio">
                   <label>
-                    <input type="radio" name="optionComparison" ng-model="page.period.offset" ng-value="-604800">
+                    <input type="radio" name="optionComparison" ng-model="settings.period.offset" ng-value="-604800">
                     One Week before
                   </label>
                 </div>
                 <div class="radio">
                   <label>
-                    <input type="radio" name="optionComparison" ng-model="page.period.offset" ng-value="-2592000">
+                    <input type="radio" name="optionComparison" ng-model="settings.period.offset" ng-value="-2592000">
                     A month before
                   </label>
                 </div>
                 <div class="radio">
                   <label>
-                    <input type="radio" name="optionComparison" ng-model="page.period.userDefined" ng-value="true">
+                    <input type="radio" name="optionComparison" ng-model="settings.period.userDefined" ng-value="true">
                     User Defined
                   </label>
                 </div>
@@ -208,10 +210,10 @@
 
                   <div>
                     <label class="checkbox-inline">
-                      <input type="radio" name="offsetBy" ng-model="page.period.offsetBy" ng-value="0">&nbsp;Start Time
+                      <input type="radio" name="offsetBy" ng-model="settings.period.offsetBy" ng-value="0">&nbsp;Start Time
                     </label>
                     <label class="checkbox-inline">
-                      <input type="radio" name="offsetBy" ng-model="page.period.offsetBy" ng-value="1">&nbsp;End Time
+                      <input type="radio" name="offsetBy" ng-model="settings.period.offsetBy" ng-value="1">&nbsp;End Time
                     </label>
                   </div>
 
@@ -220,7 +222,7 @@
                   <div class="row">
                     <div class="col-xs-6">
                       <div class="input-group input-group-sm">
-                        <input type="number" class="form-control" ng-model="page.period.offset">
+                        <input type="number" class="form-control" ng-model="settings.period.offset">
                         <span class="input-group-addon">seconds</span>
                       </div>
                     </div>
@@ -237,27 +239,92 @@
       <!-- Periods Tab End -->
 
       <!-- Visualization Tab Start -->
-      <tab active="true">
+      <tab>
 
         <tab-heading><i class="fa fa-bar-chart-o"></i> Visualization</tab-heading>
         <p>&nbsp;</p>
-        <div class="container row"><h4>Type</h4><hr></div>
+        <div class="container row"><h4>Type</h4></div>
 
         <div class="container row">
           <div class="col-xs-12">
-            <select>
-              <option>Histogram</option>
-              <option>Pie Chart</option>
-            </select>
+            <label class="radio-inline">
+                <input type="radio" name="chartType" ng-model="settings.visualization.type" value="area">
+                Area
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="chartType" ng-model="settings.visualization.type" value="line">
+                Lines
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="chartType" ng-model="settings.visualization.type" value="column">
+                Columns
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="chartType" ng-model="settings.visualization.type" value="range">
+                Range Area <span class="text-muted">(Mean-Max)</span>
+            </label>
           </div>
         </div>
+
+        <br>
 
         <div class="container row"><h4>Options</h4><hr></div>
 
         <div class="container row">
-          <div class="col-xs-12">
-            test
+          <div class="col-xs-2">
+            <div class="form-group">
+              <label>Chart Value</label>
+              <select class="form-control" ng-model="settings.visualization.chartValue" ng-disabled="settings.visualization.chartValueDisabled">
+                <option value="min">Min</option>
+                <option value="mean">Mean</option>
+                <option value="max">Max</option>
+                <option value="count">Count</option>
+                <option value="total">Total</option>
+              </select>
+            </div>
           </div>
+          <div class="col-xs-2">
+            <div class="form-group">
+              <label>Value Field</label>
+              <input ng-model="settings.visualization.valueField" class="form-control" type="text" placeholder="Field Name">
+            </div>
+          </div>
+          <div class="col-xs-2">
+            <div class="form-group">
+              <label>Time Field</label>
+              <input ng-model="settings.visualization.timeField" class="form-control" type="text" placeholder="Field Name">
+            </div>
+          </div>
+<!--           <div class="col-xs-2">
+            <div class="form-group">
+              <label>Downsample Interval</label>
+              <input ng-model="settings.visualization.pointInterval" class="form-control" type="text">
+            </div>
+          </div>
+          <div class="col-xs-2">
+            <div class="form-group">
+              <label>Points Resolution</label>
+              <input ng-model="settings.visualization.pointResolution" class="form-control" type="text">
+            </div>
+          </div> -->
+          <div class="col-xs-2">
+
+            <div class="input-group" style="margin: 2px;">
+              <span class="input-group-addon" style="width: 90px;">
+                <label><input ng-model="settings.visualization.pointIntervalOpt" value="interval" type="radio" name="downsampleOption"> Interval</label>
+              </span>
+              <input style="text-align:right;" type="text" class="form-control" ng-model="settings.visualization.pointInterval">
+            </div><!-- /input-group -->
+
+            <div class="input-group" style="margin: 2px;">
+              <span class="input-group-addon" style="width: 90px;">
+                <label><input ng-model="settings.visualization.pointIntervalOpt" value="points" type="radio" name="downsampleOption"> Points</label>
+              </span>
+              <input style="text-align:right;" type="text" min="1" class="form-control" ng-model="settings.visualization.pointPoints">
+            </div><!-- /input-group -->
+
+          </div><!-- /.col-lg-6 -->
+
         </div>
 
 
@@ -270,15 +337,21 @@
 <div class="highlight">
 
   <div class="pull-right">
-    <span class="text-muted" ng-pluralize count="status.graphCount" when="{'0': 'No chart will be shown', 'one': '1 chart will be shown', 'other': '{} individual charts will be shown'}"> </span>
+    <span></span>
   </div>
 
-  <button class="btn btn-sm btn-primary">Show !</button>
+  <button ng-disabled="status.isLoading" ng-click="showGraph()" class="btn btn-sm btn-primary">Show !</button>
   <span class="text-muted"> | </span>
   <button class="btn btn-sm btn-default">Save</button>
+  &nbsp;
+  <img ng-show="status.isLoading" src="images/loading.gif">
 </div>
 <div class="highlight">
-  <h4>Graph Output</h4>
+  <h4>Graph Output {{ status.loadingPercent }}</h4>
   <hr>
-  Please define the model before
+  <div class="row">
+    <div ng-repeat="chart in charts">
+      <highchart config="chart" class="col-xs-12"></highchart>
+    </div>
+  </div>
 </div>

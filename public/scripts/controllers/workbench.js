@@ -2,11 +2,13 @@
 
 angular.module('graphEsApp')
 
-  .controller('WorkbenchCtrl', function($rootScope, $scope, $timeout, Head, List, DateConv) {
+  .controller('WorkbenchCtrl', function($rootScope, $scope, $timeout, Head, List, DateConv, Graph) {
     Head.setTitle('Workbench');
 
     $scope.status = {};
-    $scope.status.graphCount = 0;
+    $scope.status.isLoading = false;
+    $scope.status.loadingPercent = '';
+    $scope.status.chartCounts = 0;
     $scope.status.periodTimerStart = null;
     $scope.status.periodTimerEnd = null;
     $scope.status.isShowTimerStart = false;
@@ -16,13 +18,13 @@ angular.module('graphEsApp')
 
     $scope._tmpDimensions = {};
 
-    $scope.page = {
+    $scope.settings = {
       model: {
         dimensions: [],
-        query: '',
+        query: '*',
       },
       period: {
-        start: '1 hour ago',
+        start: '1 day ago',
         end: 'now',
         compare: false,
         offsetBy: 0,
@@ -30,22 +32,18 @@ angular.module('graphEsApp')
         userDefined: false,
       },
       visualization: {
+        type: 'area',
+        chartValue: 'mean',
+        chartValueDisabled: false,
+        valueField: '_value',
+        timeField: '@timestamp',
+        pointIntervalOpt: 'interval',
+        pointInterval: '2m',
+        pointPoints: '100',
       }
     };
 
-    $scope.recalculateGraphCount = function() {
-      var totalCount = 1;
-      for (var i = $scope.page.model.dimensions.length - 1; i >= 0; i--) {
-        var cnt = 0;
-        for (var name in $scope.page.model.dimensions[i].lists) {
-          if ($scope.page.model.dimensions[i].lists[name] === true) {
-            cnt += 1;
-          }
-        }
-        totalCount = totalCount * cnt;
-      }
-      $scope.status.graphCount = totalCount;
-    };
+    $scope.charts = [];
 
     $scope.toggleDimension = function(name) {
       $scope._tmpDimensions[name] = !$scope._tmpDimensions[name];
@@ -55,10 +53,11 @@ angular.module('graphEsApp')
         List.get(List.getPattern(dimension.pattern))
           .success(function(lists){
             if ($scope._tmpDimensions[name]) {
-              $scope.page.model.dimensions.push(dimension);
-              $scope.page.model.dimensions[angular.posInList('name', name, $scope.page.model.dimensions)].lists = {};
+              $scope.settings.model.dimensions.push(dimension);
+              $scope.settings.model.dimensions[angular.posInList('name', name, $scope.settings.model.dimensions)].lists = {};
+              $scope.settings.model.dimensions[angular.posInList('name', name, $scope.settings.model.dimensions)].enableGroup = false;
               angular.forEach(lists.list, function(l){
-                $scope.page.model.dimensions[angular.posInList('name', name, $scope.page.model.dimensions)].lists[l] = false;
+                $scope.settings.model.dimensions[angular.posInList('name', name, $scope.settings.model.dimensions)].lists[l] = false;
               });
             }
           })
@@ -67,7 +66,7 @@ angular.module('graphEsApp')
           });
       } else {
         // Disable dimension
-        angular.removeInList('name', name, $scope.page.model.dimensions);
+        angular.removeInList('name', name, $scope.settings.model.dimensions);
       }
     };
 
@@ -87,17 +86,29 @@ angular.module('graphEsApp')
       }
     };
 
+    $scope.toggleGroup = function(dimension) {
+      var v = dimension.enableGroup;
+      for (var i = $scope.settings.model.dimensions.length - 1; i >= 0; i--) {
+        $scope.settings.model.dimensions[i].enableGroup = false;
+      }
+      if (!v) {
+        dimension.enableGroup = true;
+      } else {
+        dimension.enableGroup = false;
+      }
+    };
+
     $scope.fastFill = function(start, end) {
       if (start) {
-        $scope.page.period.start = start;
+        $scope.settings.period.start = start;
       }
       if (end) {
-        $scope.page.period.end = end;
+        $scope.settings.period.end = end;
       }
     };
 
     $scope.flashTimePeriodNotice = function (period) {
-      if (period === "start") {
+      if (period === 'start') {
         $scope.status.isShowTimerStart = true;
         $timeout.cancel($scope.status.periodTimerStart);
         $scope.status.periodTimerStart = $timeout(function() {
@@ -112,36 +123,67 @@ angular.module('graphEsApp')
       }
     };
 
-    $scope.$watch('page.period.start', function() {
-      if (DateConv.strtotime($scope.page.period.start) > 0) {
+    $scope.$watch('settings.period.start', function() {
+      if (DateConv.strtotime($scope.settings.period.start) > 0) {
         $scope.status.invalidPagePeriodStart = false;
-        $scope.pagePeriodStart = DateConv.strtotime($scope.page.period.start);
+        $scope.settingsPeriodStart = DateConv.strtotime($scope.settings.period.start);
         $scope.flashTimePeriodNotice('start');
       } else {
         $scope.status.invalidPagePeriodStart = true;
       }
     });
 
-    $scope.$watch('page.period.end', function() {
-      if (DateConv.strtotime($scope.page.period.end) > 0) {
+    $scope.$watch('settings.period.end', function() {
+      if (DateConv.strtotime($scope.settings.period.end) > 0) {
         $scope.status.invalidPagePeriodEnd = false;
-        $scope.pagePeriodEnd = DateConv.strtotime($scope.page.period.end);
+        $scope.settingsPeriodEnd = DateConv.strtotime($scope.settings.period.end);
         $scope.flashTimePeriodNotice('end');
       } else {
         $scope.status.invalidPagePeriodEnd = true;
       }
     });
 
-    $scope.$watch('page.model.dimensions', function(){
-      $scope.recalculateGraphCount();
-    }, true);
-
-    $scope.$watch('page.period.offset', function() {
-      if ([-86400, -604800, -2592000].indexOf($scope.page.period.offset) === -1) {
-        $scope.page.period.userDefined = true;
+    $scope.$watch('settings.period.offset', function() {
+      if ([-86400, -604800, -2592000].indexOf($scope.settings.period.offset) === -1) {
+        $scope.settings.period.userDefined = true;
       } else {
-        $scope.page.period.userDefined = false;
+        $scope.settings.period.userDefined = false;
       }
     });
+
+    $scope.$watch('settings.visualization.type', function(){
+      if ($scope.settings.visualization.type === 'range') {
+        $scope.settings.visualization.chartValueDisabled = true;
+      } else {
+        $scope.settings.visualization.chartValueDisabled = false;
+      }
+    });
+
+    $scope.addChart = function(series) {
+      var graphConfig = {
+        // title: series.name,
+        title: '',
+        yaxisTitle: $scope.settings.model.query,
+        series: series,
+        graphType: $scope.settings.visualization.type,
+      };
+      $scope.charts.push(Graph.parseGraphConfig(graphConfig));
+      if ($scope.charts.length === $scope.status.chartCounts) {
+        $scope.status.loadingPercent = '';
+        $scope.status.isLoading = false;
+      } else {
+        $scope.status.loadingPercent = '(' + $scope.charts.length + '/' + $scope.status.chartCounts + ')';
+      }
+      console.log(Graph.parseGraphConfig(graphConfig));
+    };
+
+    $scope.showGraph = function() {
+      var queries = Graph.preParse($scope.settings, $rootScope.config.currentProfile);
+      $scope.status.isLoading = true;
+      $scope.status.chartCounts = queries.charts.length;
+      $scope.status.loadingPercent = '(0/' + $scope.status.chartCounts + ')';
+      $scope.charts = [];
+      Graph.get(queries, $scope.addChart);
+    };
 
   });

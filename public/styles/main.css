@@ -12,3 +12,17 @@ button:focus {
   -webkit-appearance:none;
   -moz-appearance:none;
 }
+
+.group-normal {
+  border-style: solid;
+  border-color: white;
+  padding: 5px;
+  border-radius: 3px;
+}
+
+.group-active {
+  border-style: solid;
+  border-color: green;
+  padding: 5px;
+  border-radius: 3px;
+}
