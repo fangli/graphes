@@ -170,7 +170,7 @@
             <div class="container row">
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" ng-model="settings.period.compare"> Enable trend contrast with
+                  <input type="checkbox" ng-model="settings.period.compare"> Enable comparison with
                 </label>
               </div>
             </div>
@@ -206,18 +206,7 @@
               </div>
               <div class="col-xs-7">
                 <div class="form-group">
-                  <label>Offset by</label>
-
-                  <div>
-                    <label class="checkbox-inline">
-                      <input type="radio" name="offsetBy" ng-model="settings.period.offsetBy" ng-value="0">&nbsp;Start Time
-                    </label>
-                    <label class="checkbox-inline">
-                      <input type="radio" name="offsetBy" ng-model="settings.period.offsetBy" ng-value="1">&nbsp;End Time
-                    </label>
-                  </div>
-
-                  <label>for</label>
+                  <label>Offset for</label>
 
                   <div class="row">
                     <div class="col-xs-6">
@@ -352,6 +341,9 @@
   <div class="row">
     <div ng-repeat="chart in charts">
       <highchart config="chart" class="col-xs-12"></highchart>
+    </div>
+    <div ng-show="status.isLoading" class="col-xs-12">
+      <img src="images/loading_line.gif">
     </div>
   </div>
 </div>

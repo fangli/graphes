@@ -12,8 +12,8 @@ angular.module('graphEsApp')
         return adapter.preParse(settings, currentProfile);
       },
 
-      get: function(queries, cb) {
-        return adapter.get(queries, cb);
+      get: function(queries, settings, cb) {
+        return adapter.get(queries, settings, cb);
       },
 
       // params

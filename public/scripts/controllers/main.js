@@ -17,8 +17,8 @@ angular.module('graphEsApp')
     $scope.menus = [
       {'title': 'Home', 'href': '/'},
       {'title': 'Workbench', 'href': '/workbench'},
+      {'title': 'Console', 'href': '/console'},
       {'title': 'Dash', 'href': '/dash'},
-      {'title': 'Shell', 'href': '/shell'},
     ];
 
     Profile.query()

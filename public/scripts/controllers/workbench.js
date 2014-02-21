@@ -27,7 +27,6 @@ angular.module('graphEsApp')
         start: '1 day ago',
         end: 'now',
         compare: false,
-        offsetBy: 0,
         offset: -86400,
         userDefined: false,
       },
@@ -183,7 +182,7 @@ angular.module('graphEsApp')
       $scope.status.chartCounts = queries.charts.length;
       $scope.status.loadingPercent = '(0/' + $scope.status.chartCounts + ')';
       $scope.charts = [];
-      Graph.get(queries, $scope.addChart);
+      Graph.get(queries, $scope.settings, $scope.addChart);
     };
 
   });

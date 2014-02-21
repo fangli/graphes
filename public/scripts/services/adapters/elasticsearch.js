@@ -82,6 +82,25 @@ angular.module('graphEsApp')
       return result;
     };
 
+    var addComparisonSeries = function(charts, timeField, config) {
+      if (config.compare === true) {
+
+        for (var i = charts.length - 1; i >= 0; i--) {
+
+          var sNames = [];
+          for(var k in charts[i].facets) { sNames.push(k); }
+
+          for (var j in sNames) {
+            charts[i].facets['Compare:' + sNames[j]] = angular.copy(charts[i].facets[sNames[j]]);
+            var filterSlice = charts[i].facets['Compare:' + sNames[j]].facet_filter.fquery.query.filtered.filter.bool.must[0].range[timeField];
+              filterSlice.from = DateConv.strtotime(config.start).getTime() + (config.offset * 1000);
+              filterSlice.to = DateConv.strtotime(config.end).getTime() + (config.offset * 1000);
+          }
+        }
+      }
+      return charts;
+    };
+
     var getRealQuery = function(pattern, replacement) {
       return pattern.substring(0, pattern.indexOf('{')) + replacement + pattern.substring(pattern.lastIndexOf('}') + 1);
     };
@@ -101,7 +120,7 @@ angular.module('graphEsApp')
       });
     };
 
-    var postParse = function(data, seriesType) {
+    var postParse = function(data, seriesType, offset) {
       var seriesTemplate;
       if (seriesType === 'range') {
         seriesTemplate = {
@@ -127,7 +146,11 @@ angular.module('graphEsApp')
           var singleSeries = angular.copy(seriesTemplate);
           singleSeries.name = seriesName;
           for (var i = 0; i < data.facets[seriesName].entries.length; i++) {
-            singleSeries.data.push([data.facets[seriesName].entries[i].time, data.facets[seriesName].entries[i].mean, data.facets[seriesName].entries[i].max]);
+            if (seriesName.substr(0, 8) === 'Compare:') {
+              singleSeries.data.push([data.facets[seriesName].entries[i].time - offset, data.facets[seriesName].entries[i].mean, data.facets[seriesName].entries[i].max]);
+            } else {
+              singleSeries.data.push([data.facets[seriesName].entries[i].time, data.facets[seriesName].entries[i].mean, data.facets[seriesName].entries[i].max]);
+            }
           }
           seriesData.push(singleSeries);
         }
@@ -136,7 +159,11 @@ angular.module('graphEsApp')
           var singleSeries = angular.copy(seriesTemplate);
           singleSeries.name = seriesName;
           for (var i = 0; i < data.facets[seriesName].entries.length; i++) {
-            singleSeries.data.push([data.facets[seriesName].entries[i].time, data.facets[seriesName].entries[i][seriesType]]);
+            if (seriesName.substr(0, 8) === 'Compare:') {
+              singleSeries.data.push([data.facets[seriesName].entries[i].time - offset, data.facets[seriesName].entries[i][seriesType]]);
+            } else {
+              singleSeries.data.push([data.facets[seriesName].entries[i].time, data.facets[seriesName].entries[i][seriesType]]);
+            }
           }
           seriesData.push(singleSeries);
         }
@@ -242,25 +269,43 @@ angular.module('graphEsApp')
           charts.push(singleChart);
         } // End chart
 
+        charts = addComparisonSeries(charts, settings.visualization.timeField, settings.period);
+
         if (charts.length === 0) {
           var theChart = angular.copy(esQueryStr);
           theChart.facets.Main = angular.copy(seriesTemplate);
           charts.push(theChart);
         }
 
-        var indices = resolveIndices(DateConv.strtotime(settings.period.start).getTime(), DateConv.strtotime(settings.period.end).getTime(), 'days', profile.pattern).join(',');
+        var oriStart = DateConv.strtotime(settings.period.start).getTime();
+        var oriEnd = DateConv.strtotime(settings.period.end).getTime();
+        var oriOffset = settings.period.offset * 1000;
+
+        var indices = resolveIndices(oriStart, oriEnd, 'days', profile.pattern);
+
+        if (settings.period.compare) {
+          var indicesWithOffset = resolveIndices(oriStart + oriOffset, oriEnd + oriOffset, 'days', profile.pattern);
+          for (var n = indicesWithOffset.length - 1; n >= 0; n--) {
+            if (indices.indexOf(indicesWithOffset[n]) === -1) {
+              indices.push(indicesWithOffset[n]);
+            }
+          }
+        }
+
+        indices = indices.join(',');
+
         var type = (settings.visualization.type === 'range')? 'range': settings.visualization.chartValue;
         return {indices: indices, charts: charts, seriesType: type};
       },
 
-      get: function(queries, cb) {
+      get: function(queries, settings, cb) {
         var pro = [];
         for (var i = queries.charts.length - 1; i >= 0; i--) {
           (function(a) {
             pro[a] = makeRequest(queries.indices, queries.charts[a]);
             pro[a].then(
               function(data) {
-                cb(postParse(data, queries.seriesType));
+                cb(postParse(data, queries.seriesType, settings.period.offset * 1000));
               },
               function() {
                 window.alert('Error occured when retrieving data!');

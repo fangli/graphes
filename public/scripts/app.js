@@ -36,9 +36,9 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider) {
         controller: 'ProfileCtrl'
       })
 
-      .when('/shell', {
-        templateUrl: 'views/shell.html',
-        controller: 'ShellCtrl'
+      .when('/console', {
+        templateUrl: 'views/console.html',
+        controller: 'ConsoleCtrl'
       })
 
       .when('/about', {
