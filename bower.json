@@ -18,8 +18,8 @@
     "sugar": "~1.4.1",
     "sugarjs-locale-chinese": "~0.0.1",
     "highcharts-ng": "~0.0.4",
-    "highcharts": "git@github.com:highslide-software/highcharts.com.git#~3.0.9",
-    "funplus-highcharts-export-csv": "~1.0.3"
+    "highcharts": "https://github.com/highslide-software/highcharts.com/archive/v3.0.9.zip",
+    "funplus-highcharts-export-csv": "~1.0.4"
   },
   "devDependencies": {
     "angular-mocks": "1.2.6",
