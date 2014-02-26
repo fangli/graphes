@@ -15,6 +15,7 @@ angular.module('graphEsApp')
     $scope.status.isShowTimerEnd = false;
     $scope.status.invalidPagePeriodStart = false;
     $scope.status.invalidPagePeriodEnd = false;
+    $scope.isControlPanelHidden = false;
 
     $scope._tmpDimensions = {};
 
@@ -173,6 +174,7 @@ angular.module('graphEsApp')
       $scope.status.isLoading = true;
       $scope.status.chartCounts = queries.charts.length;
       $scope.status.loadingPercent = '(0/' + $scope.status.chartCounts + ')';
+      $scope.isControlPanelHidden = true;
       $scope.charts = [];
       Graph.get(queries, $scope.settings, $scope.addChart);
     };

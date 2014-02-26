@@ -1,4 +1,4 @@
-<div class="bs-example">
+<div ng-hide="isControlPanelHidden" class="bs-example">
   <tabset>
 
       <!-- Model Tab Start -->
@@ -307,14 +307,14 @@
 
             <div class="input-group" style="margin: 2px;">
               <span class="input-group-addon" style="width: 90px;">
-                <label><input ng-model="settings.visualization.pointIntervalOpt" value="interval" type="radio" name="downsampleOption"> Interval</label>
+                <label><input ng-model="settings.visualization.pointIntervalOpt" value="interval" type="radio" name="downsampleOption">&nbsp;Interval</label>
               </span>
               <input style="text-align:right;" type="text" class="form-control" ng-model="settings.visualization.pointInterval">
             </div><!-- /input-group -->
 
             <div class="input-group" style="margin: 2px;">
               <span class="input-group-addon" style="width: 90px;">
-                <label><input ng-model="settings.visualization.pointIntervalOpt" value="points" type="radio" name="downsampleOption"> Points</label>
+                <label><input ng-model="settings.visualization.pointIntervalOpt" value="points" type="radio" name="downsampleOption">&nbsp;Points</label>
               </span>
               <input style="text-align:right;" type="text" min="1" class="form-control" ng-model="settings.visualization.pointPoints">
             </div><!-- /input-group -->
@@ -330,7 +330,7 @@
   </tabset>
 </div>
 
-<div class="highlight">
+<div ng-hide="isControlPanelHidden" class="highlight">
 
   <div class="pull-right">
     <span></span>
@@ -342,6 +342,16 @@
   &nbsp;
   <img ng-show="status.isLoading" src="images/loading.gif">
 </div>
+
+
+<div ng-hide="!isControlPanelHidden" class="row">
+  <div class="col-xs-12">
+    <button ng-click="isControlPanelHidden = false" class="btn btn-default btn-block"><i class="fa fa-chevron-down"></i> Show Control Panel <i class="fa fa-chevron-down"></i></button>
+  </div>
+  <hr>
+</div>
+
+
 <div class="highlight">
   <h4>Graph Output {{ status.loadingPercent }}</h4>
   <hr>
