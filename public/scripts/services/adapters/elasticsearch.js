@@ -226,7 +226,11 @@ angular.module('graphEsApp')
         // Prepare series template
         var seriesTemplate = angular.copy(esSeriesStr);
         seriesTemplate.date_histogram.key_field = settings.visualization.timeField;
-        seriesTemplate.date_histogram.value_field = settings.visualization.valueField;
+        if (settings.visualization.valueField.indexOf('doc[') === -1){
+          seriesTemplate.date_histogram.value_field = settings.visualization.valueField;
+        } else {
+          seriesTemplate.date_histogram.value_script = settings.visualization.valueField;
+        }
         seriesTemplate.date_histogram.interval = getPointInterval(
           DateConv.strtotime(settings.period.start).getTime(),
           DateConv.strtotime(settings.period.end).getTime(),
