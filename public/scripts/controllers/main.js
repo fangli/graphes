@@ -28,6 +28,9 @@ angular.module('graphEsApp')
         if (angular.isInList('name', $cookies.currentProfileName, data)) {
           $rootScope.config.currentProfile = angular.getInList('name', $cookies.currentProfileName, $rootScope.config.profiles);
         }
+        if ($location.path() === '/workbench') {
+          $route.reload();
+        }
       })
       .error(function() {
         window.alert('Err: Unable to get configurations from GraphES server, please reload the page and try again!');
