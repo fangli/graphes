@@ -25,7 +25,12 @@ angular.module('graphEsApp')
 
     $scope.addTags = function (dimension) {
       if (dimension.tmpNew) {
-        dimension.lists[dimension.tmpNew] = true;
+        var split = dimension.tmpNew.split('|');
+        for (var i = split.length - 1; i >= 0; i--) {
+          if (split[i].trim()) {
+            dimension.lists[split[i].trim()] = true;
+          }
+        }
       }
       dimension.tmpNew = '';
     };
