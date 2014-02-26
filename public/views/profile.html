@@ -63,6 +63,90 @@
     </div>
 
       <hr>
+
+      <h5 class="bs-example"> Default Preferences </h5>
+      <div class="highlight">
+
+        <div class="form-group">
+          <label for="inputDefaultQuery">Query string</label>
+          <input type="text" class="form-control" id="inputDefaultQuery" placeholder="The default query string" ng-model="currentProfile.def.model.query">
+        </div>
+
+        <div class="form-group">
+          <label for="inputPeriodStart">Period from</label>
+          <input type="text" class="form-control" id="inputPeriodStart" placeholder="The default start time of the query" ng-model="currentProfile.def.period.start">
+        </div>
+
+        <div class="form-group">
+          <label for="inputPeriodEnd">Period to</label>
+          <input type="text" class="form-control" id="inputPeriodEnd" placeholder="The default end time of the query" ng-model="currentProfile.def.period.end">
+        </div>
+
+        <div class="form-group"><label>Comparison</label></div>
+
+        <div class="form-group">
+          <label class="radio-inline">
+            <input type="radio" ng-model="currentProfile.def.period.compare" ng-value="true"> Enabled compare
+          </label>
+          <label class="radio-inline">
+            <input type="radio" ng-model="currentProfile.def.period.compare" ng-value="false"> Disabled compare
+          </label>
+        </div>
+
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="The default offset of comparison(in seconds)" ng-model="currentProfile.def.period.offset">
+        </div>
+
+        <div class="form-group">
+          <div class="row">
+            <div class="col-xs-2">
+              <label>Chart Type</label>
+              <select class="form-control" ng-model="currentProfile.def.visualization.type">
+                <option value="area">Area</option>
+                <option value="line">Line</option>
+                <option value="column">Column</option>
+                <option value="range">Range</option>
+              </select>
+            </div>
+            <div class="col-xs-2">
+              <label>Chart Value</label>
+              <select class="form-control" ng-model="currentProfile.def.visualization.chartValue">
+                <option value="min">Min</option>
+                <option value="mean">Mean</option>
+                <option value="max">Max</option>
+                <option value="count">Count</option>
+                <option value="total">Total</option>
+              </select>
+            </div>
+            <div class="col-xs-2">
+              <label>Value Field</label>
+              <input type="text" class="form-control" placeholder="The default field of values" ng-model="currentProfile.def.visualization.valueField">
+            </div>
+            <div class="col-xs-2">
+              <label>Time Field</label>
+              <input type="text" class="form-control" placeholder="The default field of datetime" ng-model="currentProfile.def.visualization.timeField">
+            </div>
+            <div class="col-xs-3">
+              <div class="input-group" style="margin: 2px;">
+                <span class="input-group-addon" style="width: 90px;">
+                  <label><input ng-model="currentProfile.def.visualization.pointIntervalOpt" value="interval" type="radio" name="downsampleOption"> Interval</label>
+                </span>
+                <input style="text-align:right;" type="text" class="form-control" ng-model="currentProfile.def.visualization.pointInterval">
+              </div><!-- /input-group -->
+
+              <div class="input-group" style="margin: 2px;">
+                <span class="input-group-addon" style="width: 90px;">
+                  <label><input ng-model="currentProfile.def.visualization.pointIntervalOpt" value="points" type="radio" name="downsampleOption"> Points</label>
+                </span>
+                <input style="text-align:right;" type="text" min="1" class="form-control" ng-model="currentProfile.def.visualization.pointPoints">
+              </div><!-- /input-group -->
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
       <h5 class="bs-example">
         Filtering Dimensions <a ng-click="addNewDimension()" class="btn btn-default btn-xs"><i class="fa fa-plus-square"></i> Add</a>
       </h5>

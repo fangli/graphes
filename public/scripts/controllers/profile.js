@@ -39,6 +39,28 @@ angular.module('graphEsApp')
         description: '',
         pattern: '',
         dimensions: [],
+        def: {
+          model: {
+            query: '*',
+          },
+          period: {
+            start: '1 day ago',
+            end: 'now',
+            compare: false,
+            offset: -86400,
+            userDefined: false,
+          },
+          visualization: {
+            type: 'area',
+            chartValue: 'mean',
+            chartValueDisabled: false,
+            valueField: '_value',
+            timeField: '@timestamp',
+            pointIntervalOpt: 'interval',
+            pointInterval: '2m',
+            pointPoints: '100',
+          }
+        }
       };
       $scope.showingCurrent = true;
     };
