@@ -44,6 +44,13 @@ angular.module('graphEsApp')
 
     $scope.charts = [];
 
+    $scope.addTags = function (dimension) {
+      if (dimension.tmpNew) {
+        dimension.lists[dimension.tmpNew] = true;
+      }
+      dimension.tmpNew = '';
+    };
+
     $scope.toggleDimension = function(name) {
       $scope._tmpDimensions[name] = !$scope._tmpDimensions[name];
       if ($scope._tmpDimensions[name]) {
@@ -55,6 +62,7 @@ angular.module('graphEsApp')
               $scope.settings.model.dimensions.push(dimension);
               $scope.settings.model.dimensions[angular.posInList('name', name, $scope.settings.model.dimensions)].lists = {};
               $scope.settings.model.dimensions[angular.posInList('name', name, $scope.settings.model.dimensions)].enableGroup = false;
+              $scope.settings.model.dimensions[angular.posInList('name', name, $scope.settings.model.dimensions)].tmpNew = '';
               angular.forEach(lists.list, function(l){
                 $scope.settings.model.dimensions[angular.posInList('name', name, $scope.settings.model.dimensions)].lists[l] = false;
               });

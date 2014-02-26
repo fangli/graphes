@@ -32,9 +32,16 @@
               <div class="bs-example">
                   <h4>{{ dimension.name }} <small> | <i class="text-muted" ng-bind-html="dimension.pattern | pattern"></i></small></h4><hr>
                   <div ng-class="{'group-normal': true, 'group-active': dimension.enableGroup}">
-                    <span ng-repeat="(name, ena) in dimension.lists">
-                      <button ng-click="toggleOne(dimension, name, ena)" ng-class="{btn: true, 'btn-default': !ena, 'btn-success': ena, 'btn-xs': true, active: ena}">{{ name }}</button>&nbsp;
-                    </span>
+                    <div class="row">
+                      <div class="col-xs-12">
+                        <form ng-submit="addTags(dimension);">
+                          <span ng-repeat="(name, ena) in dimension.lists">
+                            <span ng-click="toggleOne(dimension, name, ena)" ng-class="{btn: true, 'btn-default': !ena, 'btn-success': ena, 'btn-xs': true, active: ena}">{{ name }}</span>&nbsp;
+                          </span>
+                          <input ng-blur="addTags(dimension)" ng-model="dimension.tmpNew" placeholder="Add..." type="text" class="form-control input-sm" style="display: inline; width: 60px; height: 22px; margin: 4px;">
+                        </form>
+                      </div>
+                    </div>
                   </div>
               </div>
               <div class="highlight">
