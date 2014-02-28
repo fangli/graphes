@@ -24,7 +24,7 @@
           <td><i class="fa fa-file-text-o"></i> <a href>{{ profile.name }}</a></td>
           <td>{{ profile.pattern }}</td>
           <td>
-            <span ng-repeat="dimension in profile.dimensions">
+            <span ng-repeat="dimension in profile.def.model.dimensions">
               <span tooltip-placement="top" tooltip-trigger="mouseenter" tooltip="{{ dimension.pattern }}" class="label label-info">{{ dimension.name }}</span>&nbsp;
             </span>
           </td>
@@ -119,6 +119,17 @@
               </select>
             </div>
             <div class="col-xs-2">
+              <label>Stacking</label>
+              <select class="form-control" ng-model="currentProfile.def.visualization.stacking">
+                <option value="">Disabled</option>
+                <option value="normal">Normal</option>
+                <option value="percent">Percent</option>
+              </select>
+            </div>
+          </div>
+          <p>&nbsp;</p>
+          <div class="row">
+            <div class="col-xs-2">
               <label>Value Field/Script</label>
               <input type="text" class="form-control" placeholder="The default field of values" ng-model="currentProfile.def.visualization.valueField">
             </div>
@@ -152,7 +163,7 @@
       </h5>
 
       <div class="highlight">
-        <div ng-repeat="(id, dimension) in currentProfile.dimensions">
+        <div ng-repeat="(id, dimension) in currentProfile.def.model.dimensions">
           <div class="row">
             <div class="col-xs-2">
               <input type="text" class="form-control" placeholder="Name" ng-model="dimension.name" ng-required="true">
@@ -164,7 +175,7 @@
           </div>
           <p></p>
         </div>
-        <div class="text-muted" ng-show="currentProfile.dimensions.length === 0">No dimension existed, click button Add to create one.</div>
+        <div class="text-muted" ng-show="currentProfile.def.model.dimensions.length === 0">No dimension existed, click button Add to create one.</div>
       </div>
 
     <button type="submit" class="btn btn-primary">

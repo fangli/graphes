@@ -1,0 +1,28 @@
+<div ng-hide="isControlPanelHidden" class="bs-example">
+  <label style="margin: 10px;">Charts Snapshot ID:</label>&nbsp;&nbsp;<a href="#" editable-text="snapshotId">{{ snapshotId || 'Click to edit' }}</a>
+  <span ng-show="isLoading">
+    <img src="images/loading.gif">
+  </span>
+</div>
+
+
+<div class="highlight">
+  <div ng-show="chartData.charts.length > 0" class="row">
+    <div class="col-xs-12">
+      <h4>{{ chartData.name }}</h4>
+      <p class="alert alert-warning">
+        You are viewing history charts captured <span style="border-bottom: dashed 1px" tooltip="{{ chartData.AbsCreated }}">{{ chartData.relativeCreated }} </span>
+      </p>
+      <p>
+        <button ng-click="editInWorkbench()" class="btn btn-xs btn-default">Edit in Workbench</button>
+        <button ng-click="editInConsole()" class="btn btn-xs btn-default">Edit in Console</button>
+      </p>
+      <hr>
+      <div class="row">
+        <div ng-repeat="chart in chartData.charts">
+          <highchart config="chart" class="col-xs-12"></highchart>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

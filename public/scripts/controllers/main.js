@@ -9,16 +9,16 @@ angular.module('graphEsApp')
     $rootScope.config = {'profiles': [], 'currentProfile': {}};
 
     $scope.isActive = function (viewLocation) {
-      return viewLocation === $location.path();
+      return $location.path().startsWith(viewLocation);
     };
 
     $scope.Head = Head;
 
     $scope.menus = [
-      {'title': 'Home', 'href': '/'},
+      {'title': 'Dashboard', 'href': '/dash'},
       {'title': 'Workbench', 'href': '/workbench'},
       {'title': 'Console', 'href': '/console'},
-      {'title': 'Dash', 'href': '/dash'},
+      {'title': 'Snapshots', 'href': '/snapshot'},
     ];
 
     Profile.query()

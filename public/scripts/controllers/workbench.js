@@ -2,11 +2,12 @@
 
 angular.module('graphEsApp')
 
-  .controller('WorkbenchCtrl', function($rootScope, $scope, $timeout, Head, List, DateConv, Graph) {
+  .controller('WorkbenchCtrl', function($rootScope, $scope, $timeout, $location, Head, List, DateConv, Graph, Snapshot) {
     Head.setTitle('Workbench');
 
     $scope.status = {};
     $scope.status.isLoading = false;
+    $scope.status.snapshotSaved = false;
     $scope.status.loadingPercent = '';
     $scope.status.chartCounts = 0;
     $scope.status.periodTimerStart = null;
@@ -16,13 +17,18 @@ angular.module('graphEsApp')
     $scope.status.invalidPagePeriodStart = false;
     $scope.status.invalidPagePeriodEnd = false;
     $scope.isControlPanelHidden = false;
-
-    $scope._tmpDimensions = {};
-
-    $scope.settings = angular.copy($rootScope.config.currentProfile.def);
-    $scope.settings.model.dimensions = [];
-
+    $scope.snapshot = {};
     $scope.charts = [];
+
+    // $scope._tmpDimensions = {};
+
+    if ($rootScope.currentWorkbench) {
+      $scope.settings = angular.copy($rootScope.currentWorkbench);
+      $rootScope.currentWorkbench = null;
+    } else {
+      $scope.settings = angular.copy($rootScope.config.currentProfile);
+    }
+
 
     $scope.addTags = function (dimension) {
       if (dimension.tmpNew) {
@@ -36,29 +42,24 @@ angular.module('graphEsApp')
       dimension.tmpNew = '';
     };
 
-    $scope.toggleDimension = function(name) {
-      $scope._tmpDimensions[name] = !$scope._tmpDimensions[name];
-      if ($scope._tmpDimensions[name]) {
+    $scope.toggleDimension = function(dimension) {
+      dimension.enabled = !dimension.enabled;
+      if (dimension.enabled) {
         // Enable dimension
-        var dimension = angular.getInList('name', name, $rootScope.config.currentProfile.dimensions);
         List.get(List.getPattern(dimension.pattern))
           .success(function(lists){
-            if ($scope._tmpDimensions[name]) {
-              $scope.settings.model.dimensions.push(dimension);
-              $scope.settings.model.dimensions[angular.posInList('name', name, $scope.settings.model.dimensions)].lists = {};
-              $scope.settings.model.dimensions[angular.posInList('name', name, $scope.settings.model.dimensions)].enableGroup = false;
-              $scope.settings.model.dimensions[angular.posInList('name', name, $scope.settings.model.dimensions)].tmpNew = '';
+            if (dimension.enabled) {
+              dimension.lists = {};
+              dimension.enableGroup = false;
+              dimension.tmpNew = '';
               angular.forEach(lists.list, function(l){
-                $scope.settings.model.dimensions[angular.posInList('name', name, $scope.settings.model.dimensions)].lists[l] = false;
+                dimension.lists[l] = false;
               });
             }
           })
           .error(function(){
             window.alert('Could not get the list of filtering pattern!');
           });
-      } else {
-        // Disable dimension
-        angular.removeInList('name', name, $scope.settings.model.dimensions);
       }
     };
 
@@ -80,8 +81,8 @@ angular.module('graphEsApp')
 
     $scope.toggleGroup = function(dimension) {
       var v = dimension.enableGroup;
-      for (var i = $scope.settings.model.dimensions.length - 1; i >= 0; i--) {
-        $scope.settings.model.dimensions[i].enableGroup = false;
+      for (var i = $scope.settings.def.model.dimensions.length - 1; i >= 0; i--) {
+        $scope.settings.def.model.dimensions[i].enableGroup = false;
       }
       if (!v) {
         dimension.enableGroup = true;
@@ -92,10 +93,10 @@ angular.module('graphEsApp')
 
     $scope.fastFill = function(start, end) {
       if (start) {
-        $scope.settings.period.start = start;
+        $scope.settings.def.period.start = start;
       }
       if (end) {
-        $scope.settings.period.end = end;
+        $scope.settings.def.period.end = end;
       }
     };
 
@@ -115,49 +116,18 @@ angular.module('graphEsApp')
       }
     };
 
-    $scope.$watch('settings.period.start', function() {
-      if (DateConv.strtotime($scope.settings.period.start) > 0) {
-        $scope.status.invalidPagePeriodStart = false;
-        $scope.settingsPeriodStart = DateConv.strtotime($scope.settings.period.start);
-        $scope.flashTimePeriodNotice('start');
-      } else {
-        $scope.status.invalidPagePeriodStart = true;
-      }
-    });
-
-    $scope.$watch('settings.period.end', function() {
-      if (DateConv.strtotime($scope.settings.period.end) > 0) {
-        $scope.status.invalidPagePeriodEnd = false;
-        $scope.settingsPeriodEnd = DateConv.strtotime($scope.settings.period.end);
-        $scope.flashTimePeriodNotice('end');
-      } else {
-        $scope.status.invalidPagePeriodEnd = true;
-      }
-    });
-
-    $scope.$watch('settings.period.offset', function() {
-      if ([-86400, -604800, -2592000].indexOf($scope.settings.period.offset) === -1) {
-        $scope.settings.period.userDefined = true;
-      } else {
-        $scope.settings.period.userDefined = false;
-      }
-    });
-
-    $scope.$watch('settings.visualization.type', function(){
-      if ($scope.settings.visualization.type === 'range') {
-        $scope.settings.visualization.chartValueDisabled = true;
-      } else {
-        $scope.settings.visualization.chartValueDisabled = false;
-      }
-    });
+    $scope.editInConsole = function() {
+      $rootScope.currentConsole = angular.copy($scope.settings);
+      $location.path('/console');
+    };
 
     $scope.addChart = function(series) {
       var graphConfig = {
-        // title: series.name,
         title: '',
-        yaxisTitle: $scope.settings.model.query,
+        yaxisTitle: $scope.settings.def.model.query,
         series: series,
-        graphType: $scope.settings.visualization.type,
+        graphType: $scope.settings.def.visualization.type,
+        stacking: $scope.settings.def.visualization.stacking,
       };
       $scope.charts.push(Graph.parseGraphConfig(graphConfig));
       if ($scope.charts.length === $scope.status.chartCounts) {
@@ -169,8 +139,16 @@ angular.module('graphEsApp')
       console.log(Graph.parseGraphConfig(graphConfig));
     };
 
+    $scope.generateSnapshotName = function() {
+      $scope.snapshot.name = 'Query ' + $scope.settings.def.model.query + ' generated at ' + DateConv.strtotime('now');
+      $scope.snapshot.settings = angular.copy($scope.settings);
+      $scope.snapshot.created = new Date().getTime();
+      $scope.status.snapshotSaved = false;
+    };
+
     $scope.showGraph = function() {
-      var queries = Graph.preParse($scope.settings, $rootScope.config.currentProfile);
+      var queries = Graph.preParse($scope.settings);
+      $scope.generateSnapshotName();
       $scope.status.isLoading = true;
       $scope.status.chartCounts = queries.charts.length;
       $scope.status.loadingPercent = '(0/' + $scope.status.chartCounts + ')';
@@ -178,5 +156,54 @@ angular.module('graphEsApp')
       $scope.charts = [];
       Graph.get(queries, $scope.settings, $scope.addChart);
     };
+
+    $scope.saveAsSnapshot = function() {
+      $scope.snapshot.charts = $scope.charts;
+      Snapshot.save($scope.snapshot)
+        .success(function(data) {
+          $scope.status.snapshotSaved = true;
+          $scope.status.snapshotUrl = '/snapshot/' + data._id;
+        })
+        .error(function() {
+          window.alert('Could not save the charts snapshot, try again!');
+        });
+    };
+
+
+    $scope.$watch('settings.def.period.start', function() {
+      if (DateConv.strtotime($scope.settings.def.period.start) > 0) {
+        $scope.status.invalidPagePeriodStart = false;
+        $scope.settingsPeriodStart = DateConv.strtotime($scope.settings.def.period.start);
+        $scope.flashTimePeriodNotice('start');
+      } else {
+        $scope.status.invalidPagePeriodStart = true;
+      }
+    });
+
+    $scope.$watch('settings.def.period.end', function() {
+      if (DateConv.strtotime($scope.settings.def.period.end) > 0) {
+        $scope.status.invalidPagePeriodEnd = false;
+        $scope.settingsPeriodEnd = DateConv.strtotime($scope.settings.def.period.end);
+        $scope.flashTimePeriodNotice('end');
+      } else {
+        $scope.status.invalidPagePeriodEnd = true;
+      }
+    });
+
+    $scope.$watch('settings.def.period.offset', function() {
+      if ([-86400, -604800, -2592000].indexOf($scope.settings.def.period.offset) === -1) {
+        $scope.settings.def.period.userDefined = true;
+      } else {
+        $scope.settings.def.period.userDefined = false;
+      }
+    });
+
+    $scope.$watch('settings.def.visualization.type', function(){
+      if ($scope.settings.def.visualization.type === 'range') {
+        $scope.settings.def.visualization.chartValueDisabled = true;
+      } else {
+        $scope.settings.def.visualization.chartValueDisabled = false;
+      }
+    });
 
   });

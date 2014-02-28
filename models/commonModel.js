@@ -5,7 +5,7 @@ var mongo = require('mongodb');
 var Db = mongo.Db;
 var server = new mongo.Server('localhost', 27017);
 var db = new Db('graphes', server, {auto_reconnect: true, w: 1, journal: false, fsync: false});
- 
+var ObjectID = require('mongodb').ObjectID;
 db.open(function(err) {
   if(err) {
     console.log('Unable to connect to MongoDB');
@@ -15,3 +15,4 @@ db.open(function(err) {
 });
 
 exports.db = db;
+exports.ObjectID = ObjectID;

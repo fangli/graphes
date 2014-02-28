@@ -16,11 +16,11 @@ angular.module('graphEsApp')
     };
 
     $scope.removeDimension = function (index) {
-      $scope.currentProfile.dimensions.splice(index, 1);
+      $scope.currentProfile.def.model.dimensions.splice(index, 1);
     };
 
     $scope.addNewDimension = function () {
-      $scope.currentProfile.dimensions.push({name:'', pattern:[]});
+      $scope.currentProfile.def.model.dimensions.push({name:'', pattern:[]});
     };
 
     $scope.showCurrent = function(index) {
@@ -38,10 +38,10 @@ angular.module('graphEsApp')
         name: '',
         description: '',
         pattern: '',
-        dimensions: [],
         def: {
           model: {
             query: '*',
+            dimensions: [],
           },
           period: {
             start: '1 day ago',
@@ -55,6 +55,7 @@ angular.module('graphEsApp')
             chartValue: 'mean',
             chartValueDisabled: false,
             valueField: '_value',
+            stacking: "",
             timeField: '@timestamp',
             pointIntervalOpt: 'interval',
             pointInterval: '2m',

@@ -8,27 +8,27 @@
         <!-- model start -->
         <div class="container row">
           <div class="col-xs-3">
-            <div style="cursor:pointer;"
-              ng-click="toggleDimension(dimension.name)"
-              ng-repeat="dimension in $root.config.currentProfile.dimensions"
-              ng-class="{'wellbox': true, 'wellbox-active': _tmpDimensions[dimension.name]}">
+            <div tooltip-popup-delay="500" tooltip="Turn on the facet or not" style="cursor:pointer;"
+              ng-repeat="dimension in settings.def.model.dimensions"
+              ng-click="toggleDimension(dimension)"
+              ng-class="{'wellbox': true, 'wellbox-active': dimension.enabled}">
               <div class="checkbox" style="padding-left:10px;">
-                  <i ng-show="_tmpDimensions[dimension.name]" class="fa fa-check-square-o"></i> <i ng-hide="_tmpDimensions[dimension.name]" class="fa fa-square-o"></i> {{ dimension.name }}
+                  <i ng-show="dimension.enabled" class="fa fa-check-square-o"></i> <i ng-hide="dimension.enabled" class="fa fa-square-o"></i> {{ dimension.name }}
               </div>
             </div>
           </div>
           <div class="col-xs-9">
             <div class="form-horizontal">
               <div class="form-group">
-                <label class="col-xs-1 control-label">Query</label>
-                <div class="col-xs-11">
-                  <input type="text" class="form-control" placeholder="search for time-serials..." ng-model="settings.model.query">
+                <label class="col-xs-2 control-label">Main Query <a target="_blank" href="http://lucene.apache.org/core/2_9_4/queryparsersyntax.html"><i class="fa fa-question-circle"></i></a></label>
+                <div class="col-xs-10">
+                  <input tooltip-popup-delay="500" tooltip="The query syntax is based on Lucene, could be anything you want" type="text" class="form-control" placeholder="search for time-serials..." ng-model="settings.def.model.query">
                 </div>
               </div>
             </div>
             <hr>
 
-            <div ng-repeat="dimension in settings.model.dimensions" class="">
+            <div ng-repeat="dimension in settings.def.model.dimensions | filter: {enabled: true}" class="">
               <div class="bs-example">
                   <h4>{{ dimension.name }} <small> | <i class="text-muted" ng-bind-html="dimension.pattern | pattern"></i></small></h4><hr>
                   <div ng-class="{'group-normal': true, 'group-active': dimension.enableGroup}">
@@ -38,7 +38,7 @@
                           <span ng-repeat="(name, ena) in dimension.lists">
                             <span ng-click="toggleOne(dimension, name, ena)" ng-class="{btn: true, 'btn-default': !ena, 'btn-success': ena, 'btn-xs': true, active: ena}">{{ name }}</span>&nbsp;
                           </span>
-                          <input ng-blur="addTags(dimension)" ng-model="dimension.tmpNew" placeholder="Add..." type="text" class="form-control input-sm" style="display: inline; width: 60px; height: 22px; margin: 4px;">
+                          <input tooltip-popup-delay="500" tooltip="Press enter to confirm the new value. Add more in batch using '|' as the separator" ng-blur="addTags(dimension)" ng-model="dimension.tmpNew" placeholder="Add..." type="text" class="form-control input-sm" style="display: inline; width: 60px; height: 22px; margin: 4px;">
                         </form>
                       </div>
                     </div>
@@ -47,16 +47,14 @@
               <div class="highlight">
                 <div class="pull-right">
                   Select
-                  <button ng-click="toggleAll(dimension.lists, true)" class="btn btn-xs btn-default">All</button>
-                  <button ng-click="toggleAll(dimension.lists, false)" class="btn btn-xs btn-default">None</button>
-                  <button ng-click="toggleAll(dimension.lists)" class="btn btn-xs btn-default">Toggle</button> | 
-                  <button ng-click="toggleGroup(dimension)" class="btn btn-xs btn-default">Assemble</button>
+                  <button tooltip-popup-delay="500" tooltip="Turn on all series in current facet" ng-click="toggleAll(dimension.lists, true)" class="btn btn-xs btn-default">All</button>
+                  <button tooltip-popup-delay="500" tooltip="Turn off all series in current facet" ng-click="toggleAll(dimension.lists, false)" class="btn btn-xs btn-default">None</button>
+                  <button tooltip-popup-delay="500" tooltip="Reverse if the series should be drawn" ng-click="toggleAll(dimension.lists)" class="btn btn-xs btn-default">Toggle</button> | 
+                  <button tooltip-popup-delay="500" tooltip="Draw selected series in the same chart when enabled" ng-click="toggleGroup(dimension)" class="btn btn-xs btn-default">Group</button>
                 </div>
                 <div>&nbsp;</div>
               </div>
             </div>
-
-            <div ng-show="settings.model.dimensions.length === 0"><i class="text-warning"><i class="fa fa-warning"></i> No filter applied, please select them on the left side</i></div>
 
           </div>
         </div>
@@ -103,7 +101,7 @@
                 <label class="col-xs-1 control-label">From</label>
                 <div class="col-xs-11">
                   <div class="input-group">
-                    <input type="text" class="form-control" ng-model="settings.period.start" ng-change="">
+                    <input tooltip-append-to-body="true" tooltip-popup-delay="500" tooltip="Examples: January 10, 2012; Fri, 12:33; 3:45pm; Last week; 3 days before, yesterday etc." type="text" class="form-control" ng-model="settings.def.period.start" ng-change="">
                     <div class="input-group-btn">
                       <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Fast Fill <span class="caret"></span></button>
                       <ul class="dropdown-menu pull-right">
@@ -144,8 +142,8 @@
               <div ng-class="{'form-group': true, 'has-error': status.invalidPagePeriodEnd}">
                 <label class="col-xs-1 control-label">To&nbsp;&nbsp;</label>
                 <div class="col-xs-11">
-                  <div class="input-group">
-                    <input type="text" class="form-control" ng-model="settings.period.end">
+                  <div tooltip-append-to-body="true" tooltip-popup-delay="500" tooltip="Examples: Now; January 10, 2012; Fri, 12:33; 3:45pm; Last week; 3 days before, yesterday etc." class="input-group">
+                    <input type="text" class="form-control" ng-model="settings.def.period.end">
                     <div class="input-group-btn">
                       <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Fast Fill <span class="caret"></span></button>
                       <ul class="dropdown-menu pull-right">
@@ -176,36 +174,36 @@
 
             <div class="container row">
               <div class="checkbox">
-                <label>
-                  <input type="checkbox" ng-model="settings.period.compare"> Enable comparison with
+                <label tooltip-popup-delay="500" tooltip="Enable history comparison or not">
+                  <input type="checkbox" ng-model="settings.def.period.compare"> Enable comparison with
                 </label>
               </div>
             </div>
 
-            <div class="container row" ng-show="settings.period.compare">
+            <div class="container row" ng-show="settings.def.period.compare">
               <div class="col-xs-5">
 
                 <div class="radio">
                   <label>
-                    <input type="radio" name="optionComparison" ng-model="settings.period.offset" ng-value="-86400">
+                    <input type="radio" name="optionComparison" ng-model="settings.def.period.offset" ng-value="-86400">
                     One day before
                   </label>
                 </div>
                 <div class="radio">
                   <label>
-                    <input type="radio" name="optionComparison" ng-model="settings.period.offset" ng-value="-604800">
+                    <input type="radio" name="optionComparison" ng-model="settings.def.period.offset" ng-value="-604800">
                     One Week before
                   </label>
                 </div>
                 <div class="radio">
                   <label>
-                    <input type="radio" name="optionComparison" ng-model="settings.period.offset" ng-value="-2592000">
+                    <input type="radio" name="optionComparison" ng-model="settings.def.period.offset" ng-value="-2592000">
                     A month before
                   </label>
                 </div>
                 <div class="radio">
                   <label>
-                    <input type="radio" name="optionComparison" ng-model="settings.period.userDefined" ng-value="true">
+                    <input type="radio" name="optionComparison" ng-model="settings.def.period.userDefined" ng-value="true">
                     User Defined
                   </label>
                 </div>
@@ -218,7 +216,7 @@
                   <div class="row">
                     <div class="col-xs-6">
                       <div class="input-group input-group-sm">
-                        <input type="number" class="form-control" ng-model="settings.period.offset">
+                        <input type="number" class="form-control" ng-model="settings.def.period.offset">
                         <span class="input-group-addon">seconds</span>
                       </div>
                     </div>
@@ -244,19 +242,19 @@
         <div class="container row">
           <div class="col-xs-12">
             <label class="radio-inline">
-                <input type="radio" name="chartType" ng-model="settings.visualization.type" value="area">
+                <input type="radio" name="chartType" ng-model="settings.def.visualization.type" value="area">
                 Area
             </label>
             <label class="radio-inline">
-                <input type="radio" name="chartType" ng-model="settings.visualization.type" value="line">
+                <input type="radio" name="chartType" ng-model="settings.def.visualization.type" value="line">
                 Lines
             </label>
             <label class="radio-inline">
-                <input type="radio" name="chartType" ng-model="settings.visualization.type" value="column">
+                <input type="radio" name="chartType" ng-model="settings.def.visualization.type" value="column">
                 Columns
             </label>
             <label class="radio-inline">
-                <input type="radio" name="chartType" ng-model="settings.visualization.type" value="range">
+                <input type="radio" name="chartType" ng-model="settings.def.visualization.type" value="range">
                 Range Area <span class="text-muted">(Mean-Max)</span>
             </label>
           </div>
@@ -268,9 +266,9 @@
 
         <div class="container row">
           <div class="col-xs-2">
-            <div class="form-group">
+            <div tooltip-popup-delay="500" tooltip="Which kind of value should be use to display the charts" class="form-group">
               <label>Chart Value</label>
-              <select class="form-control" ng-model="settings.visualization.chartValue" ng-disabled="settings.visualization.chartValueDisabled">
+              <select class="form-control" ng-model="settings.def.visualization.chartValue" ng-disabled="settings.def.visualization.chartValueDisabled">
                 <option value="min">Min</option>
                 <option value="mean">Mean</option>
                 <option value="max">Max</option>
@@ -279,16 +277,28 @@
               </select>
             </div>
           </div>
+
           <div class="col-xs-2">
-            <div class="form-group">
+            <div tooltip-popup-delay="500" tooltip="Stacking normally or percent" class="form-group">
+              <label>Stacking</label>
+              <select class="form-control" ng-model="settings.def.visualization.stacking" ng-disabled="settings.def.visualization.type === 'range'">
+                <option value="">Disabled</option>
+                <option value="normal">Normal</option>
+                <option value="percent">Percent</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-xs-2">
+            <div tooltip-popup-delay="500" tooltip="Input the value field directly, or use a script to alter the value as you need. For example: doc['_value'].value * 1000" class="form-group">
               <label>Value Field/Script</label>
-              <input ng-model="settings.visualization.valueField" class="form-control" type="text" placeholder="Field Name">
+              <input ng-model="settings.def.visualization.valueField" class="form-control" type="text" placeholder="Field Name">
             </div>
           </div>
           <div class="col-xs-2">
-            <div class="form-group">
+            <div tooltip-popup-delay="500" tooltip="The datetime field" class="form-group">
               <label>Time Field</label>
-              <input ng-model="settings.visualization.timeField" class="form-control" type="text" placeholder="Field Name">
+              <input ng-model="settings.def.visualization.timeField" class="form-control" type="text" placeholder="Field Name">
             </div>
           </div>
 <!--           <div class="col-xs-2">
@@ -307,16 +317,16 @@
 
             <div class="input-group" style="margin: 2px;">
               <span class="input-group-addon" style="width: 90px;">
-                <label><input ng-model="settings.visualization.pointIntervalOpt" value="interval" type="radio" name="downsampleOption">&nbsp;Interval</label>
+                <label tooltip-popup-delay="500" tooltip="Set the resolution by interval"><input ng-model="settings.def.visualization.pointIntervalOpt" value="interval" type="radio" name="downsampleOption">&nbsp;Interval</label>
               </span>
-              <input style="text-align:right;" type="text" class="form-control" ng-model="settings.visualization.pointInterval">
+              <input tooltip-append-to-body="true" tooltip-popup-delay="500" tooltip="The interval of points. It allows for the constant values of year, quarter, month, week, day, hour, minute. also support time setting like 1.5h (up to w for weeks)." style="text-align:right;" type="text" class="form-control" ng-model="settings.def.visualization.pointInterval">
             </div><!-- /input-group -->
 
             <div class="input-group" style="margin: 2px;">
               <span class="input-group-addon" style="width: 90px;">
-                <label><input ng-model="settings.visualization.pointIntervalOpt" value="points" type="radio" name="downsampleOption">&nbsp;Points</label>
+                <label tooltip-popup-delay="500" tooltip="Set the resolution by points"><input ng-model="settings.def.visualization.pointIntervalOpt" value="points" type="radio" name="downsampleOption">&nbsp;Points</label>
               </span>
-              <input style="text-align:right;" type="text" min="1" class="form-control" ng-model="settings.visualization.pointPoints">
+              <input tooltip-append-to-body="true" tooltip-popup-delay="500" tooltip="How many points for a chart" style="text-align:right;" type="text" min="1" class="form-control" ng-model="settings.def.visualization.pointPoints">
             </div><!-- /input-group -->
 
           </div><!-- /.col-lg-6 -->
@@ -333,12 +343,16 @@
 <div ng-hide="isControlPanelHidden" class="highlight">
 
   <div class="pull-right">
-    <span></span>
+    <span>
+      Save current settings as
+        <button class="btn btn-sm btn-default">Workbench</button>
+        <button class="btn btn-sm btn-default">Dashboard</button>
+    </span>
   </div>
 
   <button ng-disabled="status.isLoading" ng-click="showGraph()" class="btn btn-sm btn-primary">Show !</button>
-  <span class="text-muted"> | </span>
-  <button class="btn btn-sm btn-default">Save</button>
+  <button tooltip-popup-delay="500" tooltip="Edit the current querying settings in RAW JSON" ng-click="editInConsole()" class="btn btn-sm btn-default">Edit in Console</button>
+  <span class="text-muted">
   &nbsp;
   <img ng-show="status.isLoading" src="images/loading.gif">
 </div>
@@ -354,6 +368,15 @@
 
 <div class="highlight">
   <h4>Graph Output {{ status.loadingPercent }}</h4>
+  <div class="row">
+    <div ng-show="(!status.isLoading) && charts.length && (!status.snapshotSaved)" class="col-xs-12">
+      <a tooltip-popup-delay="500" tooltip="Click to edit the title of snapshot" href="#" editable-text="snapshot.name">{{ snapshot.name }}</a>
+      <button tooltip-popup-delay="500" tooltip="Save all displayed charts as a snapshot and you can share it later" ng-click="saveAsSnapshot()" ng-show="!status.isLoading && charts.length" class="btn btn-xs btn-success"><i class="fa fa-floppy-o"></i> Save and Share</button>
+    </div>
+    <div ng-show="(!status.isLoading) && charts.length && (status.snapshotSaved)" class="col-xs-12">
+      <p class="text-success">All following charts have been saved as <a ng-href="{{ status.snapshotUrl }}">{{ status.snapshotUrl }}</a></p>
+    </div>
+  </div>
   <hr>
   <div class="row">
     <div ng-repeat="chart in charts">

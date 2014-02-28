@@ -1,1 +1,48 @@
-console
+<div ng-hide="isControlPanelHidden" class="bs-example">
+<div class="row">
+  <div class="col-xs-12">
+    <label>Raw Query JSON</label>
+    <textarea ng-model="rawSettings" class="form-control" rows="10"></textarea>
+  </div>
+</div>
+</div>
+
+
+<div ng-hide="isControlPanelHidden" class="highlight">
+
+
+  <div class="pull-right">
+    <span>
+      Save current settings as
+        <button class="btn btn-sm btn-default">Workbench</button>
+        <button class="btn btn-sm btn-default">Dashboard</button>
+    </span>
+  </div>
+
+
+  <button ng-disabled="status.jsonNotValid || status.isLoading" ng-click="showGraph()" class="btn btn-sm btn-primary">Show !</button>
+  <button ng-click="editInWorkbench()" class="btn btn-sm btn-default">Edit in Workbench</button>
+  &nbsp;
+  <img ng-show="status.isLoading" src="images/loading.gif">
+</div>
+
+<div ng-hide="!isControlPanelHidden" class="row">
+  <div class="col-xs-12">
+    <button ng-click="isControlPanelHidden = false" class="btn btn-default btn-block"><i class="fa fa-chevron-down"></i> Show Query Panel <i class="fa fa-chevron-down"></i></button>
+  </div>
+  <hr>
+</div>
+
+
+<div class="highlight">
+  <h4>Graph Output {{ status.loadingPercent }}</h4>
+  <hr>
+  <div class="row">
+    <div ng-repeat="chart in charts">
+      <highchart config="chart" class="col-xs-12"></highchart>
+    </div>
+    <div ng-show="status.isLoading" class="col-xs-12">
+      <img src="images/loading_line.gif">
+    </div>
+  </div>
+</div>

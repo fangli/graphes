@@ -8,8 +8,8 @@ angular.module('graphEsApp')
 
     return {
 
-      preParse: function(settings, currentProfile) {
-        return adapter.preParse(settings, currentProfile);
+      preParse: function(settings) {
+        return adapter.preParse(settings);
       },
 
       get: function(queries, settings, cb) {
@@ -22,9 +22,20 @@ angular.module('graphEsApp')
       //   "yaxisTitle": "The Y axis title",
       //   "series": [], // The series of data
       //   "graphType": "line" | "bar",
+      //   "stacking": "normal" | "percent"
       // }
       parseGraphConfig: function(params) {
         var graphTemplate;
+        var pointFormat;
+        var min;
+        if (params.stacking != 'percent') {
+          min = null;
+          pointFormat = '<span style="color:{series.color}">{series.name}</span>: {point.y}<br/>';
+        } else {
+          min = 0;
+          pointFormat = '<span style="color:{series.color}">{series.name}</span>: <b>{point.percentage:.1f}%</b> ({point.y})<br/>';
+        }
+
         if (params.graphType === 'area')
         {
           graphTemplate = {
@@ -34,6 +45,7 @@ angular.module('graphEsApp')
             options: {
               tooltip: {
                 crosshairs: true,
+                pointFormat: pointFormat,
                 shared: true,
               },
               chart: {
@@ -44,19 +56,14 @@ angular.module('graphEsApp')
                 type: 'datetime',
               },
               yAxis: {
+                min: min,
                 title: {
                   text: params.yaxisTitle,
                 },
               },
               plotOptions: {
                 area: {
-                  fillColor: {
-                    linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1},
-                    stops: [
-                      [0, Highcharts.getOptions().colors[0]],
-                      [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
-                    ]
-                  },
+                  stacking: params.stacking,
                   fillOpacity: 0.5,
                   lineWidth: 1,
                   marker: {
@@ -80,7 +87,13 @@ angular.module('graphEsApp')
               text: params.title,
             },
             options: {
+              tooltip: {
+                pointFormat: pointFormat,
+              },
               plotOptions: {
+                column: {
+                  stacking: params.stacking,
+                },
                 lineWidth: 1,
               },
               chart: {
@@ -91,6 +104,7 @@ angular.module('graphEsApp')
                 type: 'datetime',
               },
               yAxis: {
+                min: min,
                 title: {
                   text: params.yaxisTitle,
                 }
@@ -107,6 +121,7 @@ angular.module('graphEsApp')
               tooltip: {
                 crosshairs: true,
                 shared: true,
+                pointFormat: pointFormat,
               },
               chart: {
                 type: 'line',
@@ -115,6 +130,7 @@ angular.module('graphEsApp')
               plotOptions: {
                 lineWidth: 1,
                 line: {
+                  stacking: params.stacking,
                   marker: {
                     enabled: false
                   },
@@ -124,6 +140,7 @@ angular.module('graphEsApp')
                 type: 'datetime',
               },
               yAxis: {
+                min: min,
                 title: {
                   text: params.yaxisTitle,
                 }

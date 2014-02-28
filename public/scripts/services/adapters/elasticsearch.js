@@ -204,20 +204,23 @@ angular.module('graphEsApp')
 
     return {
 
-      preParse: function(settings, profile) {
+      preParse: function(settings) {
         var filterGroup = [];
         var assembledSingle = [];
-        for (var k = settings.model.dimensions.length - 1; k >= 0; k--) {
-          var single = [];
-          for (var name in settings.model.dimensions[k].lists) {
-            if (settings.model.dimensions[k].lists[name] === true) {
-              single.push(getRealQuery(settings.model.dimensions[k].pattern, name));
+        for (var k = settings.def.model.dimensions.length - 1; k >= 0; k--) {
+          var dimension = settings.def.model.dimensions[k];
+          if (dimension.enabled) {
+            var single = [];
+            for (var name in dimension.lists) {
+              if (dimension.lists[name] === true) {
+                single.push(getRealQuery(dimension.pattern, name));
+              }
             }
-          }
-          if (!settings.model.dimensions[k].enableGroup) {
-            filterGroup = multiplePush(filterGroup, single);
-          } else {
-            assembledSingle = angular.copy(single);
+            if (!dimension.enableGroup) {
+              filterGroup = multiplePush(filterGroup, single);
+            } else {
+              assembledSingle = angular.copy(single);
+            }
           }
         }
 
@@ -225,23 +228,23 @@ angular.module('graphEsApp')
 
         // Prepare series template
         var seriesTemplate = angular.copy(esSeriesStr);
-        seriesTemplate.date_histogram.key_field = settings.visualization.timeField;
-        if (settings.visualization.valueField.indexOf('doc[') === -1){
-          seriesTemplate.date_histogram.value_field = settings.visualization.valueField;
+        seriesTemplate.date_histogram.key_field = settings.def.visualization.timeField;
+        if (settings.def.visualization.valueField.indexOf('doc[') === -1){
+          seriesTemplate.date_histogram.value_field = settings.def.visualization.valueField;
         } else {
-          seriesTemplate.date_histogram.value_script = settings.visualization.valueField;
+          seriesTemplate.date_histogram.value_script = settings.def.visualization.valueField;
         }
         seriesTemplate.date_histogram.interval = getPointInterval(
-          DateConv.strtotime(settings.period.start).getTime(),
-          DateConv.strtotime(settings.period.end).getTime(),
-          settings.visualization.pointInterval,
-          settings.visualization.pointPoints,
-          settings.visualization.pointIntervalOpt
+          DateConv.strtotime(settings.def.period.start).getTime(),
+          DateConv.strtotime(settings.def.period.end).getTime(),
+          settings.def.visualization.pointInterval,
+          settings.def.visualization.pointPoints,
+          settings.def.visualization.pointIntervalOpt
         );
-        seriesTemplate.facet_filter.fquery.query.filtered.query.query_string.query = settings.model.query;
-        seriesTemplate.facet_filter.fquery.query.filtered.filter.bool.must[0].range[settings.visualization.timeField] = {
-          'from': DateConv.strtotime(settings.period.start).getTime(),
-          'to': DateConv.strtotime(settings.period.end).getTime(),
+        seriesTemplate.facet_filter.fquery.query.filtered.query.query_string.query = settings.def.model.query;
+        seriesTemplate.facet_filter.fquery.query.filtered.filter.bool.must[0].range[settings.def.visualization.timeField] = {
+          'from': DateConv.strtotime(settings.def.period.start).getTime(),
+          'to': DateConv.strtotime(settings.def.period.end).getTime(),
         };
         // End prepare query template
 
@@ -273,7 +276,7 @@ angular.module('graphEsApp')
           charts.push(singleChart);
         } // End chart
 
-        charts = addComparisonSeries(charts, settings.visualization.timeField, settings.period);
+        charts = addComparisonSeries(charts, settings.def.visualization.timeField, settings.def.period);
 
         if (charts.length === 0) {
           var theChart = angular.copy(esQueryStr);
@@ -281,14 +284,14 @@ angular.module('graphEsApp')
           charts.push(theChart);
         }
 
-        var oriStart = DateConv.strtotime(settings.period.start).getTime();
-        var oriEnd = DateConv.strtotime(settings.period.end).getTime();
-        var oriOffset = settings.period.offset * 1000;
+        var oriStart = DateConv.strtotime(settings.def.period.start).getTime();
+        var oriEnd = DateConv.strtotime(settings.def.period.end).getTime();
+        var oriOffset = settings.def.period.offset * 1000;
 
-        var indices = resolveIndices(oriStart, oriEnd, 'days', profile.pattern);
+        var indices = resolveIndices(oriStart, oriEnd, 'days', settings.pattern);
 
-        if (settings.period.compare) {
-          var indicesWithOffset = resolveIndices(oriStart + oriOffset, oriEnd + oriOffset, 'days', profile.pattern);
+        if (settings.def.period.compare) {
+          var indicesWithOffset = resolveIndices(oriStart + oriOffset, oriEnd + oriOffset, 'days', settings.pattern);
           for (var n = indicesWithOffset.length - 1; n >= 0; n--) {
             if (indices.indexOf(indicesWithOffset[n]) === -1) {
               indices.push(indicesWithOffset[n]);
@@ -298,7 +301,7 @@ angular.module('graphEsApp')
 
         indices = indices.join(',');
 
-        var type = (settings.visualization.type === 'range')? 'range': settings.visualization.chartValue;
+        var type = (settings.def.visualization.type === 'range')? 'range': settings.def.visualization.chartValue;
         return {indices: indices, charts: charts, seriesType: type};
       },
 
@@ -309,7 +312,7 @@ angular.module('graphEsApp')
             pro[a] = makeRequest(queries.indices, queries.charts[a]);
             pro[a].then(
               function(data) {
-                cb(postParse(data, queries.seriesType, settings.period.offset * 1000));
+                cb(postParse(data, queries.seriesType, settings.def.period.offset * 1000));
               },
               function() {
                 window.alert('Error occured when retrieving data!');

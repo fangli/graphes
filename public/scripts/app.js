@@ -7,6 +7,7 @@ var app = angular.module('graphEsApp', [
   'ngRoute',
   'ui.bootstrap',
   'highcharts-ng',
+  'xeditable',
 ]);
 
 
@@ -18,32 +19,37 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider) {
     $routeProvider
       .when('/', {
         templateUrl: 'views/index.html',
-        controller: 'IndexCtrl'
+        controller: 'IndexCtrl',
       })
 
       .when('/dash', {
         templateUrl: 'views/dash.html',
-        controller: 'DashCtrl'
+        controller: 'DashCtrl',
       })
 
       .when('/workbench', {
         templateUrl: 'views/workbench.html',
-        controller: 'WorkbenchCtrl'
+        controller: 'WorkbenchCtrl',
       })
 
       .when('/profile', {
         templateUrl: 'views/profile.html',
-        controller: 'ProfileCtrl'
+        controller: 'ProfileCtrl',
       })
 
       .when('/console', {
         templateUrl: 'views/console.html',
-        controller: 'ConsoleCtrl'
+        controller: 'ConsoleCtrl',
       })
 
       .when('/about', {
         templateUrl: 'views/about.html',
-        controller: 'AboutCtrl'
+        controller: 'AboutCtrl',
+      })
+
+      .when('/snapshot/:snapshotId?', {
+        templateUrl: 'views/snapshot.html',
+        controller: 'SnapshotCtrl',
       })
 
       .otherwise({
@@ -52,3 +58,6 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider) {
 
   });
 
+app.run(function(editableOptions) {
+  editableOptions.theme = 'bs3';
+});
