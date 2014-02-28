@@ -17,11 +17,6 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider) {
     $locationProvider.html5Mode(true);
 
     $routeProvider
-      .when('/', {
-        templateUrl: 'views/index.html',
-        controller: 'IndexCtrl',
-      })
-
       .when('/dash', {
         templateUrl: 'views/dash.html',
         controller: 'DashCtrl',
@@ -53,7 +48,7 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider) {
       })
 
       .otherwise({
-        redirectTo: '/'
+        redirectTo: '/dash'
       });
 
   });
