@@ -20,6 +20,7 @@ app.use(express.json());
 app.use(express.methodOverride());
 require('./controllers/profileController')(app);
 require('./controllers/listController')(app);
+require('./controllers/snapshotController')(app);
 
 // Handler frontend app
 app.use(express.static(path.join(__dirname, 'public')));
