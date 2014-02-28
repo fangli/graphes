@@ -1,6 +1,8 @@
 GraphES
 ============
 
+[![Build Status](https://travis-ci.org/funplus/graphes.png?branch=master)](https://travis-ci.org/funplus/graphes)
+
 Yet another data visualization dashboard which querying ElasticSearch in predefined way
 
 Features comming soon...
