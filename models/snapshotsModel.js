@@ -11,7 +11,7 @@ exports.findByName = function(req, res) {
   db.collection('snapshots', function(err, collection) {
     try {
       collection.findOne({'_id': new ObjectID.createFromHexString(name)}, function(err, item) {
-        res.send(item);
+        res.send(JSON.parse(item['body']));
       });
     } catch(e) {
       res.send([]);
@@ -23,7 +23,7 @@ exports.findByName = function(req, res) {
 exports.saveSnapshot = function(req, res) {
   var snapshot = req.body;
   db.collection('snapshots', function(err, collection) {
-    collection.insert(snapshot, function(err, result) {
+    collection.insert({body: JSON.stringify(snapshot)}, function(err, result) {
       if (err) {
         console.log('Error updating: ' + err);
         res.status(500).send('Unable to save chart snapshots');
