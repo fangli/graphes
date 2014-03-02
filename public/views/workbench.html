@@ -66,7 +66,7 @@
       <tab>
         <tab-heading><i class="fa fa-clock-o"></i> Periods</tab-heading>
         <p>&nbsp;</p>
-        <div class="container row"><h4>Basic</h4><hr></div>
+        <div class="container row"><h4>Basic <small>All datetime were converted to your local time automatically</small></h4><hr></div>
 
         <div class="container row">
           <div class="panel panel-info">
@@ -369,12 +369,12 @@
 <div class="highlight">
   <h4>Graph Output {{ status.loadingPercent }}</h4>
   <div class="row">
-    <div ng-show="(!status.isLoading) && charts.length && (!status.snapshotSaved)" class="col-xs-12">
-      <a tooltip-popup-delay="500" tooltip="Click to edit the title of snapshot" href="#" editable-text="snapshot.name">{{ snapshot.name }}</a>
-      <button tooltip-popup-delay="500" tooltip="Save all displayed charts as a snapshot and you can share it later" ng-click="saveAsSnapshot()" ng-show="!status.isLoading && charts.length" class="btn btn-xs btn-success"><i class="fa fa-floppy-o"></i> Save and Share</button>
+    <div ng-show="(!status.isLoading) && charts.length && (!status.archiveSaved)" class="col-xs-12">
+      <a tooltip-popup-delay="500" tooltip="Click to edit the title of archive" href="#" editable-text="archive.name">{{ archive.name }}</a>
+      <button tooltip-popup-delay="500" tooltip="Save all displayed charts as a archive and you can share it later" ng-click="saveAsArchive()" ng-show="!status.isLoading && charts.length" class="btn btn-xs btn-success"><i class="fa fa-floppy-o"></i> Save and Share</button>
     </div>
-    <div ng-show="(!status.isLoading) && charts.length && (status.snapshotSaved)" class="col-xs-12">
-      <p class="text-success">All following charts have been saved as <a ng-href="{{ status.snapshotUrl }}">{{ status.snapshotUrl }}</a></p>
+    <div ng-show="(!status.isLoading) && charts.length && (status.archiveSaved)" class="col-xs-12">
+      <p class="text-success">All following charts have been saved as <a ng-href="{{ status.archiveUrl }}">{{ status.archiveUrl }}</a></p>
     </div>
   </div>
   <hr>

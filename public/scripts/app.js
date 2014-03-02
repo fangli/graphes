@@ -42,9 +42,9 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider) {
         controller: 'AboutCtrl',
       })
 
-      .when('/snapshot/:snapshotId?', {
-        templateUrl: 'views/snapshot.html',
-        controller: 'SnapshotCtrl',
+      .when('/archive/:archiveId?', {
+        templateUrl: 'views/archive.html',
+        controller: 'ArchiveCtrl',
       })
 
       .otherwise({

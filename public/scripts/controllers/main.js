@@ -18,7 +18,7 @@ angular.module('graphEsApp')
       {'title': 'Dashboard', 'href': '/dash'},
       {'title': 'Workbench', 'href': '/workbench'},
       {'title': 'Console', 'href': '/console'},
-      {'title': 'Snapshots', 'href': '/snapshot'},
+      {'title': 'Archives', 'href': '/archive'},
     ];
 
     Profile.query()

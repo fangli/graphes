@@ -2,16 +2,16 @@
 
 angular.module('graphEsApp')
 
-  .controller('SnapshotCtrl', function($rootScope, $location, $routeParams, $scope, Head, Snapshot) {
-    Head.setTitle('Snapshots');
+  .controller('ArchiveCtrl', function($rootScope, $location, $routeParams, $scope, Head, Archive) {
+    Head.setTitle('Archives');
 
-    $scope.snapshotId = $routeParams.snapshotId;
+    $scope.archiveId = $routeParams.archiveId;
     $scope.isLoading = false;
     $scope.chartData = {};
 
-    if ($scope.snapshotId) {
+    if ($scope.archiveId) {
       $scope.isLoading = true;
-      Snapshot.get($scope.snapshotId)
+      Archive.get($scope.archiveId)
         .success(function(data){
           data.AbsCreated = Date.create(data.created).toString();
           data.relativeCreated = Date.create(data.created).relative();
@@ -20,15 +20,15 @@ angular.module('graphEsApp')
         })
         .error(function() {
           $scope.isLoading = false;
-          window.alert('Could not get the charts snapshot');
+          window.alert('Could not get the charts archive');
         });
     }
 
-    $scope.$watch('snapshotId', function() {
-      if ($scope.snapshotId) {
-        $location.path('/snapshot/' + $scope.snapshotId);
+    $scope.$watch('archiveId', function() {
+      if ($scope.archiveId) {
+        $location.path('/archive/' + $scope.archiveId);
       } else {
-        $location.path('/snapshot/');
+        $location.path('/archive/');
       }
     });
 

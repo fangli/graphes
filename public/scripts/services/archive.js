@@ -2,14 +2,14 @@
 
 angular.module('graphEsApp')
 
-  .factory('Snapshot', ['$http', function($http) {
-    var baseUrl = '/api/snapshot/';
+  .factory('Archive', ['$http', function($http) {
+    var baseUrl = '/api/archive/';
     return {
       get: function(name) {
         return $http.get(baseUrl + name);
       },
-      save: function(snapshot){
-        return $http.post(baseUrl, snapshot);
+      save: function(archive){
+        return $http.post(baseUrl, archive);
       },
       remove: function(name) {
         return $http.delete(baseUrl + name);

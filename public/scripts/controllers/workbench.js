@@ -2,12 +2,12 @@
 
 angular.module('graphEsApp')
 
-  .controller('WorkbenchCtrl', function($rootScope, $scope, $timeout, $location, Head, List, DateConv, Graph, Snapshot) {
+  .controller('WorkbenchCtrl', function($rootScope, $scope, $timeout, $location, Head, List, DateConv, Graph, Archive) {
     Head.setTitle('Workbench');
 
     $scope.status = {};
     $scope.status.isLoading = false;
-    $scope.status.snapshotSaved = false;
+    $scope.status.archiveSaved = false;
     $scope.status.loadingPercent = '';
     $scope.status.chartCounts = 0;
     $scope.status.periodTimerStart = null;
@@ -17,7 +17,7 @@ angular.module('graphEsApp')
     $scope.status.invalidPagePeriodStart = false;
     $scope.status.invalidPagePeriodEnd = false;
     $scope.isControlPanelHidden = false;
-    $scope.snapshot = {};
+    $scope.archive = {};
     $scope.charts = [];
 
     // $scope._tmpDimensions = {};
@@ -139,16 +139,16 @@ angular.module('graphEsApp')
       console.log(Graph.parseGraphConfig(graphConfig));
     };
 
-    $scope.generateSnapshotName = function() {
-      $scope.snapshot.name = 'Query ' + $scope.settings.def.model.query + ' generated at ' + DateConv.strtotime('now');
-      $scope.snapshot.settings = angular.copy($scope.settings);
-      $scope.snapshot.created = new Date().getTime();
-      $scope.status.snapshotSaved = false;
+    $scope.generateArchiveName = function() {
+      $scope.archive.name = 'Query ' + $scope.settings.def.model.query + ' generated at ' + DateConv.strtotime('now');
+      $scope.archive.settings = angular.copy($scope.settings);
+      $scope.archive.created = new Date().getTime();
+      $scope.status.archiveSaved = false;
     };
 
     $scope.showGraph = function() {
       var queries = Graph.preParse($scope.settings);
-      $scope.generateSnapshotName();
+      $scope.generateArchiveName();
       $scope.status.isLoading = true;
       $scope.status.chartCounts = queries.charts.length;
       $scope.status.loadingPercent = '(0/' + $scope.status.chartCounts + ')';
@@ -157,15 +157,15 @@ angular.module('graphEsApp')
       Graph.get(queries, $scope.settings, $scope.addChart);
     };
 
-    $scope.saveAsSnapshot = function() {
-      $scope.snapshot.charts = $scope.charts;
-      Snapshot.save($scope.snapshot)
+    $scope.saveAsArchive = function() {
+      $scope.archive.charts = $scope.charts;
+      Archive.save($scope.archive)
         .success(function(data) {
-          $scope.status.snapshotSaved = true;
-          $scope.status.snapshotUrl = '/snapshot/' + data._id;
+          $scope.status.archiveSaved = true;
+          $scope.status.archiveUrl = '/archive/' + data._id;
         })
         .error(function() {
-          window.alert('Could not save the charts snapshot, try again!');
+          window.alert('Could not save the charts archive, try again!');
         });
     };
 
