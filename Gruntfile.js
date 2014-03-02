@@ -45,6 +45,7 @@ module.exports = function (grunt) {
       server: {
         files: [
           'app.js',
+          'config.js',
           'routes.js',
           'controllers/*.js',
           'controllers/**/*.js',
@@ -249,6 +250,7 @@ module.exports = function (grunt) {
           // flatten: true,
           cwd: '.',
           src: [
+            'config.js',
             'app.js',
             'routes.js',
             'controllers/*',

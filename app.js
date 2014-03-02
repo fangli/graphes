@@ -9,10 +9,15 @@ var  path = require('path');
 
 // Initial express
 var app = express();
-app.set('port', process.env.PORT || 3000);
+var config = require('./config');
+app.set('port', config.listen_port);
+
+app.use(express.cookieParser());
+app.use(express.session({ secret: config.cookie_secret }));
 
 // Handle ES requests
-require('./models/esproxy').configureESProxy(app, 'ES_SERVER', ES_PORT, 'ES_USER', 'ES_PASSWORD');
+require('./models/cas').configureCas(express, app, config.cas_url);
+require('./models/esproxy').configureESProxy(app, config.es_host, config.es_port, config.es_user, config.es_passwd);
 
 // Handle another requests
 app.use(express.urlencoded());
@@ -21,6 +26,7 @@ app.use(express.methodOverride());
 require('./controllers/profileController')(app);
 require('./controllers/listController')(app);
 require('./controllers/archiveController')(app);
+require('./controllers/casLoginController')(app);
 
 // Handler frontend app
 app.use(express.static(path.join(__dirname, 'public')));

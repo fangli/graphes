@@ -5,7 +5,8 @@
     "express": "~3.3.4",
     "jade": "~0.34.0",
     "mongodb": "latest",
-    "redis": "latest"
+    "redis": "latest",
+    "cas": "*"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

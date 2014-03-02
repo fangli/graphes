@@ -11,7 +11,11 @@ exports.findByName = function(req, res) {
   db.collection('archives', function(err, collection) {
     try {
       collection.findOne({'_id': new ObjectID.createFromHexString(name)}, function(err, item) {
-        res.send(JSON.parse(item['body']));
+          if (item) {
+            res.send(JSON.parse(item['body']));
+          } else {
+            res.send([]);
+          }
       });
     } catch(e) {
       res.send([]);
