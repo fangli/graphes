@@ -12,8 +12,12 @@ angular.module('graphEsApp')
         return adapter.preParse(settings);
       },
 
-      get: function(queries, settings, cb) {
-        return adapter.get(queries, settings, cb);
+      getOne: function(query, cb, params) {
+        return adapter.getOne(query, cb, params);
+      },
+
+      getAll: function(queries, cb) {
+        return adapter.getAll(queries, cb);
       },
 
       // params
@@ -43,6 +47,9 @@ angular.module('graphEsApp')
               text: params.title,
             },
             options: {
+              credits: {
+                  enabled: false,
+              },
               tooltip: {
                 crosshairs: true,
                 pointFormat: pointFormat,
@@ -87,6 +94,9 @@ angular.module('graphEsApp')
               text: params.title,
             },
             options: {
+              credits: {
+                  enabled: false,
+              },
               tooltip: {
                 pointFormat: pointFormat,
               },
@@ -118,6 +128,9 @@ angular.module('graphEsApp')
               text: params.title,
             },
             options: {
+              credits: {
+                  enabled: false,
+              },
               tooltip: {
                 crosshairs: true,
                 shared: true,
@@ -154,6 +167,9 @@ angular.module('graphEsApp')
               text: params.title,
             },
             options: {
+              credits: {
+                  enabled: false,
+              },
               tooltip: {
                 crosshairs: true,
                 shared: true,

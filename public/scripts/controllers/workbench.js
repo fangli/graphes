@@ -9,7 +9,6 @@ angular.module('graphEsApp')
     $scope.status.isLoading = false;
     $scope.status.archiveSaved = false;
     $scope.status.loadingPercent = '';
-    $scope.status.chartCounts = 0;
     $scope.status.periodTimerStart = null;
     $scope.status.periodTimerEnd = null;
     $scope.status.isShowTimerStart = false;
@@ -18,7 +17,7 @@ angular.module('graphEsApp')
     $scope.status.invalidPagePeriodEnd = false;
     $scope.isControlPanelHidden = false;
     $scope.archive = {};
-    $scope.charts = [];
+    $scope.charts = {total: 0, loaded: 0, data: {}};
 
     // $scope._tmpDimensions = {};
 
@@ -121,7 +120,7 @@ angular.module('graphEsApp')
       $location.path('/console');
     };
 
-    $scope.addChart = function(series) {
+    $scope.addChart = function(series, index) {
       var graphConfig = {
         title: '',
         yaxisTitle: $scope.settings.def.model.query,
@@ -129,14 +128,27 @@ angular.module('graphEsApp')
         graphType: $scope.settings.def.visualization.type,
         stacking: $scope.settings.def.visualization.stacking,
       };
-      $scope.charts.push(Graph.parseGraphConfig(graphConfig));
-      if ($scope.charts.length === $scope.status.chartCounts) {
+      $scope.charts.data[index] = Graph.parseGraphConfig(graphConfig);
+      $scope.charts.loaded += 1;
+      if ($scope.charts.loaded === $scope.charts.total) {
         $scope.status.loadingPercent = '';
         $scope.status.isLoading = false;
       } else {
-        $scope.status.loadingPercent = '(' + $scope.charts.length + '/' + $scope.status.chartCounts + ')';
+        $scope.status.loadingPercent = '(' + $scope.charts.loaded + '/' + $scope.charts.total + ')';
       }
       console.log(Graph.parseGraphConfig(graphConfig));
+    };
+
+    $scope.showGraph = function() {
+      var queries = Graph.preParse($scope.settings);
+      $scope.generateArchiveName();
+      $scope.status.isLoading = true;
+      $scope.charts = {total: queries.length, loaded: 0, data: {}};
+      $scope.status.loadingPercent = '(0/' + $scope.charts.total + ')';
+      $scope.isControlPanelHidden = true;
+      for (var i = queries.length - 1; i >= 0; i--) {
+        Graph.getOne(queries[i], $scope.addChart, i);
+      };
     };
 
     $scope.generateArchiveName = function() {
@@ -144,17 +156,6 @@ angular.module('graphEsApp')
       $scope.archive.settings = angular.copy($scope.settings);
       $scope.archive.created = new Date().getTime();
       $scope.status.archiveSaved = false;
-    };
-
-    $scope.showGraph = function() {
-      var queries = Graph.preParse($scope.settings);
-      $scope.generateArchiveName();
-      $scope.status.isLoading = true;
-      $scope.status.chartCounts = queries.charts.length;
-      $scope.status.loadingPercent = '(0/' + $scope.status.chartCounts + ')';
-      $scope.isControlPanelHidden = true;
-      $scope.charts = [];
-      Graph.get(queries, $scope.settings, $scope.addChart);
     };
 
     $scope.saveAsArchive = function() {

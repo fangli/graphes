@@ -13,9 +13,7 @@
 
   <div class="pull-right">
     <span>
-      Save current settings as
-        <button class="btn btn-sm btn-default">Workbench</button>
-        <button class="btn btn-sm btn-default">Dashboard</button>
+
     </span>
   </div>
 
@@ -36,9 +34,18 @@
 
 <div class="highlight">
   <h4>Graph Output {{ status.loadingPercent }}</h4>
+  <div class="row">
+    <div ng-show="(!status.isLoading) && charts.loaded && (!status.archiveSaved)" class="col-xs-12">
+      <a tooltip-popup-delay="500" tooltip="Click to rename" href="#" editable-text="archive.name">{{ archive.name }}</a>
+      <button tooltip-popup-delay="500" tooltip="Save all displayed charts as a archive and you can share it later" ng-click="saveAsArchive()" class="btn btn-xs btn-default"><i class="fa fa-floppy-o"></i> Save Result</button>
+    </div>
+    <div ng-show="(!status.isLoading) && charts.loaded && (status.archiveSaved)" class="col-xs-12">
+      <p class="text-success">All following charts have been saved as <a ng-href="{{ status.archiveUrl }}">{{ status.archiveUrl }}</a></p>
+    </div>
+  </div>
   <hr>
   <div class="row">
-    <div ng-repeat="chart in charts">
+    <div ng-repeat="chart in charts.data">
       <highchart config="chart" class="col-xs-12"></highchart>
     </div>
     <div ng-show="status.isLoading" class="col-xs-12">

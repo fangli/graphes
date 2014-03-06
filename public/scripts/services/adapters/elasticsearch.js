@@ -204,9 +204,20 @@ angular.module('graphEsApp')
 
     return {
 
+      injectTime: function(ori_queries) {
+        if Object.isObject(ori_queries) {
+          ori_queries = [ori_queries];
+        }
+        ori_queries.forEach(function(ori_query){
+
+        })
+      },
+
       preParse: function(settings) {
         var filterGroup = [];
         var assembledSingle = [];
+
+        // Split all dimensions from the raw object
         for (var k = settings.def.model.dimensions.length - 1; k >= 0; k--) {
           var dimension = settings.def.model.dimensions[k];
           if (dimension.enabled) {
@@ -248,6 +259,7 @@ angular.module('graphEsApp')
         };
         // End prepare query template
 
+        // Combine all series
         var charts = [];
         // For each chart
         for (var i = filterGroup.length - 1; i >= 0; i--) {
@@ -284,12 +296,11 @@ angular.module('graphEsApp')
           charts.push(theChart);
         }
 
+        // Generate indices list
         var oriStart = DateConv.strtotime(settings.def.period.start).getTime();
         var oriEnd = DateConv.strtotime(settings.def.period.end).getTime();
         var oriOffset = settings.def.period.offset * 1000;
-
         var indices = resolveIndices(oriStart, oriEnd, 'days', settings.pattern);
-
         if (settings.def.period.compare) {
           var indicesWithOffset = resolveIndices(oriStart + oriOffset, oriEnd + oriOffset, 'days', settings.pattern);
           for (var n = indicesWithOffset.length - 1; n >= 0; n--) {
@@ -298,28 +309,30 @@ angular.module('graphEsApp')
             }
           }
         }
-
         indices = indices.join(',');
 
+        // Get chart type
         var type = (settings.def.visualization.type === 'range')? 'range': settings.def.visualization.chartValue;
-        return {indices: indices, charts: charts, seriesType: type};
+
+        var ret = [];
+        for (var k = charts.length - 1; k >= 0; k--) {
+          ret.push({
+            indices: indices,
+            chart: charts[k],
+            seriesType: type,
+            offset: settings.def.period.offset * 1000,
+          });
+        }
+        return ret;
       },
 
-      get: function(queries, settings, cb) {
-        var pro = [];
-        for (var i = queries.charts.length - 1; i >= 0; i--) {
-          (function(a) {
-            pro[a] = makeRequest(queries.indices, queries.charts[a]);
-            pro[a].then(
-              function(data) {
-                cb(postParse(data, queries.seriesType, settings.def.period.offset * 1000));
-              },
-              function() {
-                window.alert('Error occured when retrieving data!');
-              }
-            );
-          })(i);
-        }
+      getOne: function(query, cb, param) {
+        var pro = makeRequest(query.indices, query.chart);
+        pro.then(function(data) {
+          cb(postParse(data, query.seriesType, query.offset), param);
+        }, function() {
+          window.alert('Error occured when retrieving data!');
+        });
       },
 
     };

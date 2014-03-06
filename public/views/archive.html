@@ -7,7 +7,7 @@
 
 
 <div class="highlight">
-  <div ng-show="chartData.charts.length > 0" class="row">
+  <div ng-show="chartData.name" class="row">
     <div class="col-xs-12">
       <h4>{{ chartData.name }}</h4>
       <p class="alert alert-warning">
@@ -19,7 +19,7 @@
       </p>
       <hr>
       <div class="row">
-        <div ng-repeat="chart in chartData.charts">
+        <div ng-repeat="chart in chartData.charts.data">
           <highchart config="chart" class="col-xs-12"></highchart>
         </div>
       </div>

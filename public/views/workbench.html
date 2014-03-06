@@ -344,9 +344,7 @@
 
   <div class="pull-right">
     <span>
-      Save current settings as
-        <button class="btn btn-sm btn-default">Workbench</button>
-        <button class="btn btn-sm btn-default">Dashboard</button>
+
     </span>
   </div>
 
@@ -369,19 +367,60 @@
 <div class="highlight">
   <h4>Graph Output {{ status.loadingPercent }}</h4>
   <div class="row">
-    <div ng-show="(!status.isLoading) && charts.length && (!status.archiveSaved)" class="col-xs-12">
-      <a tooltip-popup-delay="500" tooltip="Click to edit the title of archive" href="#" editable-text="archive.name">{{ archive.name }}</a>
-      <button tooltip-popup-delay="500" tooltip="Save all displayed charts as a archive and you can share it later" ng-click="saveAsArchive()" ng-show="!status.isLoading && charts.length" class="btn btn-xs btn-success"><i class="fa fa-floppy-o"></i> Save and Share</button>
+    <div ng-show="(!status.isLoading) && charts.loaded && (!status.archiveSaved)" class="col-xs-12">
+      <a tooltip-popup-delay="500" tooltip="Click to rename" href="#" editable-text="archive.name">{{ archive.name }}</a>
+      <button tooltip-popup-delay="500" tooltip="Save all displayed charts as a archive and you can share it later" ng-click="saveAsArchive()" class="btn btn-xs btn-default"><i class="fa fa-floppy-o"></i> Save Result</button>
     </div>
-    <div ng-show="(!status.isLoading) && charts.length && (status.archiveSaved)" class="col-xs-12">
+    <div ng-show="(!status.isLoading) && charts.loaded && (status.archiveSaved)" class="col-xs-12">
       <p class="text-success">All following charts have been saved as <a ng-href="{{ status.archiveUrl }}">{{ status.archiveUrl }}</a></p>
     </div>
   </div>
   <hr>
-  <div class="row">
-    <div ng-repeat="chart in charts">
-      <highchart config="chart" class="col-xs-12"></highchart>
+    <div ng-repeat="(idx, chart) in charts.data">
+      <div class="row">
+        <div class="col-xs-11">
+          <highchart config="chart" class="col-xs-12"></highchart>
+        </div>
+        <div class="col-xs-1" style="padding-left:0px">
+          <div class="row">
+            <div class="col-xs-12">
+              <span><strong>No. {{ idx*1 + 1 }}</strong></span>
+              <hr>
+            </div>
+            <div class="col-xs-12">
+              <p> <button class="btn btn-xs btn-default">Refresh</button> </p>
+              <p> <button class="btn btn-xs btn-default">Source</button> </p>
+              <p><hr></p>
+              <p>
+                <div class="radio">
+                  <label><input type="radio" name="optionsRadios" value="option1" checked>Area</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="optionsRadios" value="option1">Line</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="optionsRadios" value="option1">Column</label>
+                </div>
+              </p>
+              <p><hr></p>
+              <p>
+                <div class="radio">
+                  <label><input type="radio" name="optionsRadios" value="option1" checked>Area</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="optionsRadios" value="option1">Line</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="optionsRadios" value="option1">Column</label>
+                </div>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p>&nbsp;</p>
     </div>
+  <div class="row">
     <div ng-show="status.isLoading" class="col-xs-12">
       <img src="images/loading_line.gif">
     </div>
