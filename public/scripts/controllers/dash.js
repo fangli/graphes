@@ -2,273 +2,116 @@
 
 angular.module('graphEsApp')
 
-  .controller('DashCtrl', function($scope, Head) {
+  .controller('DashCtrl', function($scope, $timeout, Head, Graph) {
     Head.setTitle('Dashboard');
 
-    $scope.defaultChart = {options: {credits: {enabled: false, }, exporting: {enabled: false, }, }, title: {text: ''}, loading: true, };
+    $scope.defaultChart = {'data': {options: {credits: {enabled: false, }, exporting: {enabled: false, }, }, title: {text: ''}, loading: true, }};
 
-    $scope.chart = {
-             //This is not a highcharts object. It just looks a little like one!
-             options: {
-                plotOptions :{
-                    line: {
-                        marker: {
-                          enabled: false
-                        },
-                    },
-                },
-                credits: {
-                    enabled: false,
-                },
-                legend: false,
-                exporting: {
-                    enabled: false,
-                },
-                 //This is the Main Highcharts chart config. Any Highchart options are valid here.
-                 //will be ovverriden by values specified below.
-                 chart: {
-                     type: 'line'
-                 },
-                 tooltip: {
-                     style: {
-                         fontWeight: 'bold'
-                     }
-                 },
-             },
+    $scope.isEditing = 0;
 
-             //The below properties are watched separately for changes.
+    $scope.dashSettings = {boxes: []};
 
-             //Series object - a list of series using normal highcharts series options.
-             series: [{
-                 data: [10, 15, 12, 8, 7, 23 ,13 ,15 ,16 ,17, 13, 15,10, 15, 12, 8, 7, 23 ,13 ,15 ,16 ,17, 13, 15 ]
-             }],
-             //Title configuration
-             title: {
-                 text: ''
-             },
-             //Boolean to control showng loading status on chart
-             loading: false,
-             //Configuration for the xAxis. Currently only one x axis can be dynamically controlled.
-             //properties currentMin and currentMax provied 2-way binding to the chart's maximimum and minimum
-             yAxis: {
-                title: null,
-                gridLineWidth: 0,
-             },
-             xAxis: {
-             },
-             //Whether to use HighStocks instead of HighCharts. Defaults to false.
-             useHighStocks: false
-             }
+    $scope.flushChartSize = function() {
+        $timeout(function() {
+            window.dispatchEvent(new Event('resize'));
+        }, 1);
+    }
 
+    $scope.bindChart = function(series, chart) {
 
-    $scope.dashSettings = {
-        'name': 'Default Dashboard',
-        'description': 'the test dash',
-        'created': 1370292929,
-        'boxes': [
-            {
-                'name': 'Farm dash',
-                'created': 1381928374,
-                'description': 'the dash for farm',
-                'groups': [
-                    {
-                        'name': 'tr',
-                        'description': 'the tr platform for farm tr',
-                        'chartHeight': '120px',
-                        'chartWidth': '3',
-                        'charts': [
-                            {
-                                'name': 'loadAvg',
-                                'chartData': null,
-                                'chartQuery': {},
-                                'style': {
-                                    'type': 'area',
-                                    'stacking': '',
-                                }
-                            },
-                            {
-                                'name': 'loadAvg',
-                                'chartData': null,
-                                'chartQuery': {},
-                                'style': {
-                                    'type': 'area',
-                                    'stacking': '',
-                                }
-                            },
-                            {
-                                'name': 'loadAvg',
-                                'chartData': null,
-                                'chartQuery': {},
-                                'style': {
-                                    'type': 'area',
-                                    'stacking': '',
-                                }
-                            },
-                            {
-                                'name': 'loadAvg',
-                                'chartData': null,
-                                'chartQuery': {},
-                                'style': {
-                                    'type': 'area',
-                                    'stacking': '',
-                                }
-                            },
-                            {
-                                'name': 'loadAvg',
-                                'chartData': null,
-                                'chartQuery': {},
-                                'style': {
-                                    'type': 'area',
-                                    'stacking': '',
-                                }
-                            },
-                            {
-                                'name': 'loadAvg',
-                                'chartData': null,
-                                'chartQuery': {},
-                                'style': {
-                                    'type': 'area',
-                                    'stacking': '',
-                                }
-                            },
-                            {
-                                'name': 'loadAvg',
-                                'chartData': null,
-                                'chartQuery': {},
-                                'style': {
-                                    'type': 'area',
-                                    'stacking': '',
-                                }
-                            },
-                            {
-                                'name': 'loadAvg',
-                                'chartData': null,
-                                'chartQuery': {},
-                                'style': {
-                                    'type': 'area',
-                                    'stacking': '',
-                                }
-                            },
-                            {
-                                'name': 'loadAvg',
-                                'chartData': null,
-                                'chartQuery': {},
-                                'style': {
-                                    'type': 'area',
-                                    'stacking': '',
-                                }
-                            },
-                        ]
-                    },
-                    {
-                        'name': 'ae',
-                        'description': 'the ae platform for farm ae',
-                        'chartHeight': '120px',
-                        'chartWidth': '4',
-                        'charts': [
-                            {
-                                'name': 'system load',
-                                'chartData': null,
-                                'chartQuery': {},
-                                'style': {
-                                    'type': 'area',
-                                    'stacking': '',
-                                }
-                            },
-                            {
-                                'name': 'system load',
-                                'chartData': null,
-                                'chartQuery': {},
-                                'style': {
-                                    'type': 'area',
-                                    'stacking': '',
-                                }
-                            },
-                            {
-                                'name': 'system load',
-                                'chartData': null,
-                                'chartQuery': {},
-                                'style': {
-                                    'type': 'area',
-                                    'stacking': '',
-                                }
-                            },
-                            {
-                                'name': 'system load',
-                                'chartData': null,
-                                'chartQuery': {},
-                                'style': {
-                                    'type': 'area',
-                                    'stacking': '',
-                                }
-                            },
-                            {
-                                'name': 'system load',
-                                'chartData': null,
-                                'chartQuery': {},
-                                'style': {
-                                    'type': 'area',
-                                    'stacking': '',
-                                }
-                            },
-                            {
-                                'name': 'system load',
-                                'chartData': null,
-                                'chartQuery': {},
-                                'style': {
-                                    'type': 'area',
-                                    'stacking': '',
-                                }
-                            },
-                            {
-                                'name': 'system load',
-                                'chartData': null,
-                                'chartQuery': {},
-                                'style': {
-                                    'type': 'area',
-                                    'stacking': '',
-                                }
-                            },
-                            {
-                                'name': 'system load',
-                                'chartData': null,
-                                'chartQuery': {},
-                                'style': {
-                                    'type': 'area',
-                                    'stacking': '',
-                                }
-                            },
-                            {
-                                'name': 'system load',
-                                'chartData': null,
-                                'chartQuery': {},
-                                'style': {
-                                    'type': 'area',
-                                    'stacking': '',
-                                }
-                            },
-                        ]
-                    },
-                ]
-            },
-        ]
+      var graphConfig = {
+        title: '',
+        yaxisTitle: chart.chartQuery.mainQuery,
+        series: series,
+        graphType: chart.chartQuery.graphType,
+        stacking: chart.chartQuery.stacking,
+      };
+
+      console.log(graphConfig);
+
+      chart.chartData = {
+        data: Graph.parseGraphConfig(graphConfig, true),
+        series: series,
+        chart: chart,
+      };
+    };
+
+    $scope.loadSingle = function(chart) {
+      var query = Graph.injectTimetoBasicQueries(angular.copy(chart.chartQuery));
+      Graph.getOne(query, $scope.bindChart, chart);
+    }
+
+    $scope.saveSourceAndRefresh = function(group, index) {
+        $timeout(function(){
+            group.charts[index].isShowingSource = false;
+            group.charts[index].chartData = angular.copy($scope.defaultChart);
+            $scope.loadSingle(group.charts[index]);
+        }, 5);
     }
 
     $scope.loadGroupData = function (group) {
-        angular.forEach(group.charts, function(chart, _id) {
-            if (chart.chartData === null) {
-                chart.chartData = $scope.defaultChart;
+        for (var i = group.charts.length - 1; i >= 0; i--) {
+            if (group.charts[i].chartData === null) {
+                group.charts[i].chartData = angular.copy($scope.defaultChart);
+                $scope.loadSingle(group.charts[i]);
             } else {
 
             }
-        });
+        };
     };
 
+    $scope.addGroup = function(box) {
+        if (box.newGroup.name) {
+            box.groups.push(angular.copy(box.newGroup));
+            box.newGroup = {charts: [], chartWidth: '3', chartHeight: 120};
+        }
+    };
+
+    $scope.addChart = function(group) {
+        if (group.newChart.name) {
+            group.newChart.chartQuery = angular.fromJson(group.newChart.chartQuery);
+            group.newChart.chartData = angular.copy($scope.defaultChart);
+            var chartIndex = group.charts.push(angular.copy(group.newChart)) - 1;
+            $scope.loadSingle(group.charts[chartIndex]);
+            group.newChart = {name: '', chartData: null, style: 'default', description: ''};
+        }
+    };
+
+    $scope.addBox = function() {
+        if ($scope.dashSettings.newBox.name) {
+            $scope.dashSettings.boxes.push(angular.copy($scope.dashSettings.newBox));
+            $scope.dashSettings.newBox = {name: '', description: '', style: 'default', groups:[]};
+        }
+    };
+
+    $scope.deleteBox = function(index) {
+        $scope.dashSettings.boxes.splice(index, 1);
+    }
+
+    $scope.deleteGroup = function(box, index) {
+        box.groups.splice(index, 1);
+    }
+
+    $scope.deleteChart = function(group, index) {
+        group.charts.splice(index, 1);
+    }
+
+    $scope.toggleSource = function(group, index) {
+        group.charts[index].isShowingSource = !group.charts[index].isShowingSource;
+        if (!group.charts[index].isShowingSource) {
+            $scope.saveSourceAndRefresh(group, index);
+        }
+        $scope.flushChartSize();
+    }
+
     $scope.activeTab = function(group) {
-        window.dispatchEvent(new Event('resize'));
+        $scope.flushChartSize();
         $scope.loadGroupData(group);
     };
-        
+
+    $scope.$watch('isEditing', function() {
+        $scope.flushChartSize();
+    });
 
   }
 );

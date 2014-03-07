@@ -135,21 +135,21 @@
             </div>
             <div class="col-xs-2">
               <label>Time Field</label>
-              <input type="text" class="form-control" placeholder="The default field of datetime" ng-model="currentProfile.def.visualization.timeField">
+              <input type="text" class="form-control" placeholder="The default field of datetime" ng-model="currentProfile.def.period.timeField">
             </div>
             <div class="col-xs-3">
               <div class="input-group" style="margin: 2px;">
                 <span class="input-group-addon" style="width: 90px;">
-                  <label><input ng-model="currentProfile.def.visualization.pointIntervalOpt" value="interval" type="radio" name="downsampleOption"> Interval</label>
+                  <label><input ng-model="currentProfile.def.period.pointIntervalOpt" value="interval" type="radio" name="downsampleOption"> Interval</label>
                 </span>
-                <input style="text-align:right;" type="text" class="form-control" ng-model="currentProfile.def.visualization.pointInterval">
+                <input style="text-align:right;" type="text" class="form-control" ng-model="currentProfile.def.period.pointInterval">
               </div><!-- /input-group -->
 
               <div class="input-group" style="margin: 2px;">
                 <span class="input-group-addon" style="width: 90px;">
-                  <label><input ng-model="currentProfile.def.visualization.pointIntervalOpt" value="points" type="radio" name="downsampleOption"> Points</label>
+                  <label><input ng-model="currentProfile.def.period.pointIntervalOpt" value="points" type="radio" name="downsampleOption"> Points</label>
                 </span>
-                <input style="text-align:right;" type="text" min="1" class="form-control" ng-model="currentProfile.def.visualization.pointPoints">
+                <input style="text-align:right;" type="text" min="1" class="form-control" ng-model="currentProfile.def.period.pointPoints">
               </div><!-- /input-group -->
 
             </div>

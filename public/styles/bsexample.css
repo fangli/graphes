@@ -305,5 +305,13 @@
   background-color: #f0f7fd;
   border-color: #d0e3f0;
 }
+.bs-callout-default {
+  background-color: #fff;
+  border-color: #f7f7f9;
+}
+.bs-callout-success {
+  background-color: #f3f9ef;
+  border-color: #d6e9c6;
+}
 
 $scope.charts = {total: 0, loaded: 0, data: {}};

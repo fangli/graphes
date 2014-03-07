@@ -32,11 +32,6 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider) {
         controller: 'ProfileCtrl',
       })
 
-      .when('/console', {
-        templateUrl: 'views/console.html',
-        controller: 'ConsoleCtrl',
-      })
-
       .when('/about', {
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl',
@@ -53,6 +48,8 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider) {
 
   });
 
-app.run(function(editableOptions) {
+app.run(function(editableOptions, editableThemes) {
+  editableThemes.bs3.inputClass = 'input-sm';
+  editableThemes.bs3.buttonsClass = 'btn-sm';
   editableOptions.theme = 'bs3';
 });

@@ -1,6 +1,27 @@
+<div ng-show="isEditing" class="row">
+  <div class="col-xs-12">
+    <div class="alert alert-warning">
+      <span style="margin-top: -5px;" class="pull-right"><button class="btn btn-sm btn-success"><i class="fa fa-floppy-o"></i> Save</button></span>
+      <strong>You are in Edit Mode, </strong>
+      click save button on the right side after you get things done.
+    </div>
+  </div>
+</div>
+
+
 <div class="row">
   <div class="col-xs-12">
-    <h2>{{ dashSettings.name }} <small>{{ dashSettings.description }}</small></h2>
+    <h2>
+      <span ng-show="!isEditing">
+        <span style="text-transform: uppercase;text-shadow: 1px 1px 1px #999999;">{{ dashSettings.name }}</span>
+        <small style="text-transform: uppercase;">{{ dashSettings.description }}</small>
+      </span>
+      <span ng-show="isEditing">
+        <a style="text-transform: uppercase;text-shadow: 1px 1px 1px #999999;" href="#" editable-text="dashSettings.name">{{ dashSettings.name || 'Dashboard Title' }}</a>
+        <small style="text-transform: uppercase;"><a href="#" editable-text="dashSettings.description">{{ dashSettings.description || 'Description' }}</a></small>
+      </span>
+      <button ng-show="!isEditing" ng-model="isEditing" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" class="btn btn-xs btn-default"><i class="fa fa-pencil-square-o"></i> Edit Mode</button>
+    </h2>
     <hr>
   </div>
 </div>
@@ -9,18 +30,131 @@
 
 <div ng-repeat="box in dashSettings.boxes" class="col-xs-12">
 
-  <div class="panel panel-default">
+  <div class="panel panel-{{ box.style }}">
     <div class="panel-heading">
-      <h3 class="panel-title">{{ box.name }}</h3>
+      <h3 class="panel-title">
+        <span ng-show="!isEditing">
+          <span style="text-transform: uppercase;">{{ box.name }}</span> 
+          <small class="text-muted">{{ box.description }}</small>
+        </span>
+        <span ng-show="isEditing">
+          <span class="pull-right"><a href ng-click="deleteBox($index)"><i class="fa fa-trash-o"></i></a></span>
+          <span style="text-transform: uppercase;"><a href="#" editable-text="box.name">{{ box.name || 'Empty' }}</a></span> 
+          <small class="text-muted"><a href="#" editable-text="box.description">{{ box.description || 'Empty' }}</a></small>
+        </span>
+      </h3>
     </div>
     <div class="panel-body">
       <tabset>
-        <tab select="activeTab(group)" ng-repeat="group in box.groups" heading="{{ group.name }}">
+        <tab active="$first" select="activeTab(group)" ng-repeat="group in box.groups">
+          <tab-heading>
+            <span ng-show="!isEditing">{{ group.name }}</span>
+            <span ng-show="isEditing">
+              <a href="#" buttons="no" editable-text="group.name">{{ group.name || 'Empty' }}</a> <a href ng-click="deleteGroup(box, $index)"><i class="fa fa-trash-o"></i></a>
+            </span>
+          </tab-heading>
           <div class="row">
+
             <div ng-repeat="chart in group.charts" class="col-xs-{{ group.chartWidth }}">
-              <div class="bs-callout bs-callout-info">
-                <h4>{{ chart.name }}</h4>
-                <highchart style="width:100%;height: {{ group.chartHeight }}" config="chart.chartData"></highchart>
+              <div class="bs-callout bs-callout-{{ chart.style }}">
+                <h4>
+                  <span ng-show="!isEditing">{{ chart.name }}</span>
+                  <span ng-show="isEditing">
+                    <a href="#" editable-text="chart.name">{{ chart.name || 'Empty' }}</a>&nbsp;
+                    <a href ng-click="toggleSource(group, $index)"><i class="fa fa-pencil-square-o"></i></a>&nbsp;
+                    <a href ng-click="deleteChart(group, $index)"><i class="fa fa-trash-o"></i></a>
+                  </span>
+                </h4>
+                <highchart ng-show="(!isEditing) || (!chart.isShowingSource)" style="width:100%;height: {{ group.chartHeight }}px" config="chart.chartData.data"></highchart>
+                <span ng-show="(isEditing) && (chart.isShowingSource)">
+                  <textarea ng-jsonobj rows="7" class="form-control" ng-model="chart.chartQuery"></textarea>
+                </span>
+              </div>
+            </div>
+
+            <div ng-show="isEditing" class="col-xs-{{ group.chartWidth }}">
+              <div class="bs-callout highlight">
+                <h4 class="text-muted">NEW CHART</h4>
+                <form role="form" ng-submit="addChart(group)">
+                  <div class="row">
+                    <div class="col-xs-6">
+                      <select ng-model="group.newChart.style" class="form-control">
+                        <option value="default">Default</option>
+                        <option value="success">Green</option>
+                        <option value="info">Blue</option>
+                        <option value="warning">Yellow</option>
+                        <option value="danger">Red</option>
+                      </select>
+                    </div>
+                    <div class="col-xs-6">
+                      <input ng-init="group.newChart = {style: 'default', chartData: null}" type="text" class="form-control" placeholder="Title" ng-model="group.newChart.name" required>
+                    </div>
+                    <div style="margin-top:4px;" class="col-xs-12">
+                      <input type="text" class="form-control" placeholder="Description" ng-model="group.newChart.description">
+                    </div>
+                    <div style="margin-top:4px;" class="col-xs-12">
+                      <textarea ng-model="group.newChart.chartQuery" placeholder="Chart query string here" class="form-control" rows="2" required></textarea>
+                    </div>
+                    <div style="margin-top:4px;" class="col-xs-12">
+                      <span class="pull-right">
+                        <button type="submit" class="btn btn-xs btn-success">Add</button>
+                      </span>
+                    </div>
+                  </div> <!-- row -->
+                </form>
+              </div>
+            </div>
+
+          </div>
+        </tab>
+        <tab ng-show="isEditing" heading="+">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="bs-callout">
+                <h4>New Group</h4>
+                <hr>
+                <form role="form" ng-submit="addGroup(box, box.newGroup)">
+
+                  <div class="row">
+                    <div class="col-xs-3">
+                      <div class="form-group">
+                        <label>Group Name <small class="text-muted">*</small></label>
+                        <input ng-init="box.newGroup = {charts: [], chartWidth: '3', chartHeight: 120}" ng-model="box.newGroup.name" type="text" class="form-control" placeholder="Enter new group name" required>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-xs-4">
+                      <div class="form-group">
+                        <label>Description</label>
+                        <input ng-model="box.newGroup.description" type="text" class="form-control" placeholder="Enter the description">
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="row">
+                    <div class="form-group col-xs-2">
+                      <label>Height <small class="text-muted">for each chart</small></label>
+                      <div class="input-group">
+                        <input ng-model="box.newGroup.chartHeight" type="number" class="form-control" placeholder="The height of each chart">
+                        <span class="input-group-addon">px</span>
+                      </div>
+                    </div>
+                    <div class="form-group col-xs-2">
+                      <label>Width <small class="text-muted">for each chart</small></label>
+                      <select ng-model="box.newGroup.chartWidth" class="form-control">
+                        <option value="2">1/6 Screen</option>
+                        <option value="3">1/4 Screen</option>
+                        <option value="4">1/3 Screen</option>
+                        <option value="6">1/2 Screen</option>
+                        <option value="12">Full Width</option>
+                      </select>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-xm btn-success">Add</button>
+                </form>
+
               </div>
             </div>
           </div>
@@ -31,7 +165,52 @@
 
 </div> <!-- A box -->
 
+<div ng-show="isEditing" class="col-xs-12">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title" style="text-transform: uppercase;"><span class="text-muted">NEW BOX</span></h3>
+    </div>
+    <div class="panel-body">
+      <form role="form" ng-submit="addBox()">
 
+        <div class="row">
+          <div class="col-xs-3">
+            <div class="form-group">
+              <label>Box Title <small class="text-muted">*</small></label>
+              <input ng-init="dashSettings.newBox = {groups:[], style:'default'}" ng-model="dashSettings.newBox.name" type="text" class="form-control" placeholder="Enter new box name" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-4">
+            <div class="form-group">
+              <label>Description</label>
+              <input ng-model="dashSettings.newBox.description" type="text" class="form-control" placeholder="Enter the description">
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-xs-3">
+            <div class="form-group">
+              <label>Box Style</label>
+              <select ng-model="dashSettings.newBox.style" class="form-control">
+                <option value="default">Default</option>
+                <option value="success">Green</option>
+                <option value="info">Blue</option>
+                <option value="warning">Yellow</option>
+                <option value="danger">Red</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-success">Add</button>
+      </form>
+    </div>
+  </div>
+</div>
 
 
 

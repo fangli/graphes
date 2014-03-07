@@ -82,23 +82,18 @@ angular.module('graphEsApp')
       return result;
     };
 
-    var addComparisonSeries = function(charts, timeField, config) {
-      if (config.compare === true) {
-
-        for (var i = charts.length - 1; i >= 0; i--) {
-
-          var sNames = [];
-          for(var k in charts[i].facets) { sNames.push(k); }
-
-          for (var j in sNames) {
-            charts[i].facets['Compare:' + sNames[j]] = angular.copy(charts[i].facets[sNames[j]]);
-            var filterSlice = charts[i].facets['Compare:' + sNames[j]].facet_filter.fquery.query.filtered.filter.bool.must[0].range[timeField];
-              filterSlice.from = DateConv.strtotime(config.start).getTime() + (config.offset * 1000);
-              filterSlice.to = DateConv.strtotime(config.end).getTime() + (config.offset * 1000);
-          }
+    var addComparisonSeries = function(chart, period) {
+      if (period.compare === true) {
+        var sNames = [];
+        for(var k in chart.facets) { sNames.push(k); }
+        for (var j in sNames) {
+          chart.facets['Compare:' + sNames[j]] = angular.copy(chart.facets[sNames[j]]);
+          var filterSlice = chart.facets['Compare:' + sNames[j]].facet_filter.fquery.query.filtered.filter.bool.must[0].range[period.timeField];
+            filterSlice.from = DateConv.strtotime(period.start).getTime() + (period.offset * 1000);
+            filterSlice.to = DateConv.strtotime(period.end).getTime() + (period.offset * 1000);
         }
       }
-      return charts;
+      return chart;
     };
 
     var getRealQuery = function(pattern, replacement) {
@@ -147,7 +142,7 @@ angular.module('graphEsApp')
           singleSeries.name = seriesName;
           for (var i = 0; i < data.facets[seriesName].entries.length; i++) {
             if (seriesName.substr(0, 8) === 'Compare:') {
-              singleSeries.data.push([data.facets[seriesName].entries[i].time - offset, data.facets[seriesName].entries[i].mean, data.facets[seriesName].entries[i].max]);
+              singleSeries.data.push([data.facets[seriesName].entries[i].time - offset * 1000, data.facets[seriesName].entries[i].mean, data.facets[seriesName].entries[i].max]);
             } else {
               singleSeries.data.push([data.facets[seriesName].entries[i].time, data.facets[seriesName].entries[i].mean, data.facets[seriesName].entries[i].max]);
             }
@@ -160,7 +155,7 @@ angular.module('graphEsApp')
           singleSeries.name = seriesName;
           for (var i = 0; i < data.facets[seriesName].entries.length; i++) {
             if (seriesName.substr(0, 8) === 'Compare:') {
-              singleSeries.data.push([data.facets[seriesName].entries[i].time - offset, data.facets[seriesName].entries[i][seriesType]]);
+              singleSeries.data.push([data.facets[seriesName].entries[i].time - offset * 1000, data.facets[seriesName].entries[i][seriesType]]);
             } else {
               singleSeries.data.push([data.facets[seriesName].entries[i].time, data.facets[seriesName].entries[i][seriesType]]);
             }
@@ -189,11 +184,28 @@ angular.module('graphEsApp')
       return indices;
     };
 
-    var getPointInterval = function(start, end, interval, points, option) {
-      if (option === 'interval') {
-        return interval;
+    var getIndices = function(period, pattern) {
+      var oriStart = DateConv.strtotime(period.start).getTime();
+      var oriEnd = DateConv.strtotime(period.end).getTime();
+      var oriOffset = period.offset * 1000;
+      var indices = resolveIndices(oriStart, oriEnd, 'days', pattern);
+      if (period.compare) {
+        var indicesWithOffset = resolveIndices(oriStart + oriOffset, oriEnd + oriOffset, 'days', pattern);
+        for (var n = indicesWithOffset.length - 1; n >= 0; n--) {
+          if (indices.indexOf(indicesWithOffset[n]) === -1) {
+            indices.push(indicesWithOffset[n]);
+          }
+        }
+      }
+      indices = indices.join(',');
+      return indices;
+    };
+
+    var getPointInterval = function(period) {
+      if (period.pointIntervalOpt === 'interval') {
+        return period.pointInterval;
       } else {
-        var interv = Math.round(((end - start) / 1000) / points);
+        var interv = Math.round(((DateConv.strtotime(period.end).getTime() - DateConv.strtotime(period.start).getTime()) / 1000) / period.pointPoints);
         if (interv === 0) {
           return '1s';
         } else {
@@ -204,16 +216,31 @@ angular.module('graphEsApp')
 
     return {
 
-      injectTime: function(ori_queries) {
-        if Object.isObject(ori_queries) {
-          ori_queries = [ori_queries];
+      injectTimetoBasicQueries: function(oriQueries) {
+        var isArray = true;
+        if (Object.isObject(oriQueries)) {
+          isArray = false;
+          oriQueries = [oriQueries];
         }
-        ori_queries.forEach(function(ori_query){
-
-        })
+        oriQueries.forEach(function(query){
+          for(var i in query.chart.facets) {
+            query.chart.facets[i].date_histogram.interval = getPointInterval(query.period);
+            query.chart.facets[i].facet_filter.fquery.query.filtered.filter.bool.must[0].range[query.period.timeField] = {
+                'from': DateConv.strtotime(query.period.start).getTime(),
+                'to': DateConv.strtotime(query.period.end).getTime(),
+              };
+          }
+          query.indices = getIndices(query.period, query.pattern);
+          query.chart = addComparisonSeries(query.chart, query.period);
+        });
+        if (isArray) {
+          return oriQueries;
+        } else {
+          return oriQueries[0];
+        }
       },
 
-      preParse: function(settings) {
+      getBasicQueries: function(settings) {
         var filterGroup = [];
         var assembledSingle = [];
 
@@ -245,18 +272,8 @@ angular.module('graphEsApp')
         } else {
           seriesTemplate.date_histogram.value_script = settings.def.visualization.valueField;
         }
-        seriesTemplate.date_histogram.interval = getPointInterval(
-          DateConv.strtotime(settings.def.period.start).getTime(),
-          DateConv.strtotime(settings.def.period.end).getTime(),
-          settings.def.visualization.pointInterval,
-          settings.def.visualization.pointPoints,
-          settings.def.visualization.pointIntervalOpt
-        );
+
         seriesTemplate.facet_filter.fquery.query.filtered.query.query_string.query = settings.def.model.query;
-        seriesTemplate.facet_filter.fquery.query.filtered.filter.bool.must[0].range[settings.def.visualization.timeField] = {
-          'from': DateConv.strtotime(settings.def.period.start).getTime(),
-          'to': DateConv.strtotime(settings.def.period.end).getTime(),
-        };
         // End prepare query template
 
         // Combine all series
@@ -288,28 +305,12 @@ angular.module('graphEsApp')
           charts.push(singleChart);
         } // End chart
 
-        charts = addComparisonSeries(charts, settings.def.visualization.timeField, settings.def.period);
-
         if (charts.length === 0) {
           var theChart = angular.copy(esQueryStr);
           theChart.facets.Main = angular.copy(seriesTemplate);
           charts.push(theChart);
         }
 
-        // Generate indices list
-        var oriStart = DateConv.strtotime(settings.def.period.start).getTime();
-        var oriEnd = DateConv.strtotime(settings.def.period.end).getTime();
-        var oriOffset = settings.def.period.offset * 1000;
-        var indices = resolveIndices(oriStart, oriEnd, 'days', settings.pattern);
-        if (settings.def.period.compare) {
-          var indicesWithOffset = resolveIndices(oriStart + oriOffset, oriEnd + oriOffset, 'days', settings.pattern);
-          for (var n = indicesWithOffset.length - 1; n >= 0; n--) {
-            if (indices.indexOf(indicesWithOffset[n]) === -1) {
-              indices.push(indicesWithOffset[n]);
-            }
-          }
-        }
-        indices = indices.join(',');
 
         // Get chart type
         var type = (settings.def.visualization.type === 'range')? 'range': settings.def.visualization.chartValue;
@@ -317,10 +318,13 @@ angular.module('graphEsApp')
         var ret = [];
         for (var k = charts.length - 1; k >= 0; k--) {
           ret.push({
-            indices: indices,
             chart: charts[k],
             seriesType: type,
-            offset: settings.def.period.offset * 1000,
+            period: settings.def.period,
+            pattern: settings.pattern,
+            mainQuery: settings.def.model.query,
+            graphType: settings.def.visualization.type,
+            stacking: settings.def.visualization.stacking,
           });
         }
         return ret;
@@ -329,7 +333,7 @@ angular.module('graphEsApp')
       getOne: function(query, cb, param) {
         var pro = makeRequest(query.indices, query.chart);
         pro.then(function(data) {
-          cb(postParse(data, query.seriesType, query.offset), param);
+          cb(postParse(data,query.seriesType, query.period.offset), param);
         }, function() {
           window.alert('Error occured when retrieving data!');
         });

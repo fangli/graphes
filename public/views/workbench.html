@@ -298,7 +298,7 @@
           <div class="col-xs-2">
             <div tooltip-popup-delay="500" tooltip="The datetime field" class="form-group">
               <label>Time Field</label>
-              <input ng-model="settings.def.visualization.timeField" class="form-control" type="text" placeholder="Field Name">
+              <input ng-model="settings.def.period.timeField" class="form-control" type="text" placeholder="Field Name">
             </div>
           </div>
 <!--           <div class="col-xs-2">
@@ -317,16 +317,16 @@
 
             <div class="input-group" style="margin: 2px;">
               <span class="input-group-addon" style="width: 90px;">
-                <label tooltip-popup-delay="500" tooltip="Set the resolution by interval"><input ng-model="settings.def.visualization.pointIntervalOpt" value="interval" type="radio" name="downsampleOption">&nbsp;Interval</label>
+                <label tooltip-popup-delay="500" tooltip="Set the resolution by interval"><input ng-model="settings.def.period.pointIntervalOpt" value="interval" type="radio" name="downsampleOption">&nbsp;Interval</label>
               </span>
-              <input tooltip-append-to-body="true" tooltip-popup-delay="500" tooltip="The interval of points. It allows for the constant values of year, quarter, month, week, day, hour, minute. also support time setting like 1.5h (up to w for weeks)." style="text-align:right;" type="text" class="form-control" ng-model="settings.def.visualization.pointInterval">
+              <input tooltip-append-to-body="true" tooltip-popup-delay="500" tooltip="The interval of points. It allows for the constant values of year, quarter, month, week, day, hour, minute. also support time setting like 1.5h (up to w for weeks)." style="text-align:right;" type="text" class="form-control" ng-model="settings.def.period.pointInterval">
             </div><!-- /input-group -->
 
             <div class="input-group" style="margin: 2px;">
               <span class="input-group-addon" style="width: 90px;">
-                <label tooltip-popup-delay="500" tooltip="Set the resolution by points"><input ng-model="settings.def.visualization.pointIntervalOpt" value="points" type="radio" name="downsampleOption">&nbsp;Points</label>
+                <label tooltip-popup-delay="500" tooltip="Set the resolution by points"><input ng-model="settings.def.period.pointIntervalOpt" value="points" type="radio" name="downsampleOption">&nbsp;Points</label>
               </span>
-              <input tooltip-append-to-body="true" tooltip-popup-delay="500" tooltip="How many points for a chart" style="text-align:right;" type="text" min="1" class="form-control" ng-model="settings.def.visualization.pointPoints">
+              <input tooltip-append-to-body="true" tooltip-popup-delay="500" tooltip="How many points for a chart" style="text-align:right;" type="text" min="1" class="form-control" ng-model="settings.def.period.pointPoints">
             </div><!-- /input-group -->
 
           </div><!-- /.col-lg-6 -->
@@ -349,7 +349,7 @@
   </div>
 
   <button ng-disabled="status.isLoading" ng-click="showGraph()" class="btn btn-sm btn-primary">Show !</button>
-  <button tooltip-popup-delay="500" tooltip="Edit the current querying settings in RAW JSON" ng-click="editInConsole()" class="btn btn-sm btn-default">Edit in Console</button>
+
   <span class="text-muted">
   &nbsp;
   <img ng-show="status.isLoading" src="images/loading.gif">
@@ -376,42 +376,46 @@
     </div>
   </div>
   <hr>
-    <div ng-repeat="(idx, chart) in charts.data">
+    <div ng-repeat="(id, chart) in charts.data">
       <div class="row">
         <div class="col-xs-11">
-          <highchart config="chart" class="col-xs-12"></highchart>
+          <highchart ng-show="!chart.showingSource" config="chart.chartData" class="col-xs-12"></highchart>
+          <div ng-show="chart.showingSource" class="highlight">
+            <h4>Query Source</h4>
+            <textarea class="form-control" rows="15">{{ chart.queryString }}</textarea>
+          </div>
         </div>
         <div class="col-xs-1" style="padding-left:0px">
           <div class="row">
             <div class="col-xs-12">
-              <span><strong>No. {{ idx*1 + 1 }}</strong></span>
+              <span><strong>No. {{ id*1 + 1 }}</strong></span>
               <hr>
             </div>
             <div class="col-xs-12">
-              <p> <button class="btn btn-xs btn-default">Refresh</button> </p>
-              <p> <button class="btn btn-xs btn-default">Source</button> </p>
+              <p> <button ng-click="refreshOne(id, chart.info.query)" class="btn btn-xs btn-default">Refresh</button> </p>
+              <p> <button type="button" class="btn btn-xs btn-default" ng-model="chart.showingSource" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">Source</button> </p>
               <p><hr></p>
               <p>
                 <div class="radio">
-                  <label><input type="radio" name="optionsRadios" value="option1" checked>Area</label>
+                  <label><input type="radio" name="opt-graphType-{{ id }}" value="area" ng-model="chart.info.query.graphType" ng-click="addChart(chart.series, chart.info, {'graphType': 'area'})">Area</label>
                 </div>
                 <div class="radio">
-                  <label><input type="radio" name="optionsRadios" value="option1">Line</label>
+                  <label><input type="radio" name="opt-graphType-{{ id }}" value="line" ng-model="chart.info.query.graphType" ng-click="addChart(chart.series, chart.info, {'graphType': 'line'})">Line</label>
                 </div>
                 <div class="radio">
-                  <label><input type="radio" name="optionsRadios" value="option1">Column</label>
+                  <label><input type="radio" name="opt-graphType-{{ id }}" value="column" ng-model="chart.info.query.graphType" ng-click="addChart(chart.series, chart.info, {'graphType': 'column'})">Column</label>
                 </div>
               </p>
               <p><hr></p>
               <p>
                 <div class="radio">
-                  <label><input type="radio" name="optionsRadios" value="option1" checked>Area</label>
+                  <label><input type="radio" name="opt-graphStacking-{{ id }}" value="" ng-model="chart.info.query.stacking" ng-click="addChart(chart.series, chart.info, {'stacking': ''})">Disabled</label>
                 </div>
                 <div class="radio">
-                  <label><input type="radio" name="optionsRadios" value="option1">Line</label>
+                  <label><input type="radio" name="opt-graphStacking-{{ id }}" value="normal" ng-model="chart.info.query.stacking" ng-click="addChart(chart.series, chart.info, {'stacking': 'normal'})">Normal</label>
                 </div>
                 <div class="radio">
-                  <label><input type="radio" name="optionsRadios" value="option1">Column</label>
+                  <label><input type="radio" name="opt-graphStacking-{{ id }}" value="percent" ng-model="chart.info.query.stacking" ng-click="addChart(chart.series, chart.info, {'stacking': 'percent'})">Percent</label>
                 </div>
               </p>
             </div>

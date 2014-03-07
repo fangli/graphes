@@ -49,6 +49,10 @@ angular.module('graphEsApp')
             compare: false,
             offset: -86400,
             userDefined: false,
+            timeField: '@timestamp',
+            pointIntervalOpt: 'interval',
+            pointInterval: '2m',
+            pointPoints: '100',
           },
           visualization: {
             type: 'area',
@@ -56,10 +60,6 @@ angular.module('graphEsApp')
             chartValueDisabled: false,
             valueField: '_value',
             stacking: "",
-            timeField: '@timestamp',
-            pointIntervalOpt: 'interval',
-            pointInterval: '2m',
-            pointPoints: '100',
           }
         }
       };

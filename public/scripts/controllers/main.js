@@ -17,7 +17,6 @@ angular.module('graphEsApp')
     $scope.menus = [
       {'title': 'Dashboard', 'href': '/dash'},
       {'title': 'Workbench', 'href': '/workbench'},
-      {'title': 'Console', 'href': '/console'},
       {'title': 'Archives', 'href': '/archive'},
     ];
 

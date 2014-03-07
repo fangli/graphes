@@ -8,16 +8,16 @@ angular.module('graphEsApp')
 
     return {
 
-      preParse: function(settings) {
-        return adapter.preParse(settings);
+      injectTimetoBasicQueries: function(basicQueries) {
+        return adapter.injectTimetoBasicQueries(basicQueries);
+      },
+
+      getBasicQueries: function(settings) {
+        return adapter.getBasicQueries(settings);
       },
 
       getOne: function(query, cb, params) {
         return adapter.getOne(query, cb, params);
-      },
-
-      getAll: function(queries, cb) {
-        return adapter.getAll(queries, cb);
       },
 
       // params
@@ -28,7 +28,7 @@ angular.module('graphEsApp')
       //   "graphType": "line" | "bar",
       //   "stacking": "normal" | "percent"
       // }
-      parseGraphConfig: function(params) {
+      parseGraphConfig: function(params, briefMode) {
         var graphTemplate;
         var pointFormat;
         var min;
@@ -44,9 +44,15 @@ angular.module('graphEsApp')
         {
           graphTemplate = {
             title: {
-              text: params.title,
+              text: (briefMode)? '' : params.title,
             },
             options: {
+              legend: {
+                enabled: !briefMode,
+              },
+              exporting: {
+                  enabled: !briefMode,
+              },
               credits: {
                   enabled: false,
               },
@@ -65,7 +71,7 @@ angular.module('graphEsApp')
               yAxis: {
                 min: min,
                 title: {
-                  text: params.yaxisTitle,
+                  text: (briefMode)? '' : params.yaxisTitle,
                 },
               },
               plotOptions: {
@@ -91,9 +97,15 @@ angular.module('graphEsApp')
         } else if (params.graphType === 'column') {
           graphTemplate = {
             title: {
-              text: params.title,
+              text: (briefMode)? '' : params.title,
             },
             options: {
+              legend: {
+                enabled: !briefMode,
+              },
+              exporting: {
+                  enabled: !briefMode,
+              },
               credits: {
                   enabled: false,
               },
@@ -116,7 +128,7 @@ angular.module('graphEsApp')
               yAxis: {
                 min: min,
                 title: {
-                  text: params.yaxisTitle,
+                  text: (briefMode)? '' : params.yaxisTitle,
                 }
               },
             },
@@ -125,9 +137,15 @@ angular.module('graphEsApp')
         } else if (params.graphType === 'line') {
           graphTemplate = {
             title: {
-              text: params.title,
+              text: (briefMode)? '' : params.title,
             },
             options: {
+              legend: {
+                enabled: !briefMode,
+              },
+              exporting: {
+                  enabled: !briefMode,
+              },
               credits: {
                   enabled: false,
               },
@@ -155,7 +173,7 @@ angular.module('graphEsApp')
               yAxis: {
                 min: min,
                 title: {
-                  text: params.yaxisTitle,
+                  text: (briefMode)? '' : params.yaxisTitle,
                 }
               },
             },
@@ -164,9 +182,15 @@ angular.module('graphEsApp')
         } else if (params.graphType === 'range') {
           graphTemplate = {
             title: {
-              text: params.title,
+              text: (briefMode)? '' : params.title,
             },
             options: {
+              legend: {
+                enabled: !briefMode,
+              },
+              exporting: {
+                  enabled: !briefMode,
+              },
               credits: {
                   enabled: false,
               },
@@ -183,7 +207,7 @@ angular.module('graphEsApp')
               },
               yAxis: {
                 title: {
-                  text: params.yaxisTitle,
+                  text: (briefMode)? '' : params.yaxisTitle,
                 }
               },
             },

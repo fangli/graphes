@@ -32,11 +32,6 @@ angular.module('graphEsApp')
       }
     });
 
-    $scope.editInConsole = function() {
-      $rootScope.currentConsole = angular.copy($scope.chartData.settings);
-      $location.path('/console');
-    };
-
     $scope.editInWorkbench = function () {
       $rootScope.currentWorkbench = angular.copy($scope.chartData.settings);
       $location.path('/workbench');

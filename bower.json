@@ -17,7 +17,6 @@
     "bootstrap": "~3.0.3",
     "sugar": "~1.4.1",
     "sugarjs-locale-chinese": "~0.0.1",
-    "highcharts-ng": "~0.0.4",
     "highcharts": "https://github.com/highslide-software/highcharts.com/archive/v3.0.9.zip",
     "funplus-highcharts-export-csv": "~1.0.4",
     "angular-xeditable": "~0.1.8"

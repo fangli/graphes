@@ -115,22 +115,32 @@ angular.module('graphEsApp')
       }
     };
 
-    $scope.editInConsole = function() {
-      $rootScope.currentConsole = angular.copy($scope.settings);
-      $location.path('/console');
-    };
+    $scope.addChart = function(series, info, params) {
 
-    $scope.addChart = function(series, index) {
+      if (!params) {
+        params = {};
+      } else {
+        info.query.graphType = params.graphType || info.query.graphType;
+        info.query.stacking = (typeof(params.stacking) === 'string')? params.stacking : info.query.stacking;
+      }
+
       var graphConfig = {
         title: '',
-        yaxisTitle: $scope.settings.def.model.query,
+        yaxisTitle: info.query.mainQuery,
         series: series,
-        graphType: $scope.settings.def.visualization.type,
-        stacking: $scope.settings.def.visualization.stacking,
+        graphType: info.query.graphType,
+        stacking: info.query.stacking,
       };
-      $scope.charts.data[index] = Graph.parseGraphConfig(graphConfig);
+
+      $scope.charts.data[info.id] = {
+        chartData: Graph.parseGraphConfig(graphConfig),
+        queryString: angular.toJson(info.query, true),
+        series: series,
+        info: info,
+      };
+
       $scope.charts.loaded += 1;
-      if ($scope.charts.loaded === $scope.charts.total) {
+      if ($scope.charts.loaded >= $scope.charts.total) {
         $scope.status.loadingPercent = '';
         $scope.status.isLoading = false;
       } else {
@@ -140,16 +150,24 @@ angular.module('graphEsApp')
     };
 
     $scope.showGraph = function() {
-      var queries = Graph.preParse($scope.settings);
+      var query;
+      var oriQueries = Graph.getBasicQueries($scope.settings);
       $scope.generateArchiveName();
       $scope.status.isLoading = true;
-      $scope.charts = {total: queries.length, loaded: 0, data: {}};
+      $scope.charts = {total: oriQueries.length, loaded: 0, data: {}};
       $scope.status.loadingPercent = '(0/' + $scope.charts.total + ')';
       $scope.isControlPanelHidden = true;
-      for (var i = queries.length - 1; i >= 0; i--) {
-        Graph.getOne(queries[i], $scope.addChart, i);
-      };
+      for (var i = oriQueries.length - 1; i >= 0; i--) {
+        query = Graph.injectTimetoBasicQueries(angular.copy(oriQueries[i]));
+        Graph.getOne(query, $scope.addChart, {'id': i, query: oriQueries[i]});
+      }
     };
+
+    $scope.refreshOne = function(id, oriQuery) {
+      var query = Graph.injectTimetoBasicQueries(angular.copy(oriQuery));
+      $scope.charts.data[id].chartData.loading = true;
+      Graph.getOne(query, $scope.addChart, {'id': id, query: oriQuery});
+    }
 
     $scope.generateArchiveName = function() {
       $scope.archive.name = 'Query ' + $scope.settings.def.model.query + ' generated at ' + DateConv.strtotime('now');
