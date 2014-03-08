@@ -59,7 +59,7 @@ angular.module('graphEsApp')
             chartValue: 'mean',
             chartValueDisabled: false,
             valueField: '_value',
-            stacking: "",
+            stacking: '',
           }
         }
       };

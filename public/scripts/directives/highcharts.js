@@ -7,12 +7,12 @@ angular.module('highcharts-ng', [])
 
     //IE8 support
     var indexOf = function(arr, find, i /*opt*/) {
-      if (i===undefined) i= 0;
-      if (i<0) i+= arr.length;
-      if (i<0) i= 0;
-      for (var n= arr.length; i<n; i++)
-        if (i in arr && arr[i]===find)
-          return i;
+      if (i === undefined) {i= 0;}
+      if (i < 0) {i+= arr.length;}
+      if (i < 0) {i= 0;}
+      for (var n= arr.length; i<n; i++) {
+        if (i in arr && arr[i]===find) {return i;}
+      }
       return -1;
     };
 
@@ -99,7 +99,7 @@ angular.module('highcharts-ng', [])
             }
           });
 
-          prependMethod(mergedOptions.chart.events, 'addSeries', function(e){
+          prependMethod(mergedOptions.chart.events, 'addSeries', function(){
             scope.config[axisName].currentMin = this[axisName][0].min || scope.config[axisName].currentMin;
             scope.config[axisName].currentMax = this[axisName][0].max || scope.config[axisName].currentMax;
           });
@@ -144,7 +144,7 @@ angular.module('highcharts-ng', [])
       scope: {
         config: '='
       },
-      link: function (scope, element, attrs) {
+      link: function (scope, element) {
         // We keep some chart-specific variables here as a closure
         // instead of storing them on 'scope'.
 
@@ -195,7 +195,7 @@ angular.module('highcharts-ng', [])
         // chart is maintained by initChart
         var chart = false;
         var initChart = function() {
-          if (chart) chart.destroy();
+          if (chart) {chart.destroy();}
           prevSeriesOptions = {};
           var config = scope.config || {};
           var mergedOptions = getMergedOptions(scope, element, config);
@@ -213,7 +213,7 @@ angular.module('highcharts-ng', [])
         initChart();
 
 
-        scope.$watch('config.series', function (newSeries, oldSeries) {
+        scope.$watch('config.series', function (newSeries) {
           var needsRedraw = processSeries(newSeries);
           if(needsRedraw) {
             chart.redraw();
@@ -244,13 +244,13 @@ angular.module('highcharts-ng', [])
           }
         });
 
-        scope.$watch('config.useHighStocks', function (useHighStocks) {
+        scope.$watch('config.useHighStocks', function () {
           initChart();
         });
 
         angular.forEach(axisNames, function(axisName) {
           scope.$watch('config.' + axisName, function (newAxes, oldAxes) {
-            if (newAxes === oldAxes) return;
+            if (newAxes === oldAxes) {return;}
             if(newAxes) {
               chart[axisName][0].update(newAxes, false);
               updateZoom(chart[axisName][0], angular.copy(newAxes));
@@ -260,14 +260,14 @@ angular.module('highcharts-ng', [])
         });
         scope.$watch('config.options', function (newOptions, oldOptions, scope) {
           //do nothing when called on registration
-          if (newOptions === oldOptions) return;
+          if (newOptions === oldOptions) {return;}
           initChart();
           processSeries(scope.config.series);
           chart.redraw();
         }, true);
 
         scope.$on('$destroy', function() {
-          if (chart) chart.destroy();
+          if (chart) {chart.destroy();}
           element.remove();
         });
 

@@ -167,7 +167,7 @@ angular.module('graphEsApp')
       var query = Graph.injectTimetoBasicQueries(angular.copy(oriQuery));
       $scope.charts.data[id].chartData.loading = true;
       Graph.getOne(query, $scope.addChart, {'id': id, query: oriQuery});
-    }
+    };
 
     $scope.generateArchiveName = function() {
       $scope.archive.name = 'Query ' + $scope.settings.def.model.query + ' generated at ' + DateConv.strtotime('now');

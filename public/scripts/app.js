@@ -18,6 +18,16 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider) {
 
     $routeProvider
       .when('/dash', {
+        templateUrl: 'views/dashlist.html',
+        controller: 'DashlistCtrl',
+      })
+
+      .when('/dash/new', {
+        templateUrl: 'views/dash.html',
+        controller: 'DashCtrl',
+      })
+
+      .when('/dash/id/:id', {
         templateUrl: 'views/dash.html',
         controller: 'DashCtrl',
       })

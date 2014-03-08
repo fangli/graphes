@@ -16,7 +16,7 @@ angular.module('graphEsApp')
           data.AbsCreated = Date.create(data.created).toString();
           data.relativeCreated = Date.create(data.created).relative();
           $scope.chartData = data;
-        $scope.isLoading = false;
+          $scope.isLoading = false;
         })
         .error(function() {
           $scope.isLoading = false;

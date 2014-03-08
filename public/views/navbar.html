@@ -7,6 +7,45 @@
         <div class="navbar-collapse collapse" ng-controller="MainCtrl">
           <ul class="nav navbar-nav">
 
+            <li ng-class="{ active: isActive('/dash'), dropdown: true}">
+              <a ng-click="setFilterFocus()" href class="dropdown-toggle" data-toggle="dropdown">Dashboard<b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li>
+                  <div class="row" style="padding: 3px 20px;min-width:330px;">
+                    <div class="col-xs-7">
+                      <div class="input-group input-group-sm">
+                        <span class="input-group-addon"><i class="fa fa-filter"></i></span>
+                        <input type="text" ng-focus-on="menuDashboardFilter" class="form-control" placeholder="Search..." ng-model="dashboardFilter">
+                      </div>
+                    </div>
+                    <div class="col-xs-5" style="padding-left:0;padding-right:0;">
+                      <button ng-click="refreshDashboardList()" class="btn btn-sm btn-default"><i ng-class="{'fa': true,'fa-refresh': true, 'fa-spin': $root.config.isDashboardsRefreshing}"></i></button>
+                      <a ng-href="#/dash" class="btn btn-sm btn-default"><i class="fa fa-gear"></i></a>
+                      <a ng-href="#/dash/new" class="btn btn-sm btn-default"><i class="fa fa-plus-square-o"></i></a>
+                    </div>
+                  </div>
+                </li>
+                <li class="divider"></li>
+                <li ng-repeat="dashboard in $root.config.dashboards | filter:dashboardFilter | filter: {global: true}">
+                  <a ng-href="#/dash/id/{{ dashboard._id }}">
+                    <div class="bs-callout" style="margin: 5px 0; padding: 0 0 0 5px;">
+                      <strong><i class="fa fa-bar-chart-o"></i> {{ dashboard.name }}</strong>
+                      <p><small class="text-muted">{{ dashboard.description }}</small></p>
+                    </div>
+                  </a>
+                </li>
+                <li class="divider"></li>
+                <li ng-repeat="dashboard in $root.config.dashboards | filter:dashboardFilter | filter: {global: false}">
+                  <a ng-href="#/dash/id/{{ dashboard._id }}">
+                    <div class="bs-callout" style="margin: 5px 0; padding: 0 0 0 5px;">
+                      <strong><i class="fa fa-bar-chart-o"></i> {{ dashboard.name }}</strong>
+                      <p><small class="text-muted">{{ dashboard.description }}</small></p>
+                    </div>
+                  </a>
+                </li>
+              </ul>
+            </li>
+
             <li ng-repeat="menu in menus" ng-class="{ active: isActive(menu.href)}"><a ng-href="#{{ menu.href }}">{{ menu.title }}</a></li>
             
           </ul>

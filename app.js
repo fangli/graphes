@@ -26,6 +26,7 @@ app.use(express.methodOverride());
 require('./controllers/profileController')(app);
 require('./controllers/listController')(app);
 require('./controllers/archiveController')(app);
+require('./controllers/dashboardController')(app);
 require('./controllers/casLoginController')(app);
 
 // Handler frontend app

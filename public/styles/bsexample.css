@@ -277,12 +277,13 @@
  
 /* Base styles (regardless of theme) */
 .bs-callout {
-  margin: 20px 0;
-  padding: 15px 30px 15px 15px;
+  margin: 10px 0;
+  padding: 10px 20px 10px 10px;
   border-left: 5px solid #eee;
 }
 .bs-callout h4 {
   margin-top: 0;
+  margin-bottom: 5px;
 }
 .bs-callout p:last-child {
   margin-bottom: 0;
@@ -306,7 +307,7 @@
   border-color: #d0e3f0;
 }
 .bs-callout-default {
-  background-color: #fff;
+  background-color: #fafafa;
   border-color: #f7f7f9;
 }
 .bs-callout-success {

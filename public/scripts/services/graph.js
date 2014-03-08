@@ -32,7 +32,7 @@ angular.module('graphEsApp')
         var graphTemplate;
         var pointFormat;
         var min;
-        if (params.stacking != 'percent') {
+        if (params.stacking !== 'percent') {
           min = null;
           pointFormat = '<span style="color:{series.color}">{series.name}</span>: {point.y}<br/>';
         } else {
@@ -51,10 +51,10 @@ angular.module('graphEsApp')
                 enabled: !briefMode,
               },
               exporting: {
-                  enabled: !briefMode,
+                enabled: !briefMode,
               },
               credits: {
-                  enabled: false,
+                enabled: false,
               },
               tooltip: {
                 crosshairs: true,
@@ -104,10 +104,10 @@ angular.module('graphEsApp')
                 enabled: !briefMode,
               },
               exporting: {
-                  enabled: !briefMode,
+                enabled: !briefMode,
               },
               credits: {
-                  enabled: false,
+                enabled: false,
               },
               tooltip: {
                 pointFormat: pointFormat,
@@ -144,10 +144,10 @@ angular.module('graphEsApp')
                 enabled: !briefMode,
               },
               exporting: {
-                  enabled: !briefMode,
+                enabled: !briefMode,
               },
               credits: {
-                  enabled: false,
+                enabled: false,
               },
               tooltip: {
                 crosshairs: true,
@@ -189,10 +189,10 @@ angular.module('graphEsApp')
                 enabled: !briefMode,
               },
               exporting: {
-                  enabled: !briefMode,
+                enabled: !briefMode,
               },
               credits: {
-                  enabled: false,
+                enabled: false,
               },
               tooltip: {
                 crosshairs: true,
