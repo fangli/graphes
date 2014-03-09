@@ -1,1 +1,61 @@
-Please select a dashboard
+<div class="row">
+
+  <div class="col-xs-12">
+    <h3>Dashboards Manager</h3>
+    <a ng-href="#/dash/new" class="btn btn-xs btn-default"><i class="fa fa-plus-square-o"></i> New</a>
+    <hr>
+  </div>
+
+  <div class="col-xs-12">
+    <div class="panel panel-default">
+      <div class="panel-heading"><strong>Global</strong></div>
+      <ul class="list-group">
+        <li ng-repeat="dash in dashboards | filter: {global: true}" class="list-group-item">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="pull-right">
+                <a href="#/dash/id/{{ dash._id }}/edit" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i> Edit</a>
+                <button type="button" ng-confirm-click="Do you really want to delete this global dashboard?" confirmed-click="deleteDashboard(dash._id)" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Remove</button>
+              </div>
+              <div>
+                <a href="#/dash/id/{{ dash._id }}">{{ dash.name }}</a> &nbsp; <span class="text-muted">{{ dash.description }}</span>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="col-xs-12">
+    <div class="panel panel-default">
+      <div class="panel-heading"><strong>Standard</strong> <small class="text-muted">Click <i  class="fa fa-star"></i> or <i class="fa fa-star-o"></i> to add or remove the favorite items under dropdown menu</small> </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-4">
+            <input ng-model="$$$dashboardFilter" class="form-control col-xs-4" placeholder="Search and Filter">
+          </div>
+        </div>
+      </div>
+      <ul class="list-group">
+        <li ng-repeat="dash in dashboards | filter:$$$dashboardFilter | filter: {global: false}" class="list-group-item">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="pull-right">
+                <a href="#/dash/id/{{ dash._id }}/edit" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i> Edit</a>
+                <button type="button" ng-confirm-click="Do you really want to delete this dashboard?" confirmed-click="deleteDashboard(dash._id)" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Remove</button>
+              </div>
+              <div>
+                <button ng-click="toggleFav(dash._id)" class="btn btn-xs btn-default">
+                  <i ng-show="favList.indexOf(dash._id) !== -1" class="fa fa-star"></i>
+                  <i ng-show="favList.indexOf(dash._id) === -1" class="fa fa-star-o"></i>
+                </button>&nbsp;&nbsp;&nbsp; <a href="#/dash/id/{{ dash._id }}">{{ dash.name }}</a> &nbsp; <span class="text-muted">{{ dash.description }}</span>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+</div>

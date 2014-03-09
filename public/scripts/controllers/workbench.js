@@ -18,6 +18,19 @@ angular.module('graphEsApp')
         });
     };
 
+    $scope.loadArchiveSchema = function(id, callback) {
+      Archive.get(id)
+        .success(function(data) {
+          $scope.settings = data.settings;
+          if (callback) {
+            callback();
+          }
+        })
+        .error(function(e) {
+          window.alert(e);
+        });
+    };
+
     $scope.addTags = function (dimension) {
       if (dimension.tmpNew) {
         var split = dimension.tmpNew.split('|');
@@ -124,7 +137,6 @@ angular.module('graphEsApp')
       $scope.charts.data[info.id] = {
         chartData: Graph.parseGraphConfig(graphConfig),
         queryString: angular.toJson(info.query, true),
-        series: series,
         info: info,
       };
 
@@ -233,6 +245,12 @@ angular.module('graphEsApp')
 
     $scope.archive = {};
     $scope.charts = {total: 0, loaded: 0, data: {}};
-    $scope.loadDefaultSchema($routeParams.id, $scope.initialWatching);
+
+    // Routes processing
+    if ($routeParams.id) {
+      $scope.loadDefaultSchema($routeParams.id, $scope.initialWatching);
+    } else if ($routeParams.archive) {
+      $scope.loadArchiveSchema($routeParams.archive, $scope.initialWatching);
+    }
   
   });

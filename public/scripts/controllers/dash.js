@@ -37,7 +37,13 @@ angular.module('graphEsApp')
     };
 
     $scope.restoreSettings = function() {
-      $route.reload();
+      if ($routeParams.id) {
+        $location.path('/dash/id/' + $routeParams.id);
+        $route.reload();
+      } else {
+        $location.path('/dash');
+        $route.reload();
+      }
     };
 
     $scope.changeToEditingMode = function() {
@@ -204,6 +210,10 @@ angular.module('graphEsApp')
     } else {
       $scope.config.isSettingsLoading = false;
       $scope.config.isCreating = true;
+    }
+
+    if (($location.path() === '/dash/new') || ($location.path().endsWith('/edit'))) {
+      $scope.changeToEditingMode();
     }
 
 

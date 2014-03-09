@@ -2,12 +2,12 @@
 
 angular.module('graphEsApp')
 
-  .controller('ArchiveCtrl', function($rootScope, $location, $routeParams, $scope, Head, Archive) {
+  .controller('ArchiveCtrl', function($location, $routeParams, $scope, Head, Archive) {
     Head.setTitle('Archives');
 
     $scope.archiveId = $routeParams.archiveId;
     $scope.isLoading = false;
-    $scope.chartData = {};
+    $scope.mainData = {};
 
     if ($scope.archiveId) {
       $scope.isLoading = true;
@@ -15,7 +15,7 @@ angular.module('graphEsApp')
         .success(function(data){
           data.AbsCreated = Date.create(data.created).toString();
           data.relativeCreated = Date.create(data.created).relative();
-          $scope.chartData = data;
+          $scope.mainData = data;
           $scope.isLoading = false;
         })
         .error(function() {
@@ -28,13 +28,12 @@ angular.module('graphEsApp')
       if ($scope.archiveId) {
         $location.path('/archive/' + $scope.archiveId);
       } else {
-        $location.path('/archive/');
+        $location.path('/archive');
       }
     });
 
     $scope.editInWorkbench = function () {
-      $rootScope.currentWorkbench = angular.copy($scope.chartData.settings);
-      $location.path('/workbench');
+      $location.path('/workbench/archive/' + $scope.archiveId);
     };
 
   }

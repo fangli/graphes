@@ -36,7 +36,7 @@
                   </a>
                 </li>
                 <li class="divider"></li>
-                <li ng-repeat="dashboard in config.dashboards | filter:dashboardFilter | filter: {global: false}">
+                <li ng-repeat="dashboard in config.dashboards | filter:dashboardFilter | filter: {global: false} | filter: isFav">
                   <a ng-href="#/dash/id/{{ dashboard._id }}">
                     <div class="bs-callout" style="margin: 5px 0; padding: 0 0 0 5px;">
                       <strong><i class="fa fa-bar-chart-o"></i> {{ dashboard.name }}</strong>
@@ -53,7 +53,7 @@
               <a ng-click="setSchemaFilterFocus()" href class="dropdown-toggle" data-toggle="dropdown">Workbench<b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <li>
-                  <div class="row" style="padding: 3px 20px;min-width:250px;">
+                  <div class="row" style="padding: 3px 20px;min-width:330px;">
                     <div class="col-xs-7">
                       <div class="input-group input-group-sm">
                         <span class="input-group-addon"><i class="fa fa-filter"></i></span>
@@ -63,6 +63,7 @@
                     <div class="col-xs-5" style="padding-left:0;padding-right:0;">
                       <button ng-click="refreshSchemaList()" class="btn btn-sm btn-default"><i ng-class="{'fa': true,'fa-refresh': true, 'fa-spin': config.isSchemasRefreshing}"></i></button>
                       <a ng-href="#/workbench/schema" class="btn btn-sm btn-default"><i class="fa fa-gear"></i></a>
+                      <a ng-href="#/workbench/schema/new" class="btn btn-sm btn-default"><i class="fa fa-plus-square-o"></i></a>
                     </div>
                   </div>
                 </li>

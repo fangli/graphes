@@ -8,6 +8,7 @@ var app = angular.module('graphEsApp', [
   'ui.bootstrap',
   'highcharts-ng',
   'xeditable',
+  'LocalStorageModule',
 ]);
 
 
@@ -29,11 +30,24 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider) {
         templateUrl: 'views/dash.html',
         controller: 'DashCtrl',
       })
+      .when('/dash/id/:id/edit', {
+        templateUrl: 'views/dash.html',
+        controller: 'DashCtrl',
+      })
 
 
       .when('/workbench/schema', {
         templateUrl: 'views/schema.html',
         controller: 'SchemaCtrl',
+      })
+      .when('/workbench/schema/new', {
+        templateUrl: 'views/schema.html',
+        controller: 'SchemaCtrl',
+      })
+
+      .when('/workbench/archive/:archive', {
+        templateUrl: 'views/workbench.html',
+        controller: 'WorkbenchCtrl',
       })
       .when('/workbench/id/:id', {
         templateUrl: 'views/workbench.html',

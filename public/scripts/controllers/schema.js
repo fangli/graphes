@@ -2,7 +2,7 @@
 
 angular.module('graphEsApp')
 
-  .controller('SchemaCtrl', function($route, $scope, Head, Schema) {
+  .controller('SchemaCtrl', function($location, $route, $scope, Head, Schema) {
     Head.setTitle('Schemas');
 
     $scope.schemas = [];
@@ -101,5 +101,8 @@ angular.module('graphEsApp')
 
     $scope.reloadSchemas();
 
+    if ($location.path() === '/workbench/schema/new') {
+      $scope.newCurrent();
+    }
 
   });

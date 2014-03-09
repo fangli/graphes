@@ -2,7 +2,7 @@
 
 angular.module('graphEsApp')
 
-  .controller('MainCtrl', function ($scope, $location, Head, Schema, Dashboard, Setfocus) {
+  .controller('MainCtrl', function ($scope, $location, Head, Schema, Dashboard, Setfocus, Lstorage) {
 
 
     $scope.config = {'schemas': [], 'dashboards': []};
@@ -10,6 +10,15 @@ angular.module('graphEsApp')
 
     $scope.isActive = function (viewLocation) {
       return $location.path().startsWith(viewLocation);
+    };
+
+    $scope.isFav = function(dashboard) {
+      var favList = Lstorage.get('favList');
+      if (favList.indexOf(dashboard._id) === -1) {
+        return false;
+      } else {
+        return true;
+      }
     };
 
     $scope.setDashboardFilterFocus = function() {

@@ -7,19 +7,19 @@
 
 
 <div class="highlight">
-  <div ng-show="chartData.name" class="row">
+  <div ng-show="mainData.name" class="row">
     <div class="col-xs-12">
-      <h4>{{ chartData.name }}</h4>
+      <h4>{{ mainData.name }}</h4>
       <p class="alert alert-warning">
-        You are viewing history charts captured <span style="border-bottom: dashed 1px" tooltip="{{ chartData.AbsCreated }}">{{ chartData.relativeCreated }} </span>
+        You are viewing history charts captured <span style="border-bottom: dashed 1px" tooltip="{{ mainData.AbsCreated }}">{{ mainData.relativeCreated }} </span>
       </p>
       <p>
         <button ng-click="editInWorkbench()" class="btn btn-xs btn-default">Edit in Workbench</button>
       </p>
       <hr>
       <div class="row">
-        <div ng-repeat="chart in chartData.charts.data">
-          <highchart config="chart" class="col-xs-12"></highchart>
+        <div ng-repeat="(i, chart) in mainData.charts.data">
+          <highchart config="chart.chartData" class="col-xs-12"></highchart>
         </div>
       </div>
     </div>
