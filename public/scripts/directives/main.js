@@ -45,12 +45,12 @@ angular.module('graphEsApp')
       });
     };
   })
-  .factory('Setfocus', function ($rootScope, $timeout) {
+  .factory('Setfocus', ['$rootScope', '$timeout', function ($rootScope, $timeout) {
     return function(name) {
       $timeout(function (){
         $rootScope.$broadcast('focusOn', name);
       });
     };
-  })
+  }])
 
 ;
