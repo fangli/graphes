@@ -68,7 +68,7 @@
           <span class="pull-right"><a href ng-click="deleteBox($index)"><i class="fa fa-trash-o"></i></a></span>
           <span style="text-transform: uppercase;"><a href="#" editable-text="box.name">{{ box.name || 'Empty' }}</a></span> 
           <small class="text-muted"><a href="#" editable-text="box.description">{{ box.description || 'Empty' }}</a></small>
-          [<a href="#" editable-select="box.style" e-ng-options="k as v for (k, v) in colorScheme"> {{ colorScheme[box.style] }} </a> ]
+          [<a href="#" editable-select="box.style" buttons="no" e-ng-options="k as v for (k, v) in colorScheme"> {{ colorScheme[box.style] }} </a> ]
 
         </span>
       </h3>
@@ -92,7 +92,7 @@
                   </div>
                   <div class="form-group">
                     <label>Width</label>
-                    <a href="#" editable-select="group.chartWidth" e-ng-options="k as v for (k, v) in rowWidthScheme" onaftersave="flushChartSize()">{{ rowWidthScheme[group.chartWidth] }}</a>
+                    <a href="#" editable-select="group.chartWidth" buttons="no" e-ng-options="k as v for (k, v) in rowWidthScheme" onaftersave="flushChartSize()">{{ rowWidthScheme[group.chartWidth] }}</a>
                   </div>
                 </div>
               </div>

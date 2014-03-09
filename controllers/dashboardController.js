@@ -19,7 +19,6 @@ module.exports = function (app) {
     mDashboards.deleteDashboard(req, res);
   });
 
-
   app.get('/api/dashboard/:id', function (req, res) {
     mDashboards.findByName(req, res);
   });

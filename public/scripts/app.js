@@ -21,35 +21,33 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider) {
         templateUrl: 'views/dashlist.html',
         controller: 'DashlistCtrl',
       })
-
       .when('/dash/new', {
         templateUrl: 'views/dash.html',
         controller: 'DashCtrl',
       })
-
       .when('/dash/id/:id', {
         templateUrl: 'views/dash.html',
         controller: 'DashCtrl',
       })
 
-      .when('/workbench', {
+
+      .when('/workbench/schema', {
+        templateUrl: 'views/schema.html',
+        controller: 'SchemaCtrl',
+      })
+      .when('/workbench/id/:id', {
         templateUrl: 'views/workbench.html',
         controller: 'WorkbenchCtrl',
-      })
-
-      .when('/profile', {
-        templateUrl: 'views/profile.html',
-        controller: 'ProfileCtrl',
-      })
-
-      .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl',
       })
 
       .when('/archive/:archiveId?', {
         templateUrl: 'views/archive.html',
         controller: 'ArchiveCtrl',
+      })
+
+      .when('/about', {
+        templateUrl: 'views/about.html',
+        controller: 'AboutCtrl',
       })
 
       .otherwise({

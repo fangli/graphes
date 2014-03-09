@@ -2,8 +2,8 @@
 
 angular.module('graphEsApp')
 
-  .factory('Dashboard', ['$http', '$rootScope', function($http, $rootScope) {
-    var baseUrl = '/api/dashboard/';
+  .factory('Schema', ['$http', '$rootScope', function($http, $rootScope) {
+    var baseUrl = '/api/schema/';
     return {
 
       get: function(id) {
@@ -13,7 +13,7 @@ angular.module('graphEsApp')
       save: function(id, body){
         var promise = $http.post(baseUrl + id, body);
         promise.then(function(){
-          $rootScope.$broadcast('refreshDashboardList', true);
+          $rootScope.$broadcast('refreshSchemaList', true);
         });
         return promise;
       },
@@ -21,7 +21,7 @@ angular.module('graphEsApp')
       remove: function(id) {
         var promise = $http.delete(baseUrl + id);
         promise.then(function(){
-          $rootScope.$broadcast('refreshDashboardList', true);
+          $rootScope.$broadcast('refreshSchemaList', true);
         });
         return promise;
       },

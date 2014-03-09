@@ -3,6 +3,6 @@
 angular.module('graphEsApp')
 
   .controller('DashlistCtrl', function(Head) {
-    Head.setTitle('All Dashboards');
+    Head.setTitle('Dashboards Manager');
   }
 );

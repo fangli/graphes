@@ -1,4 +1,7 @@
-<div ng-hide="isControlPanelHidden" class="bs-example">
+<!-- Show page after schema loaded -->
+<div ng-show="!status.isPageLoading">
+
+<div ng-hide="status.isControlPanelHidden" class="bs-example">
   <tabset>
 
       <!-- Model Tab Start -->
@@ -331,6 +334,13 @@
 
           </div><!-- /.col-lg-6 -->
 
+          <div class="col-xs-2">
+            <div tooltip-popup-delay="500" tooltip="The indice pattern" class="form-group">
+              <label>Indice Pattern</label>
+              <input ng-model="settings.pattern" class="form-control" type="text" placeholder="Indice">
+            </div>
+          </div>
+
         </div>
 
 
@@ -340,7 +350,7 @@
   </tabset>
 </div>
 
-<div ng-hide="isControlPanelHidden" class="highlight">
+<div ng-hide="status.isControlPanelHidden" class="highlight">
 
   <div class="pull-right">
     <span>
@@ -356,9 +366,9 @@
 </div>
 
 
-<div ng-hide="!isControlPanelHidden" class="row">
+<div ng-hide="!status.isControlPanelHidden" class="row">
   <div class="col-xs-12">
-    <button ng-click="isControlPanelHidden = false" class="btn btn-default btn-block"><i class="fa fa-chevron-down"></i> Show Control Panel <i class="fa fa-chevron-down"></i></button>
+    <button ng-click="status.isControlPanelHidden = false" class="btn btn-default btn-block"><i class="fa fa-chevron-down"></i> Show Control Panel <i class="fa fa-chevron-down"></i></button>
   </div>
   <hr>
 </div>
@@ -430,3 +440,6 @@
     </div>
   </div>
 </div>
+
+
+</div> <!-- End show page after schema loaded -->

@@ -266,7 +266,7 @@ angular.module('graphEsApp')
 
         // Prepare series template
         var seriesTemplate = angular.copy(esSeriesStr);
-        seriesTemplate.date_histogram.key_field = settings.def.visualization.timeField;
+        seriesTemplate.date_histogram.key_field = settings.def.period.timeField;
         if (settings.def.visualization.valueField.indexOf('doc[') === -1){
           seriesTemplate.date_histogram.value_field = settings.def.visualization.valueField;
         } else {
@@ -334,8 +334,8 @@ angular.module('graphEsApp')
         var pro = makeRequest(query.indices, query.chart);
         pro.then(function(data) {
           cb(postParse(data,query.seriesType, query.period.offset), param);
-        }, function() {
-          window.alert('Error occured when retrieving data!');
+        }, function(e) {
+          window.alert(e.error);
         });
       },
 

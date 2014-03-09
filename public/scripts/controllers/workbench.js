@@ -2,32 +2,21 @@
 
 angular.module('graphEsApp')
 
-  .controller('WorkbenchCtrl', function($rootScope, $scope, $timeout, $location, Head, List, DateConv, Graph, Archive) {
+  .controller('WorkbenchCtrl', function($scope, $timeout, $location, $routeParams, Head, List, DateConv, Graph, Archive, Schema) {
     Head.setTitle('Workbench');
 
-    $scope.status = {};
-    $scope.status.isLoading = false;
-    $scope.status.archiveSaved = false;
-    $scope.status.loadingPercent = '';
-    $scope.status.periodTimerStart = null;
-    $scope.status.periodTimerEnd = null;
-    $scope.status.isShowTimerStart = false;
-    $scope.status.isShowTimerEnd = false;
-    $scope.status.invalidPagePeriodStart = false;
-    $scope.status.invalidPagePeriodEnd = false;
-    $scope.isControlPanelHidden = false;
-    $scope.archive = {};
-    $scope.charts = {total: 0, loaded: 0, data: {}};
-
-    // $scope._tmpDimensions = {};
-
-    if ($rootScope.currentWorkbench) {
-      $scope.settings = angular.copy($rootScope.currentWorkbench);
-      $rootScope.currentWorkbench = null;
-    } else {
-      $scope.settings = angular.copy($rootScope.config.currentProfile);
-    }
-
+    $scope.loadDefaultSchema = function(id, callback) {
+      Schema.get(id)
+        .success(function(data) {
+          $scope.settings = data;
+          if (callback) {
+            callback();
+          }
+        })
+        .error(function(e) {
+          window.alert(e);
+        });
+    };
 
     $scope.addTags = function (dimension) {
       if (dimension.tmpNew) {
@@ -156,7 +145,7 @@ angular.module('graphEsApp')
       $scope.status.isLoading = true;
       $scope.charts = {total: oriQueries.length, loaded: 0, data: {}};
       $scope.status.loadingPercent = '(0/' + $scope.charts.total + ')';
-      $scope.isControlPanelHidden = true;
+      $scope.status.isControlPanelHidden = true;
       for (var i = oriQueries.length - 1; i >= 0; i--) {
         query = Graph.injectTimetoBasicQueries(angular.copy(oriQueries[i]));
         Graph.getOne(query, $scope.addChart, {'id': i, query: oriQueries[i]});
@@ -188,41 +177,62 @@ angular.module('graphEsApp')
         });
     };
 
+    $scope.initialWatching = function() {
+      $scope.$watch('settings.def.period.start', function() {
+        if (DateConv.strtotime($scope.settings.def.period.start) > 0) {
+          $scope.status.invalidPagePeriodStart = false;
+          $scope.settingsPeriodStart = DateConv.strtotime($scope.settings.def.period.start);
+          $scope.flashTimePeriodNotice('start');
+        } else {
+          $scope.status.invalidPagePeriodStart = true;
+        }
+      });
 
-    $scope.$watch('settings.def.period.start', function() {
-      if (DateConv.strtotime($scope.settings.def.period.start) > 0) {
-        $scope.status.invalidPagePeriodStart = false;
-        $scope.settingsPeriodStart = DateConv.strtotime($scope.settings.def.period.start);
-        $scope.flashTimePeriodNotice('start');
-      } else {
-        $scope.status.invalidPagePeriodStart = true;
-      }
-    });
+      $scope.$watch('settings.def.period.end', function() {
+        if (DateConv.strtotime($scope.settings.def.period.end) > 0) {
+          $scope.status.invalidPagePeriodEnd = false;
+          $scope.settingsPeriodEnd = DateConv.strtotime($scope.settings.def.period.end);
+          $scope.flashTimePeriodNotice('end');
+        } else {
+          $scope.status.invalidPagePeriodEnd = true;
+        }
+      });
 
-    $scope.$watch('settings.def.period.end', function() {
-      if (DateConv.strtotime($scope.settings.def.period.end) > 0) {
-        $scope.status.invalidPagePeriodEnd = false;
-        $scope.settingsPeriodEnd = DateConv.strtotime($scope.settings.def.period.end);
-        $scope.flashTimePeriodNotice('end');
-      } else {
-        $scope.status.invalidPagePeriodEnd = true;
-      }
-    });
+      $scope.$watch('settings.def.period.offset', function() {
+        if ([-86400, -604800, -2592000].indexOf($scope.settings.def.period.offset) === -1) {
+          $scope.settings.def.period.userDefined = true;
+        } else {
+          $scope.settings.def.period.userDefined = false;
+        }
+      });
 
-    $scope.$watch('settings.def.period.offset', function() {
-      if ([-86400, -604800, -2592000].indexOf($scope.settings.def.period.offset) === -1) {
-        $scope.settings.def.period.userDefined = true;
-      } else {
-        $scope.settings.def.period.userDefined = false;
-      }
-    });
+      $scope.$watch('settings.def.visualization.type', function(){
+        if ($scope.settings.def.visualization.type === 'range') {
+          $scope.settings.def.visualization.chartValueDisabled = true;
+        } else {
+          $scope.settings.def.visualization.chartValueDisabled = false;
+        }
+      });
+      $scope.status.isPageLoading = false;
+    };
 
-    $scope.$watch('settings.def.visualization.type', function(){
-      if ($scope.settings.def.visualization.type === 'range') {
-        $scope.settings.def.visualization.chartValueDisabled = true;
-      } else {
-        $scope.settings.def.visualization.chartValueDisabled = false;
-      }
-    });
+    // Initializing
+    $scope.status = {
+      isPageLoading: true,
+      isLoading: false,
+      archiveSaved: false,
+      loadingPercent: '',
+      periodTimerStart: null,
+      periodTimerEnd: null,
+      isShowTimerStart: false,
+      isShowTimerEnd: false,
+      invalidPagePeriodStart: false,
+      invalidPagePeriodEnd: false,
+      isControlPanelHidden: false,
+    };
 
+    $scope.archive = {};
+    $scope.charts = {total: 0, loaded: 0, data: {}};
+    $scope.loadDefaultSchema($routeParams.id, $scope.initialWatching);
+  
   });

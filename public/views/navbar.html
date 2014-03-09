@@ -7,26 +7,27 @@
         <div class="navbar-collapse collapse" ng-controller="MainCtrl">
           <ul class="nav navbar-nav">
 
+            <!-- Dashboard dropdown start -->
             <li ng-class="{ active: isActive('/dash'), dropdown: true}">
-              <a ng-click="setFilterFocus()" href class="dropdown-toggle" data-toggle="dropdown">Dashboard<b class="caret"></b></a>
+              <a ng-click="setDashboardFilterFocus()" href class="dropdown-toggle" data-toggle="dropdown">Dashboard<b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <li>
                   <div class="row" style="padding: 3px 20px;min-width:330px;">
                     <div class="col-xs-7">
                       <div class="input-group input-group-sm">
                         <span class="input-group-addon"><i class="fa fa-filter"></i></span>
-                        <input type="text" ng-focus-on="menuDashboardFilter" class="form-control" placeholder="Search..." ng-model="dashboardFilter">
+                        <input ng-init="dashboardFilter=''" type="text" ng-focus-on="menuDashboardFilter" class="form-control" placeholder="Search..." ng-model="dashboardFilter">
                       </div>
                     </div>
                     <div class="col-xs-5" style="padding-left:0;padding-right:0;">
-                      <button ng-click="refreshDashboardList()" class="btn btn-sm btn-default"><i ng-class="{'fa': true,'fa-refresh': true, 'fa-spin': $root.config.isDashboardsRefreshing}"></i></button>
+                      <button ng-click="refreshDashboardList()" class="btn btn-sm btn-default"><i ng-class="{'fa': true,'fa-refresh': true, 'fa-spin': config.isDashboardsRefreshing}"></i></button>
                       <a ng-href="#/dash" class="btn btn-sm btn-default"><i class="fa fa-gear"></i></a>
                       <a ng-href="#/dash/new" class="btn btn-sm btn-default"><i class="fa fa-plus-square-o"></i></a>
                     </div>
                   </div>
                 </li>
                 <li class="divider"></li>
-                <li ng-repeat="dashboard in $root.config.dashboards | filter:dashboardFilter | filter: {global: true}">
+                <li ng-repeat="dashboard in config.dashboards | filter:dashboardFilter | filter: {global: true}">
                   <a ng-href="#/dash/id/{{ dashboard._id }}">
                     <div class="bs-callout" style="margin: 5px 0; padding: 0 0 0 5px;">
                       <strong><i class="fa fa-bar-chart-o"></i> {{ dashboard.name }}</strong>
@@ -35,7 +36,7 @@
                   </a>
                 </li>
                 <li class="divider"></li>
-                <li ng-repeat="dashboard in $root.config.dashboards | filter:dashboardFilter | filter: {global: false}">
+                <li ng-repeat="dashboard in config.dashboards | filter:dashboardFilter | filter: {global: false}">
                   <a ng-href="#/dash/id/{{ dashboard._id }}">
                     <div class="bs-callout" style="margin: 5px 0; padding: 0 0 0 5px;">
                       <strong><i class="fa fa-bar-chart-o"></i> {{ dashboard.name }}</strong>
@@ -45,25 +46,51 @@
                 </li>
               </ul>
             </li>
+            <!-- End dashboard dropdown menu -->
 
-            <li ng-repeat="menu in menus" ng-class="{ active: isActive(menu.href)}"><a ng-href="#{{ menu.href }}">{{ menu.title }}</a></li>
+            <!-- Workbench dropdown start -->
+            <li ng-class="{ active: isActive('/workbench'), dropdown: true}">
+              <a ng-click="setSchemaFilterFocus()" href class="dropdown-toggle" data-toggle="dropdown">Workbench<b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li>
+                  <div class="row" style="padding: 3px 20px;min-width:250px;">
+                    <div class="col-xs-7">
+                      <div class="input-group input-group-sm">
+                        <span class="input-group-addon"><i class="fa fa-filter"></i></span>
+                        <input ng-init="schemaFilter=''" type="text" ng-focus-on="menuSchemaFilter" class="form-control" placeholder="Search..." ng-model="schemaFilter">
+                      </div>
+                    </div>
+                    <div class="col-xs-5" style="padding-left:0;padding-right:0;">
+                      <button ng-click="refreshSchemaList()" class="btn btn-sm btn-default"><i ng-class="{'fa': true,'fa-refresh': true, 'fa-spin': config.isSchemasRefreshing}"></i></button>
+                      <a ng-href="#/workbench/schema" class="btn btn-sm btn-default"><i class="fa fa-gear"></i></a>
+                    </div>
+                  </div>
+                </li>
+                <li class="divider"></li>
+                <li ng-repeat="schema in config.schemas | filter:schemaFilter">
+                  <a ng-href="#/workbench/id/{{ schema._id }}">
+                    <div class="bs-callout" style="margin: 5px 0; padding: 0 0 0 5px;">
+                      <strong><i class="fa fa-tasks"></i> {{ schema.name }}</strong>
+                      <p><small class="text-muted">{{ schema.description }}</small></p>
+                    </div>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <!-- End workbench dropdown -->
+
+            <!-- Archives menu -->
+            <li ng-class="{ active: isActive('/archive')}"><a ng-href="#/archive">Archives</a></li>
+            <!-- End archives menu -->
             
           </ul>
+
+          <!-- Dropdown pull-right start -->
           <ul class="nav navbar-nav navbar-right">
-            <li ng-class="{ active: isActive('/profile'), dropdown: true}">
-              <a href class="dropdown-toggle" data-toggle="dropdown">
-                <span ng-show="$root.config.currentProfile.name === undefined">{{ strProfile }}</span>
-                <span ng-hide="$root.config.currentProfile.name === undefined">{{ $root.config.currentProfile.name }}</span>
-                <b class="caret"></b>
-              </a>
-              <ul class="dropdown-menu">
-                <li ng-repeat="profile in $root.config.profiles"><a href ng-click="setProfile(profile.name)">{{ profile.name }}</a></li>
-                <li class="divider"></li>
-                <li><a ng-href="#/profile">Manage Profiles...</a></li>
-              </ul>
-            </li>
             <li ng-class="{ active: isActive('/about')}"><a ng-href="#/about"><i class="fa fa-question-circle"></i> About</a></li>
           </ul>
+          <!-- End dropdown pull-right -->
+
         </div><!--/.nav-collapse -->
       </div>
     </div>

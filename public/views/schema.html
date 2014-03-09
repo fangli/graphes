@@ -1,11 +1,9 @@
 <div ng-show="!showingCurrent">
   <div>
-    <h3>All Profiles</h3>
-    <a href class="btn btn-default btn-xs" ng-click="newCurrent()"><i class="text-muted fa fa-plus-square-o"></i> Add</a>
+    <h3>Workbench Schemas</h3>
+    <a href class="btn btn-default btn-xs" ng-click="newCurrent()"><i class="text-muted fa fa-plus-square-o"></i> New</a>
      | 
-    <a href class="btn btn-default btn-xs" ng-click="reloadProfiles()"><i class="text-muted fa fa-refresh"></i> Refresh</a>
-     | 
-    <span class="text-muted">Current Profile: {{ $root.config.currentProfile.name }}</span>
+    <a href class="btn btn-default btn-xs" ng-click="reloadSchemas()"><i class="text-muted fa fa-refresh"></i> Refresh</a>
   </div>
   <hr>
   <div class="table-responsive">
@@ -20,17 +18,16 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="profile in $root.config.profiles">
-          <td><i class="fa fa-file-text-o"></i> <a href>{{ profile.name }}</a></td>
-          <td>{{ profile.pattern }}</td>
+        <tr ng-repeat="schema in schemas">
+          <td><i class="fa fa-file-text-o"></i> <a href ng-click="showCurrent($index)">{{ schema.name }}</a></td>
+          <td>{{ schema.pattern }}</td>
           <td>
-            <span ng-repeat="dimension in profile.def.model.dimensions">
+            <span ng-repeat="dimension in schema.def.model.dimensions">
               <span tooltip-placement="top" tooltip-trigger="mouseenter" tooltip="{{ dimension.pattern }}" class="label label-info">{{ dimension.name }}</span>&nbsp;
             </span>
           </td>
-          <td>{{ profile.description }}</td>
+          <td>{{ schema.description }}</td>
           <td align="center">
-            <a href ng-click="showCurrent($index)"><i class="fa fa-edit"></i></a> 
             <a href ng-click="removeSelect($index)"><i class="fa fa-trash-o"></i></a>
           </td>
         </tr>
@@ -44,22 +41,22 @@
 
 <div ng-show="showingCurrent">
   <h3>
-    <span ng-show="isNew()">New Profile </span>
-    <span ng-hide="isNew()">Editing </span> <span class="text-muted">{{currentProfile.name}}</span>
+    <span ng-show="!currentSchema._id">New Schema </span>
+    <span ng-show="currentSchema._id">Editing </span> <span class="text-muted">{{currentSchema.name}}</span>
   </h3>
   <hr>
-  <form role="form" ng-submit="saveCurrentProfile()">
+  <form role="form" ng-submit="saveCurrentSchema()">
     <div class="form-group">
       <label for="inputName">Name*</label>
-      <input type="text" class="form-control" id="inputName" placeholder="Enter the profile name" name="name" ng-model="currentProfile.name" ng-required="true">
+      <input type="text" class="form-control" id="inputName" placeholder="Enter the schema name" name="name" ng-model="currentSchema.name" ng-required="true">
     </div>
     <div class="form-group">
       <label for="inputPattern">Index Pattern*</label>
-      <input type="text" class="form-control" id="inputPattern" placeholder="Enter the target index pattern" name="pattern" ng-model="currentProfile.pattern" ng-required="true">
+      <input type="text" class="form-control" id="inputPattern" placeholder="Enter the target index pattern" name="pattern" ng-model="currentSchema.pattern" ng-required="true">
     </div>
     <div class="form-group">
       <label for="inputDescription">Description</label>
-      <input type="text" class="form-control" id="inputDescription" placeholder="The description of profile" name="description" ng-model="currentProfile.description">
+      <input type="text" class="form-control" id="inputDescription" placeholder="The description of schema" name="description" ng-model="currentSchema.description">
     </div>
 
       <hr>
@@ -69,39 +66,39 @@
 
         <div class="form-group">
           <label for="inputDefaultQuery">Query string</label>
-          <input type="text" class="form-control" id="inputDefaultQuery" placeholder="The default query string" ng-model="currentProfile.def.model.query">
+          <input type="text" class="form-control" id="inputDefaultQuery" placeholder="The default query string" ng-model="currentSchema.def.model.query">
         </div>
 
         <div class="form-group">
           <label for="inputPeriodStart">Period from</label>
-          <input type="text" class="form-control" id="inputPeriodStart" placeholder="The default start time of the query" ng-model="currentProfile.def.period.start">
+          <input type="text" class="form-control" id="inputPeriodStart" placeholder="The default start time of the query" ng-model="currentSchema.def.period.start">
         </div>
 
         <div class="form-group">
           <label for="inputPeriodEnd">Period to</label>
-          <input type="text" class="form-control" id="inputPeriodEnd" placeholder="The default end time of the query" ng-model="currentProfile.def.period.end">
+          <input type="text" class="form-control" id="inputPeriodEnd" placeholder="The default end time of the query" ng-model="currentSchema.def.period.end">
         </div>
 
         <div class="form-group"><label>Comparison</label></div>
 
         <div class="form-group">
           <label class="radio-inline">
-            <input type="radio" ng-model="currentProfile.def.period.compare" ng-value="true"> Enabled compare
+            <input type="radio" ng-model="currentSchema.def.period.compare" ng-value="true"> Enabled compare
           </label>
           <label class="radio-inline">
-            <input type="radio" ng-model="currentProfile.def.period.compare" ng-value="false"> Disabled compare
+            <input type="radio" ng-model="currentSchema.def.period.compare" ng-value="false"> Disabled compare
           </label>
         </div>
 
         <div class="form-group">
-          <input type="text" class="form-control" placeholder="The default offset of comparison(in seconds)" ng-model="currentProfile.def.period.offset">
+          <input type="text" class="form-control" placeholder="The default offset of comparison(in seconds)" ng-model="currentSchema.def.period.offset">
         </div>
 
         <div class="form-group">
           <div class="row">
             <div class="col-xs-2">
               <label>Chart Type</label>
-              <select class="form-control" ng-model="currentProfile.def.visualization.type">
+              <select class="form-control" ng-model="currentSchema.def.visualization.type">
                 <option value="area">Area</option>
                 <option value="line">Line</option>
                 <option value="column">Column</option>
@@ -110,7 +107,7 @@
             </div>
             <div class="col-xs-2">
               <label>Chart Value</label>
-              <select class="form-control" ng-model="currentProfile.def.visualization.chartValue">
+              <select class="form-control" ng-model="currentSchema.def.visualization.chartValue">
                 <option value="min">Min</option>
                 <option value="mean">Mean</option>
                 <option value="max">Max</option>
@@ -120,7 +117,7 @@
             </div>
             <div class="col-xs-2">
               <label>Stacking</label>
-              <select class="form-control" ng-model="currentProfile.def.visualization.stacking">
+              <select class="form-control" ng-model="currentSchema.def.visualization.stacking">
                 <option value="">Disabled</option>
                 <option value="normal">Normal</option>
                 <option value="percent">Percent</option>
@@ -131,25 +128,25 @@
           <div class="row">
             <div class="col-xs-2">
               <label>Value Field/Script</label>
-              <input type="text" class="form-control" placeholder="The default field of values" ng-model="currentProfile.def.visualization.valueField">
+              <input type="text" class="form-control" placeholder="The default field of values" ng-model="currentSchema.def.visualization.valueField">
             </div>
             <div class="col-xs-2">
               <label>Time Field</label>
-              <input type="text" class="form-control" placeholder="The default field of datetime" ng-model="currentProfile.def.period.timeField">
+              <input type="text" class="form-control" placeholder="The default field of datetime" ng-model="currentSchema.def.period.timeField">
             </div>
             <div class="col-xs-3">
               <div class="input-group" style="margin: 2px;">
                 <span class="input-group-addon" style="width: 90px;">
-                  <label><input ng-model="currentProfile.def.period.pointIntervalOpt" value="interval" type="radio" name="downsampleOption"> Interval</label>
+                  <label><input ng-model="currentSchema.def.period.pointIntervalOpt" value="interval" type="radio" name="downsampleOption"> Interval</label>
                 </span>
-                <input style="text-align:right;" type="text" class="form-control" ng-model="currentProfile.def.period.pointInterval">
+                <input style="text-align:right;" type="text" class="form-control" ng-model="currentSchema.def.period.pointInterval">
               </div><!-- /input-group -->
 
               <div class="input-group" style="margin: 2px;">
                 <span class="input-group-addon" style="width: 90px;">
-                  <label><input ng-model="currentProfile.def.period.pointIntervalOpt" value="points" type="radio" name="downsampleOption"> Points</label>
+                  <label><input ng-model="currentSchema.def.period.pointIntervalOpt" value="points" type="radio" name="downsampleOption"> Points</label>
                 </span>
-                <input style="text-align:right;" type="text" min="1" class="form-control" ng-model="currentProfile.def.period.pointPoints">
+                <input style="text-align:right;" type="text" min="1" class="form-control" ng-model="currentSchema.def.period.pointPoints">
               </div><!-- /input-group -->
 
             </div>
@@ -163,7 +160,7 @@
       </h5>
 
       <div class="highlight">
-        <div ng-repeat="(id, dimension) in currentProfile.def.model.dimensions">
+        <div ng-repeat="(id, dimension) in currentSchema.def.model.dimensions">
           <div class="row">
             <div class="col-xs-2">
               <input type="text" class="form-control" placeholder="Name" ng-model="dimension.name" ng-required="true">
@@ -175,13 +172,12 @@
           </div>
           <p></p>
         </div>
-        <div class="text-muted" ng-show="currentProfile.def.model.dimensions.length === 0">No dimension existed, click button Add to create one.</div>
+        <div class="text-muted" ng-show="currentSchema.def.model.dimensions.length === 0">No dimension existed, click button Add to create one.</div>
       </div>
 
-    <button type="submit" class="btn btn-primary">
-      <span ng-show="isNew()">Add</span>
-      <span ng-hide="isNew()">Update</span>
-    </button>
-    <a class="btn btn-default" ng-click="cancelCurrent()">Cancel</a>
+    <a class="btn btn-sm btn-default" ng-click="cancelCurrent()">Cancel</a>
+    <button class="btn btn-sm btn-primary"><i class="fa fa-floppy-o"></i> Save</button>
+    <span ng-show="currentSchema._id">&nbsp;|&nbsp;</span>
+    <button ng-click="madeCurrentDuplicate()" ng-show="currentSchema._id" class="btn btn-sm btn-primary"><i class="fa fa-files-o"></i> Duplicate</button>
   </form>
 </div>
