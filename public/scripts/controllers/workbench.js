@@ -137,6 +137,7 @@ angular.module('graphEsApp')
       $scope.charts.data[info.id] = {
         chartData: Graph.parseGraphConfig(graphConfig),
         queryString: angular.toJson(info.query, true),
+        series: series,
         info: info,
       };
 

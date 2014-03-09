@@ -196,6 +196,9 @@ angular.module('graphEsApp')
       $scope.loadGroupData(group);
     };
 
+    $scope.deactiveTab = function() {
+    };
+
     $scope.$watch('isEditing', function() {
       $scope.flushChartSize();
     });
@@ -215,7 +218,6 @@ angular.module('graphEsApp')
     if (($location.path() === '/dash/new') || ($location.path().endsWith('/edit'))) {
       $scope.changeToEditingMode();
     }
-
 
   }
 );

@@ -75,7 +75,7 @@
     </div>
     <div class="panel-body">
       <tabset>
-        <tab active="$first" select="activeTab(group)" ng-repeat="group in box.groups">
+        <tab active="$first" select="activeTab(group)" deselect="deactiveTab(group)" ng-repeat="group in box.groups">
           <tab-heading>
             <span ng-show="!isEditing">{{ group.name }}</span>
             <span ng-show="isEditing">
