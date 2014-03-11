@@ -314,5 +314,3 @@
   background-color: #f3f9ef;
   border-color: #d6e9c6;
 }
-
-$scope.charts = {total: 0, loaded: 0, data: {}};
