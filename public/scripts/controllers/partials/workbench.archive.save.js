@@ -16,7 +16,7 @@ angular.module('graphEsApp')
         .success(function(result) {
           $scope.loadingStatus = 'ok';
           $scope.archiveId = result._id;
-          $scope.archiveUrl = $location.protocol() + '://' + $location.host() + ':' + $location.port() + '/archive/' + result._id;
+          $scope.archiveUrl = $location.protocol() + '://' + $location.host() + ((($location.port() === 80) || ($location.port() === 443))?'':(':' + $location.port()))  + '/archive/' + result._id;
           new Setfocus('archiveUrlInput');
         })
         .error(function(e) {
