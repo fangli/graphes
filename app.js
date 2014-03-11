@@ -23,6 +23,7 @@ require('./models/esproxy').configureESProxy(app, config.es_host, config.es_port
 app.use(express.urlencoded());
 app.use(express.json());
 app.use(express.methodOverride());
+app.use(express.compress());
 require('./controllers/schemaController')(app);
 require('./controllers/listController')(app);
 require('./controllers/archiveController')(app);
