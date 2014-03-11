@@ -5,17 +5,20 @@ var app = angular.module('graphEsApp', [
   'ngResource',
   'ngSanitize',
   'ngRoute',
+  'ngAnimate',
   'ui.bootstrap',
   'highcharts-ng',
   'xeditable',
   'LocalStorageModule',
+  'chieffancypants.loadingBar',
 ]);
 
 
-app.config(function ($routeProvider, $httpProvider, $locationProvider) {
+app.config(function ($routeProvider, $httpProvider, $locationProvider, cfpLoadingBarProvider) {
     
     $httpProvider.defaults.headers.common['Content-Type'] = 'application/json';
     $locationProvider.html5Mode(true);
+    cfpLoadingBarProvider.includeBar = false;
 
     $routeProvider
       .when('/dash', {

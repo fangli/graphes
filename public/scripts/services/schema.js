@@ -7,7 +7,11 @@ angular.module('graphEsApp')
     return {
 
       get: function(id) {
-        return $http.get(baseUrl + id);
+        if (id) {
+          return $http.get(baseUrl + id);
+        } else {
+          return $http.get(baseUrl + id, {ignoreLoadingBar: true});
+        }
       },
 
       save: function(id, body){

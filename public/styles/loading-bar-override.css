@@ -1,0 +1,9 @@
+#loading-bar-spinner {
+  top: 18px !important;
+  z-index: 23000 !important;
+}
+
+#loading-bar-spinner .spinner-icon {
+  border-top-color:  #777777;
+  border-left-color: #777777;
+}
