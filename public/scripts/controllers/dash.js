@@ -2,7 +2,7 @@
 
 angular.module('graphEsApp')
 
-  .controller('DashCtrl', function($route, $location, $routeParams, $scope, $timeout, Head, Graph, Dashboard) {
+  .controller('DashCtrl', function($route, $location, $routeParams, $modal, $scope, $timeout, Head, Graph, Dashboard) {
     Head.setTitle('Dashboard');
 
     $scope.colorScheme = {
@@ -126,7 +126,7 @@ angular.module('graphEsApp')
     $scope.saveSourceAndRefresh = function(group, index) {
       $timeout(function(){
         group.charts[index].$$$isShowingSource = false;
-        group.charts[index].$$$chartData = angular.copy($scope.defaultChart);
+        group.charts[index].$$$chartData.loading = true;
         $scope.loadSingle(group.charts[index]);
       }, 5);
     };
@@ -197,6 +197,25 @@ angular.module('graphEsApp')
     };
 
     $scope.deactiveTab = function() {
+    };
+
+    $scope.openDetails = function(chart) {
+      var modalInstance = $modal.open({
+        templateUrl: 'views/partials/dash.chart.details.html',
+        controller: 'DashDetailsCtrl',
+        resolve: {
+          chart: function () {
+            return angular.copy(chart);
+          },
+        }
+      });
+
+      // modalInstance.result.then(function (selectedItem) {
+      //   $scope.selected = selectedItem;
+      // }, function () {
+      //   $log.info('Modal dismissed at: ' + new Date());
+      // });
+
     };
 
     $scope.$watch('isEditing', function() {

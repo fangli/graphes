@@ -100,14 +100,22 @@
             <div ng-repeat="chart in group.charts" class="col-xs-{{ group.chartWidth }}">
               <div class="bs-callout bs-callout-{{ chart.style }}">
                 <h4>
-                  <span ng-show="!isEditing">{{ chart.name }}</span>
+                  <span ng-show="!isEditing">{{ chart.name }} <small>{{chart.description}}</small></span>
                   <span ng-show="isEditing">
                     <a href="#" editable-text="chart.name">{{ chart.name || 'Empty' }}</a>&nbsp;
+                    <small class="text-muted"><a href="#" editable-text="chart.description">{{ chart.description || 'Empty' }}</a></small>&nbsp;
                     <a href ng-click="toggleSource(group, $index)"><i class="fa fa-pencil-square-o"></i></a>&nbsp;
                     <a href ng-click="deleteChart(group, $index)"><i class="fa fa-trash-o"></i></a>
                   </span>
                 </h4>
-                <highchart ng-show="(!isEditing) || (!chart.$$$isShowingSource)" style="width:100%;height: {{ group.chartHeight }}px" config="chart.$$$chartData"></highchart>
+                <div>
+                  <highchart ng-show="(!isEditing) || (!chart.$$$isShowingSource)" style="width:100%;height: {{ group.chartHeight }}px" config="chart.$$$chartData"></highchart>
+                  <span ng-show="!isEditing" class="pull-right">
+                    <small class="text-muted"><i class="fa fa-info"></i> From<i> <a onaftersave="saveSourceAndRefresh(group, $index)" buttons="no" href editable-text="chart.chartQuery.period.start">{{ chart.chartQuery.period.start }}</a> </i>to<i> <a onaftersave="saveSourceAndRefresh(group, $index)" buttons="no" href editable-text="chart.chartQuery.period.end">{{ chart.chartQuery.period.end }}</a></i></small>
+                    <button class="btn btn-xs btn-default" ng-click="openDetails(chart)"><i class="fa fa-share text-muted"></i></button>
+                  </span>
+                  <span name="justaplaceholder">&nbsp;</span>
+                </div>
                 <span ng-show="(isEditing) && (chart.$$$isShowingSource)">
                   <div class="row">
                     <div class="col-xs-12">

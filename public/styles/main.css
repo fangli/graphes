@@ -26,3 +26,8 @@ button:focus {
   padding: 5px;
   border-radius: 3px;
 }
+
+.modal-dialog
+{
+  width: 800px;
+}
