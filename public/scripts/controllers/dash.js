@@ -23,7 +23,6 @@ angular.module('graphEsApp')
 
     $scope.isEditing = false;
     $scope.dashSettings = {name: '',description: '',boxes: [],global: false};
-    $scope.defaultChart = {options: {credits: {enabled: false, }, exporting: {enabled: false, }, }, title: {text: ''}, loading: true, };
 
     $scope.getDashSettings = function() {
       Dashboard.get($scope.config.currentId)
@@ -107,6 +106,11 @@ angular.module('graphEsApp')
 
     $scope.bindChart = function(series, chart) {
 
+      if (!series) {
+        chart.$$$chartData = angular.copy(Graph.nodataChart);
+        return;
+      }
+
       var graphConfig = {
         title: '',
         yaxisTitle: chart.chartQuery.mainQuery,
@@ -134,7 +138,7 @@ angular.module('graphEsApp')
     $scope.loadGroupData = function (group) {
       for (var i = group.charts.length - 1; i >= 0; i--) {
         if (!group.charts[i].$$$chartData) {
-          group.charts[i].$$$chartData = angular.copy($scope.defaultChart);
+          group.charts[i].$$$chartData = angular.copy(Graph.defaultChart);
           $scope.loadSingle(group.charts[i]);
         } else {
 
@@ -158,7 +162,7 @@ angular.module('graphEsApp')
         return false;
       }
 
-      group.$$$newChart.$$$chartData = angular.copy($scope.defaultChart);
+      group.$$$newChart.$$$chartData = angular.copy(Graph.defaultChart);
       var chartIndex = group.charts.push(angular.copy(group.$$$newChart)) - 1;
       $scope.loadSingle(group.charts[chartIndex]);
       group.$$$newChart = {name: '', $$$chartData: null, style: 'default', description: '', chartQuery: {}, miniMode: true,};

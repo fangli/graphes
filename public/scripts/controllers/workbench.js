@@ -126,16 +126,24 @@ angular.module('graphEsApp')
         info.query.stacking = (typeof(params.stacking) === 'string')? params.stacking : info.query.stacking;
       }
 
-      var graphConfig = {
-        title: '',
-        yaxisTitle: info.query.mainQuery,
-        series: series,
-        graphType: info.query.graphType,
-        stacking: info.query.stacking,
-      };
+      var graphConfig;
+      var chartData;
+
+      if (series) {
+        graphConfig = {
+          title: '',
+          yaxisTitle: info.query.mainQuery,
+          series: series,
+          graphType: info.query.graphType,
+          stacking: info.query.stacking,
+        };
+        chartData = Graph.parseGraphConfig(graphConfig);
+      } else {
+        chartData = angular.copy(Graph.nodataChart);
+      }
 
       $scope.charts.data[angular.formatInt(info.id)] = {
-        chartData: Graph.parseGraphConfig(graphConfig),
+        chartData: chartData,
         queryString: angular.toJson(info.query, true),
         $$$series: series,
         info: info,
@@ -148,7 +156,6 @@ angular.module('graphEsApp')
       } else {
         $scope.status.loadingPercent = '(' + $scope.charts.$$$loaded + '/' + $scope.charts.$$$total + ')';
       }
-      console.log(Graph.parseGraphConfig(graphConfig));
     };
 
     $scope.showGraph = function() {

@@ -335,7 +335,8 @@ angular.module('graphEsApp')
         pro.then(function(data) {
           cb(postParse(data,query.seriesType, query.period.offset), param);
         }, function(e) {
-          window.alert(e.error);
+          console.log(e.error);
+          cb(null, param);
         });
       },
 

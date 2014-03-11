@@ -5,13 +5,18 @@ angular.module('graphEsApp')
   .controller('DashDetailsCtrl', function($scope, $modalInstance, Graph, chart) {
     $scope.chart = chart;
 
-    $scope.chartData = {options: {credits: {enabled: false, }, exporting: {enabled: false, }, }, title: {text: ''}, loading: true, };
+    $scope.chartData = angular.copy(Graph.defaultChart);
 
     $scope.close = function(){
       $modalInstance.close();
     };
 
     $scope.bindChart = function(series, chart) {
+
+      if (!series) {
+        $scope.chartData = angular.copy(Graph.nodataChart);
+        return;
+      }
 
       var graphConfig = {
         title: '',

@@ -8,6 +8,10 @@ angular.module('graphEsApp')
 
     return {
 
+      defaultChart: {options: {credits: {enabled: false, }, exporting: {enabled: false, }, }, title: {text: ''}, loading: true},
+
+      nodataChart: {options: {credits: {enabled: false, }, exporting: {enabled: false, }, }, title: {text: 'No data to display'}, loading: false, },
+
       injectTimetoBasicQueries: function(basicQueries) {
         return adapter.injectTimetoBasicQueries(basicQueries);
       },
