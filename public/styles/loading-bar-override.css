@@ -4,6 +4,6 @@
 }
 
 #loading-bar-spinner .spinner-icon {
-  border-top-color:  #777777;
-  border-left-color: #777777;
+  border-top-color:  #777777 !important;
+  border-left-color: #777777 !important;
 }
