@@ -1,0 +1,34 @@
+<div class="modal-header">
+  <span class="pull-right">
+    <button class="btn btn-sm btn-default" ng-click="close()"><i class="fa fa-times"></i></button>
+  </span>
+  <h4>Archive</h4>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="col-xs-12">
+      <span ng-show="loadingStatus === 'loading'">
+        <img src="images/loading.gif">&nbsp;Processing ...
+      </span>
+      <span ng-show="loadingStatus === 'ok'">
+        <div class="form-group has-success">
+          <label class="control-label">Archive URL <small class="text-muted">Press Ctrl/Command + C to copy</small></label>
+          <div class="row">
+            <div class="col-xs-11">
+              <input ng-focus-on="archiveUrlInput" ng-model="archiveUrl" type="text" class="form-control input-sm" readonly style="cursor: pointer;">
+            </div>
+            <div class="col-xs-1">
+              <a ng-href="#/archive/{{archiveId}}" target="_blank" class="btn btn-sm btn-default" tooltip="Open in new tab"><i class="fa fa-share-square-o"></i></a>
+            </div>
+          </div>
+        </div>
+      </span>
+      <span ng-show="loadingStatus === 'error'">
+        <span class="text-danger"><strong>Error</strong>: {{ errMsg }}</span>
+        <p><a href ng-click="saveArchive()">Try again</a></p>
+      </span>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+</div>

@@ -379,10 +379,10 @@
   <div class="row">
     <div ng-show="(!status.isLoading) && charts.$$$loaded && (!status.archiveSaved)" class="col-xs-12">
       <a tooltip-popup-delay="500" tooltip="Click to rename" href="#" editable-text="archive.name">{{ archive.name }}</a>
-      <button tooltip-popup-delay="500" tooltip="Save all displayed charts as a archive and you can share it later" ng-click="saveAsArchive()" class="btn btn-xs btn-default"><i class="fa fa-floppy-o"></i> Save Result</button>
+      <button tooltip-popup-delay="500" tooltip="Save all displayed charts as a archive and you can share it later" ng-click="saveAsArchive()" class="btn btn-xs btn-success"><i class="fa fa-floppy-o"></i> Save and Share</button>
     </div>
     <div ng-show="(!status.isLoading) && charts.$$$loaded && (status.archiveSaved)" class="col-xs-12">
-      <p class="text-success">All following charts have been saved as <a ng-href="{{ status.archiveUrl }}">{{ status.archiveUrl }}</a></p>
+      <p class="text-success">All following charts have been saved as <a ng-href="{{ status.archiveUrl }}" target="_blank">{{ status.archiveUrl }}</a></p>
     </div>
   </div>
   <hr>

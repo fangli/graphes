@@ -2,7 +2,7 @@
 
 angular.module('graphEsApp')
 
-  .controller('WorkbenchCtrl', function($scope, $timeout, $location, $routeParams, Head, List, DateConv, Graph, Archive, Schema) {
+  .controller('WorkbenchCtrl', function($scope, $timeout, $location, $routeParams, $modal, Head, List, DateConv, Graph, Archive, Schema) {
     Head.setTitle('Workbench');
 
     $scope.loadDefaultSchema = function(id, callback) {
@@ -180,14 +180,26 @@ angular.module('graphEsApp')
 
     $scope.saveAsArchive = function() {
       $scope.archive.charts = $scope.charts;
-      Archive.save($scope.archive)
-        .success(function(data) {
+      
+      var modalInstance = $modal.open({
+        templateUrl: 'views/partials/workbench.archive.save.html',
+        controller: 'ArchiveSaveCtrl',
+        backdrop: 'static',
+        keyboard: false,
+        resolve: {
+          data: function () {
+            return angular.copy($scope.archive);
+          },
+        }
+      });
+
+      modalInstance.result.then(function (url) {
+        if (url) {
           $scope.status.archiveSaved = true;
-          $scope.status.archiveUrl = '/archive/' + data._id;
-        })
-        .error(function() {
-          window.alert('Could not save the charts archive, try again!');
-        });
+          $scope.status.archiveUrl = url;
+        }
+      });
+
     };
 
     $scope.initialWatching = function() {
