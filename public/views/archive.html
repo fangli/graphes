@@ -18,8 +18,31 @@
       </p>
       <hr>
       <div class="row">
-        <div ng-repeat="(i, chart) in mainData.charts.data">
+<!--         <div ng-repeat="(i, chart) in mainData.charts.data">
           <highchart config="chart.chartData" class="col-xs-12"></highchart>
+        </div> -->
+        <div ng-repeat="(id, chart) in mainData.charts.data">
+          <div class="row">
+            <div class="col-xs-11">
+              <highchart ng-show="!chart.$$$showingSource" config="chart.chartData" class="col-xs-12"></highchart>
+              <div ng-show="chart.$$$showingSource" class="highlight">
+                <h4>Query Source</h4>
+                <textarea class="form-control" rows="15">{{ chart.queryString }}</textarea>
+              </div>
+            </div>
+            <div class="col-xs-1" style="padding-left:0px">
+              <div class="row">
+                <div class="col-xs-12">
+                  <span><strong>No. {{ id*1 + 1 }}</strong></span>
+                  <hr>
+                </div>
+                <div class="col-xs-12">
+                  <p> <button type="button" class="btn btn-xs btn-default" ng-model="chart.$$$showingSource" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">Source</button> </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p>&nbsp;</p>
         </div>
       </div>
     </div>

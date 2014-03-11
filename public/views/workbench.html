@@ -377,11 +377,11 @@
 <div class="highlight">
   <h4>Graph Output {{ status.loadingPercent }}</h4>
   <div class="row">
-    <div ng-show="(!status.isLoading) && charts.loaded && (!status.archiveSaved)" class="col-xs-12">
+    <div ng-show="(!status.isLoading) && charts.$$$loaded && (!status.archiveSaved)" class="col-xs-12">
       <a tooltip-popup-delay="500" tooltip="Click to rename" href="#" editable-text="archive.name">{{ archive.name }}</a>
       <button tooltip-popup-delay="500" tooltip="Save all displayed charts as a archive and you can share it later" ng-click="saveAsArchive()" class="btn btn-xs btn-default"><i class="fa fa-floppy-o"></i> Save Result</button>
     </div>
-    <div ng-show="(!status.isLoading) && charts.loaded && (status.archiveSaved)" class="col-xs-12">
+    <div ng-show="(!status.isLoading) && charts.$$$loaded && (status.archiveSaved)" class="col-xs-12">
       <p class="text-success">All following charts have been saved as <a ng-href="{{ status.archiveUrl }}">{{ status.archiveUrl }}</a></p>
     </div>
   </div>
@@ -389,8 +389,8 @@
     <div ng-repeat="(id, chart) in charts.data">
       <div class="row">
         <div class="col-xs-11">
-          <highchart ng-show="!chart.showingSource" config="chart.chartData" class="col-xs-12"></highchart>
-          <div ng-show="chart.showingSource" class="highlight">
+          <highchart ng-show="!chart.$$$showingSource" config="chart.chartData" class="col-xs-12"></highchart>
+          <div ng-show="chart.$$$showingSource" class="highlight">
             <h4>Query Source</h4>
             <textarea class="form-control" rows="15">{{ chart.queryString }}</textarea>
           </div>
@@ -403,29 +403,29 @@
             </div>
             <div class="col-xs-12">
               <p> <button ng-click="refreshOne(id, chart.info.query)" class="btn btn-xs btn-default">Refresh</button> </p>
-              <p> <button type="button" class="btn btn-xs btn-default" ng-model="chart.showingSource" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">Source</button> </p>
+              <p> <button type="button" class="btn btn-xs btn-default" ng-model="chart.$$$showingSource" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">Source</button> </p>
               <p><hr></p>
               <p>
                 <div class="radio">
-                  <label><input type="radio" name="opt-graphType-{{ id }}" value="area" ng-model="chart.info.query.graphType" ng-click="addChart(chart.series, chart.info, {'graphType': 'area'})">Area</label>
+                  <label><input type="radio" name="opt-graphType-{{ id }}" value="area" ng-model="chart.info.query.graphType" ng-click="addChart(chart.$$$series, chart.info, {'graphType': 'area'})">Area</label>
                 </div>
                 <div class="radio">
-                  <label><input type="radio" name="opt-graphType-{{ id }}" value="line" ng-model="chart.info.query.graphType" ng-click="addChart(chart.series, chart.info, {'graphType': 'line'})">Line</label>
+                  <label><input type="radio" name="opt-graphType-{{ id }}" value="line" ng-model="chart.info.query.graphType" ng-click="addChart(chart.$$$series, chart.info, {'graphType': 'line'})">Line</label>
                 </div>
                 <div class="radio">
-                  <label><input type="radio" name="opt-graphType-{{ id }}" value="column" ng-model="chart.info.query.graphType" ng-click="addChart(chart.series, chart.info, {'graphType': 'column'})">Column</label>
+                  <label><input type="radio" name="opt-graphType-{{ id }}" value="column" ng-model="chart.info.query.graphType" ng-click="addChart(chart.$$$series, chart.info, {'graphType': 'column'})">Column</label>
                 </div>
               </p>
               <p><hr></p>
               <p>
                 <div class="radio">
-                  <label><input type="radio" name="opt-graphStacking-{{ id }}" value="" ng-model="chart.info.query.stacking" ng-click="addChart(chart.series, chart.info, {'stacking': ''})">Disabled</label>
+                  <label><input type="radio" name="opt-graphStacking-{{ id }}" value="" ng-model="chart.info.query.stacking" ng-click="addChart(chart.$$$series, chart.info, {'stacking': ''})">Disabled</label>
                 </div>
                 <div class="radio">
-                  <label><input type="radio" name="opt-graphStacking-{{ id }}" value="normal" ng-model="chart.info.query.stacking" ng-click="addChart(chart.series, chart.info, {'stacking': 'normal'})">Normal</label>
+                  <label><input type="radio" name="opt-graphStacking-{{ id }}" value="normal" ng-model="chart.info.query.stacking" ng-click="addChart(chart.$$$series, chart.info, {'stacking': 'normal'})">Normal</label>
                 </div>
                 <div class="radio">
-                  <label><input type="radio" name="opt-graphStacking-{{ id }}" value="percent" ng-model="chart.info.query.stacking" ng-click="addChart(chart.series, chart.info, {'stacking': 'percent'})">Percent</label>
+                  <label><input type="radio" name="opt-graphStacking-{{ id }}" value="percent" ng-model="chart.info.query.stacking" ng-click="addChart(chart.$$$series, chart.info, {'stacking': 'percent'})">Percent</label>
                 </div>
               </p>
             </div>

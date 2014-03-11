@@ -35,3 +35,16 @@ angular.removeInList = function (k, v, list) {
     }
   }
 };
+
+angular.formatInt = function(num) {
+  var n = +num;
+  if (n < 10) {
+    return '00' + n;
+  }
+  if (n < 100) {
+    return '0' + n;
+  }
+  if (n < 1000) {
+    return n;
+  }
+}

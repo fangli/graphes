@@ -134,19 +134,19 @@ angular.module('graphEsApp')
         stacking: info.query.stacking,
       };
 
-      $scope.charts.data[info.id] = {
+      $scope.charts.data[angular.formatInt(info.id)] = {
         chartData: Graph.parseGraphConfig(graphConfig),
         queryString: angular.toJson(info.query, true),
-        series: series,
+        $$$series: series,
         info: info,
       };
 
-      $scope.charts.loaded += 1;
-      if ($scope.charts.loaded >= $scope.charts.total) {
+      $scope.charts.$$$loaded += 1;
+      if ($scope.charts.$$$loaded >= $scope.charts.$$$total) {
         $scope.status.loadingPercent = '';
         $scope.status.isLoading = false;
       } else {
-        $scope.status.loadingPercent = '(' + $scope.charts.loaded + '/' + $scope.charts.total + ')';
+        $scope.status.loadingPercent = '(' + $scope.charts.$$$loaded + '/' + $scope.charts.$$$total + ')';
       }
       console.log(Graph.parseGraphConfig(graphConfig));
     };
@@ -156,8 +156,8 @@ angular.module('graphEsApp')
       var oriQueries = Graph.getBasicQueries($scope.settings);
       $scope.generateArchiveName();
       $scope.status.isLoading = true;
-      $scope.charts = {total: oriQueries.length, loaded: 0, data: {}};
-      $scope.status.loadingPercent = '(0/' + $scope.charts.total + ')';
+      $scope.charts = {$$$total: oriQueries.length, $$$loaded: 0, data: {}};
+      $scope.status.loadingPercent = '(0/' + $scope.charts.$$$total + ')';
       $scope.status.isControlPanelHidden = true;
       for (var i = oriQueries.length - 1; i >= 0; i--) {
         query = Graph.injectTimetoBasicQueries(angular.copy(oriQueries[i]));
@@ -167,7 +167,7 @@ angular.module('graphEsApp')
 
     $scope.refreshOne = function(id, oriQuery) {
       var query = Graph.injectTimetoBasicQueries(angular.copy(oriQuery));
-      $scope.charts.data[id].chartData.loading = true;
+      $scope.charts.data[angular.formatInt(id)].chartData.loading = true;
       Graph.getOne(query, $scope.addChart, {'id': id, query: oriQuery});
     };
 
@@ -245,7 +245,7 @@ angular.module('graphEsApp')
     };
 
     $scope.archive = {};
-    $scope.charts = {total: 0, loaded: 0, data: {}};
+    $scope.charts = {$$$total: 0, $$$loaded: 0, data: {}};
 
     // Routes processing
     if ($routeParams.id) {
