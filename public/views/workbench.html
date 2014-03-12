@@ -375,7 +375,7 @@
 
 
 <div class="highlight">
-  <h4>Graph Output {{ status.loadingPercent }}</h4>
+  <h4>Graph Output {{ status.loadingPercent }} <a tooltip-popup-delay="500" tooltip="Refresh all charts" ng-show="(!status.isLoading) && charts.$$$loaded" href ng-click="refreshAll()"><i class="fa fa-refresh"></i></a></h4>
   <div class="row">
     <div ng-show="(!status.isLoading) && charts.$$$loaded && (!status.archiveSaved)" class="col-xs-12">
       <a tooltip-popup-delay="500" tooltip="Click to rename" href="#" editable-text="archive.name">{{ archive.name }}</a>

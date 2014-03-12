@@ -186,6 +186,12 @@ angular.module('graphEsApp')
       Graph.getOne(query, $scope.addChart, {'id': id, query: oriQuery});
     };
 
+    $scope.refreshAll = function() {
+      for (var id in $scope.charts.data) {
+        $scope.refreshOne(id, $scope.charts.data[id].info.query);
+      }
+    };
+
     $scope.generateArchiveName = function() {
       $scope.archive.name = 'Query ' + $scope.settings.def.model.query + ' generated at ' + DateConv.strtotime('now');
       $scope.archive.settings = angular.copy($scope.settings);
