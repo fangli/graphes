@@ -2,13 +2,13 @@
 
 angular.module('graphEsApp')
 
-  .controller('SchemaCtrl', function($location, $route, $scope, Head, Schema) {
+  .controller('SchemaCtrl', function($location, $route, $routeParams, $scope, Head, Schema) {
     Head.setTitle('Schemas');
 
     $scope.schemas = [];
     $scope.currentSchema = {};
 
-    $scope.reloadSchemas = function() {
+    $scope.reloadSchemas = function(cb) {
       $scope.schemas = {};
       $scope.isLoading = true;
 
@@ -16,6 +16,9 @@ angular.module('graphEsApp')
         .success(function(data) {
           $scope.isLoading = false;
           $scope.schemas = data;
+
+          if (cb) {cb()};
+
         })
         .error(function() {
           $scope.isLoading = false;
@@ -99,10 +102,25 @@ angular.module('graphEsApp')
         });
     };
 
-    $scope.reloadSchemas();
+    $scope.checkUrlParams = function() {
 
-    if ($location.path() === '/workbench/schema/new') {
-      $scope.newCurrent();
-    }
+      if ($location.path() === '/workbench/schema/new') {
+        $scope.newCurrent();
+        return;
+      }
+
+      if ($routeParams.id) {
+        var pos = angular.posInList('_id', $routeParams.id, $scope.schemas);
+        if (pos !== null) {
+          $scope.showCurrent(pos);
+        } else {
+          window.alert('Err: Workbench schema not found!');
+        }
+      }
+    };
+
+    $scope.reloadSchemas($scope.checkUrlParams);
+
+
 
   });

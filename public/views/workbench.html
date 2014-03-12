@@ -1,6 +1,13 @@
 <!-- Show page after schema loaded -->
 <div ng-show="!status.isPageLoading">
 
+<div class="row">
+  <div class="col-xs-12">
+    <h2><span style="text-transform: uppercase;text-shadow: 1px 1px 1px #999999;">{{ settings.name }}</span>&nbsp;<small>{{ settings.description }}</small>&nbsp;<a ng-href="#/workbench/schema/edit/{{ settings._id }}" class="btn btn-xs btn-default"><i class="fa fa-pencil-square-o"></i>Edit</a></h2>
+    <hr>
+  </div>
+</div>
+
 <div ng-hide="status.isControlPanelHidden" class="bs-example">
   <tabset>
 

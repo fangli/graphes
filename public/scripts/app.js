@@ -47,6 +47,10 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider, cfpLoadin
         templateUrl: 'views/schema.html',
         controller: 'SchemaCtrl',
       })
+      .when('/workbench/schema/edit/:id', {
+        templateUrl: 'views/schema.html',
+        controller: 'SchemaCtrl',
+      })
 
       .when('/workbench/archive/:archive', {
         templateUrl: 'views/workbench.html',
