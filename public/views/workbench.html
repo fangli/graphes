@@ -41,7 +41,7 @@
                           <span ng-repeat="(name, ena) in dimension.lists">
                             <span ng-click="toggleOne(dimension, name, ena)" ng-class="{btn: true, 'btn-default': !ena, 'btn-success': ena, 'btn-xs': true, active: ena}">{{ name }}</span>&nbsp;
                           </span>
-                          <input tooltip-popup-delay="500" tooltip="Press enter to confirm the new value. Add more in batch using '|' as the separator" ng-blur="addTags(dimension)" ng-model="dimension.tmpNew" placeholder="Add..." type="text" class="form-control input-sm" style="display: inline; width: 60px; height: 22px; margin: 4px;">
+                          <input typeahead="ahead for ahead in getDimensionValueList(dimension) | filter: $viewValue | limitTo:10" tooltip-popup-delay="500" tooltip="Press enter to confirm the new value. Add more in batch using '|' as the separator" ng-blur="addTags(dimension)" ng-model="dimension.tmpNew" placeholder="Add..." type="text" class="form-control input-sm" style="display: inline; width: 60px; height: 22px; margin: 4px;">
                         </form>
                       </div>
                     </div>

@@ -18,6 +18,14 @@ angular.module('graphEsApp')
         });
     };
 
+    $scope.getDimensionValueList = function(dimension) {
+      var ret = [];
+      for (var singleDimension in dimension.lists) {
+        ret.push(singleDimension);
+      };
+      return ret;
+    };
+
     $scope.loadArchiveSchema = function(id, callback) {
       Archive.get(id)
         .success(function(data) {
