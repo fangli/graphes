@@ -79,6 +79,9 @@ angular.module('graphEsApp')
                 },
               },
               plotOptions: {
+                series: {
+                  animation: false,
+                },
                 area: {
                   stacking: params.stacking,
                   fillOpacity: 0.5,
@@ -117,6 +120,9 @@ angular.module('graphEsApp')
                 pointFormat: pointFormat,
               },
               plotOptions: {
+                series: {
+                  animation: false,
+                },
                 column: {
                   stacking: params.stacking,
                 },
@@ -163,6 +169,9 @@ angular.module('graphEsApp')
                 zoomType: 'x',
               },
               plotOptions: {
+                series: {
+                  animation: false,
+                },
                 lineWidth: 1,
                 line: {
                   stacking: params.stacking,
@@ -197,6 +206,11 @@ angular.module('graphEsApp')
               },
               credits: {
                 enabled: false,
+              },
+              plotOptions: {
+                series: {
+                  animation: false,
+                },
               },
               tooltip: {
                 crosshairs: true,
