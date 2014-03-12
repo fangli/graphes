@@ -31,7 +31,7 @@
             </div>
             <hr>
 
-            <div ng-repeat="dimension in settings.def.model.dimensions | filter: {enabled: true}" class="">
+            <div class="animate-repeat" ng-repeat="dimension in settings.def.model.dimensions | filter: {enabled: true}" class="">
               <div class="bs-example">
                   <h4>{{ dimension.name }} <small> | <i class="text-muted" ng-bind-html="dimension.pattern | pattern"></i></small></h4><hr>
                   <div ng-class="{'group-normal': true, 'group-active': dimension.enableGroup}">
