@@ -47,4 +47,15 @@ angular.formatInt = function(num) {
   if (n < 1000) {
     return n;
   }
-}
+};
+
+angular.glob2regex = function(glob) {
+  var pregQuote = function (str, delimiter) {
+    return (str + '').replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\' + (delimiter || '') + '-]', 'g'), '\\$&');
+  };
+
+  var globStringToRegex = function(str) {
+    return new RegExp(pregQuote(str).replace(/\\\*/g, '.*').replace(/\\\?/g, '.'), 'g');
+  };
+  return globStringToRegex(glob);
+};

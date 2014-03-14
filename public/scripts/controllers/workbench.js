@@ -43,8 +43,20 @@ angular.module('graphEsApp')
       if (dimension.tmpNew) {
         var split = dimension.tmpNew.split('|');
         for (var i = split.length - 1; i >= 0; i--) {
-          if (split[i].trim()) {
-            dimension.lists[split[i].trim()] = true;
+          var target = split[i].trim();
+          if (target) {
+
+            if (target.indexOf('*') === -1) {
+              dimension.lists[target] = true;
+            } else {
+              for (var j in dimension.lists) {
+                var match = j.match(angular.glob2regex(target));
+                if (match && (match[0] === j)) {
+                  dimension.lists[j] = true;
+                }
+              }
+            }
+
           }
         }
       }
