@@ -4,7 +4,7 @@
         <div class="navbar-header">
           <a class="navbar-brand" ng-href="#/">GraphES</a>
         </div>
-        <div class="navbar-collapse collapse" ng-controller="MainCtrl">
+        <div class="navbar-collapse collapse" ng-controller="HeaderCtrl">
           <ul class="nav navbar-nav">
 
             <!-- Dashboard dropdown start -->
@@ -80,9 +80,10 @@
             </li>
             <!-- End workbench dropdown -->
 
-            <!-- Archives menu -->
+            <!-- Standard menu -->
             <li ng-class="{ active: isActive('/archive')}"><a ng-href="#/archive">Archives</a></li>
-            <!-- End archives menu -->
+            <li ng-class="{ active: isActive('/embedded')}"><a ng-href="#/embedded">Embedded</a></li>
+            <!-- End standard menu -->
             
           </ul>
 

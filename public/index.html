@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" ng-app="graphEsApp"> <!--<![endif]-->
-  <head ng-controller="MainCtrl">
+  <head ng-controller="HeaderCtrl">
     <meta charset="utf-8">
     <base href="/">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -31,9 +31,9 @@
     <![endif]-->
 
     <!-- Add your site or application content here -->
-    <div ng-navbar></div>
-    <div class="container" ng-view=""></div>
-    <div class="container" ng-footer></div>
+    <div ng-controller="MiniModeCtrl" ng-show="!isMiniMode" ng-navbar></div>
+    <div ng-controller="MiniModeCtrl" ng-class="{'container': !isMiniMode, 'full-screen': isMiniMode}" ng-view=""></div>
+    <div ng-controller="MiniModeCtrl" ng-show="!isMiniMode" class="container" ng-footer></div>
 
     <!--[if lt IE 9]>
     <script src="bower_components/es5-shim/es5-shim.js"></script>
@@ -82,15 +82,18 @@
     <script src="scripts/services/escape.js"></script>
     <script src="scripts/services/graph.js"></script>
     <script src="scripts/filters/pattern.js"></script>
+    <script src="scripts/controllers/minimode.js"></script>
     <script src="scripts/controllers/partials/dash.chart.details.js"></script>
     <script src="scripts/controllers/partials/workbench.archive.save.js"></script>
-    <script src="scripts/controllers/main.js"></script>
+    <script src="scripts/controllers/header.js"></script>
     <script src="scripts/controllers/dash.js"></script>
     <script src="scripts/controllers/dashlist.js"></script>
     <script src="scripts/controllers/workbench.js"></script>
     <script src="scripts/controllers/schema.js"></script>
     <script src="scripts/controllers/about.js"></script>
     <script src="scripts/controllers/archive.js"></script>
+    <script src="scripts/controllers/embedded.js"></script>
+    <script src="scripts/controllers/embeddedchart.js"></script>
     <script src="http://localhost:35729/livereload.js"></script>
     <!-- endbuild -->
 </body>

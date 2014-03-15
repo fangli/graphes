@@ -2,7 +2,7 @@
 
 angular.module('graphEsApp')
 
-  .controller('MainCtrl', function ($scope, $location, Head, Schema, Dashboard, Setfocus, Lstorage) {
+  .controller('HeaderCtrl', function ($scope, $location, Head, Schema, Dashboard, Setfocus, Lstorage) {
 
 
     $scope.config = {'schemas': [], 'dashboards': []};

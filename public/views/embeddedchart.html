@@ -1,0 +1,110 @@
+<div ng-show="!req.mini" class="row">
+  <div class="col-xs-12">
+    <h3>{{ req.title }}</h3>
+    <hr>
+  </div>
+</div>
+
+<div ng-show="!req.mini" class="row">
+  <div class="col-xs-12">
+    <form class="form-inline" role="form" ng-submit="refreshChart()">
+      <label>&nbsp;From</label>
+      <div class="form-group" style="width:200px;">
+        <!-- <input ng-model="req.from" type="text" class="form-control input-sm" placeholder="From time"> -->
+        <div class="input-group">
+          <input type="text" class="form-control" ng-model="req.from" >
+          <div class="input-group-btn">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+            <ul class="dropdown-menu pull-right">
+              <li><a href ng-click="req.from = '5 minutes ago'">5 minutes ago</a></li>
+              <li><a href ng-click="req.from = '15 minutes ago'">15 minutes ago</a></li>
+              <li><a href ng-click="req.from = '30 minutes ago'">30 minutes ago</a></li>
+              <li class="divider"></li>
+              <li><a href ng-click="req.from = '1 hour ago'">1 hour ago</a></li>
+              <li><a href ng-click="req.from = '3 hours ago'">3 hours ago</a></li>
+              <li><a href ng-click="req.from = '6 hours ago'">6 hours ago</a></li>
+              <li><a href ng-click="req.from = '12 hours ago'">12 hours ago</a></li>
+              <li class="divider"></li>
+              <li><a href ng-click="req.from = '1 day ago'">1 day ago</a></li>
+              <li><a href ng-click="req.from = '3 days ago'">3 days ago</a></li>
+              <li><a href ng-click="req.from = '7 days ago'">7 days ago</a></li>
+              <li><a href ng-click="req.from = '15 days ago'">15 days ago</a></li>
+              <li class="divider"></li>
+              <li><a href ng-click="req.from = '1 month ago'">1 month ago</a></li>
+            </ul>
+          </div><!-- /btn-group -->
+        </div><!-- /input-group -->
+      </div>
+      <label>&nbsp;To</label>
+      <div class="form-group" style="width:200px;">
+        <div class="input-group">
+          <input type="text" class="form-control" ng-model="req.to" >
+          <div class="input-group-btn">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+            <ul class="dropdown-menu pull-right">
+              <li><a href ng-click="req.to = 'now'">now</a></li>
+              <li><a href ng-click="req.to = 'yesterday'">Yesterday</a></li>
+              <li><a href ng-click="req.to = 'today'">Today</a></li>
+            </ul>
+          </div><!-- /btn-group -->
+        </div><!-- /input-group -->
+      </div>
+      <label>&nbsp;Stack</label>
+      <select ng-model="req.style_stacking" class="form-control input-sm">
+        <option value="">None</option>
+        <option value="normal">Normal</option>
+        <option value="percent">Percent</option>
+      </select>
+      <label>&nbsp;Style</label>
+      <select ng-model="req.style_type" class="form-control input-sm">
+        <option value="area">Area</option>
+        <option value="line">Line</option>
+        <option value="column">Column</option>
+      </select>
+      <label>&nbsp;Series</label>
+      <select ng-model="req.style_value" class="form-control input-sm">
+        <option value="min">Min</option>
+        <option value="mean">Mean</option>
+        <option value="max">Max</option>
+        <option value="count">Count</option>
+        <option value="total">Total</option>
+      </select>
+      &nbsp;<button type="submit" class="btn btn-sm btn-primary">Show</button>
+    </form>
+    <hr>
+  </div>
+</div>
+
+<div ng-show="showingMiniSettings" class="absolute-center">
+  <div class="highlight" style="margin-bottom:0;">
+      <form ng-submit="refreshChart()">
+        <table>
+          <tbody>
+            <tr>
+              <td style="border-top: none;"><label>From</label></td>
+              <td style="border-top: none;"><input ng-model="req.from" style="display:inline; width: 180px;" class="form-control input-sm" type="text" placeholder="Start time"></td>
+            </tr>
+            <tr>
+              <td style="border-top: none;"><label>To</label></td>
+              <td style="border-top: none;"><input ng-model="req.to" style="display:inline; width: 180px;" class="form-control input-sm" type="text" placeholder="End time"></td>
+            </tr>
+            <tr>
+              <td style="border-top: none;"></td>
+              <td style="border-top: none;">
+                <span class="pull-right">
+                  <a href ng-click="showingMiniSettings=false" class="btn btn-default btn-xs">Cancel</a>&nbsp;
+                  <button type="submit" class="btn btn-primary btn-xs">OK</button>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </form>
+  </div>
+</div>
+
+<div ng-show="req.mini" class="right-bottom">
+  <button ng-click="showingMiniSettings=true" class="btn btn-xs btn-default"><i class="fa fa-cogs"></i></button>
+</div>
+
+<highchart style="height: 100%; width: 100%" config="chartData"></highchart>

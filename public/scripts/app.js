@@ -66,6 +66,16 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider, cfpLoadin
         controller: 'ArchiveCtrl',
       })
 
+      .when('/embedded', {
+        templateUrl: 'views/embedded.html',
+        controller: 'EmbeddedCtrl',
+      })
+
+      .when('/embedded/chart', {
+        templateUrl: 'views/embeddedchart.html',
+        controller: 'EmbeddedChartCtrl',
+      })
+
       .when('/about', {
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl',

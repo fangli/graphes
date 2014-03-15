@@ -28,6 +28,7 @@ require('./controllers/schemaController')(app);
 require('./controllers/listController')(app);
 require('./controllers/archiveController')(app);
 require('./controllers/dashboardController')(app);
+require('./controllers/esdataController')(app);
 require('./controllers/casLoginController')(app);
 
 // Handler frontend app

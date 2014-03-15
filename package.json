@@ -6,7 +6,10 @@
     "jade": "~0.34.0",
     "mongodb": "latest",
     "redis": "latest",
-    "cas": "*"
+    "cas": "*",
+    "restler": "~3.2.0",
+    "moment": "~2.5.1",
+    "sugar": "~1.4.1"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

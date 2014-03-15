@@ -115,6 +115,21 @@ angular.module('graphEsApp')
       });
     };
 
+    var simpleRequest = function(data) {
+      return $http({method: 'POST', url: '/api/es/facets', data: data})
+            .then(function(response) {
+              if (typeof response.data === 'object') {
+                return response.data;
+              } else {
+                // invalid response
+                return $q.reject(response.data);
+              }
+            }, function(response) {
+                // something went wrong
+              return $q.reject(response.data);
+            });
+    };
+
     var postParse = function(data, seriesType, offset) {
       var seriesTemplate;
       if (seriesType === 'range') {
@@ -333,7 +348,17 @@ angular.module('graphEsApp')
       getOne: function(query, cb, param) {
         var pro = makeRequest(query.indices, query.chart);
         pro.then(function(data) {
-          cb(postParse(data,query.seriesType, query.period.offset), param);
+          cb(postParse(data, query.seriesType, query.period.offset), param);
+        }, function(e) {
+          console.log(e.error);
+          cb(null, param);
+        });
+      },
+
+      simpleGet: function(req, cb, param) {
+        var pro = simpleRequest(req);
+        pro.then(function(data) {
+          cb(postParse(data, req.style_value), param);
         }, function(e) {
           console.log(e.error);
           cb(null, param);

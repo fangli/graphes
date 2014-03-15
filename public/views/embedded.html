@@ -1,0 +1,135 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h3>Embedded GraphES&nbsp;<small>enables the ability to integrate your website with awesome charts in few clicks.</small></h3>
+    <hr>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
+    <h4>1. Link to the following URL in your website</h4>
+    <div class="bs-callout bs-callout-info">
+      <h4>Href link</h4>
+      <p class="text-info">&lt;a href=&quot;{{ baseLink }}/embedded/chart/?<strong>mini=false</strong>&amp;k1=v1&amp;k2=v2&quot; target=&quot;_blank&quot;&gt;See Chart&lt;/a&gt;</p>
+    </div>
+    <h4>2. or use embedded iframe in your page</h4>
+    <div class="bs-callout bs-callout-info">
+      <h4>Embedded iframe</h4>
+      <p class="text-info">{{ iframeContent[0] }}<strong>mini=true</strong>{{ iframeContent[1] }}</p>
+    </div>
+    <h4>3. or get RAW data from data service</h4>
+    <div class="bs-callout bs-callout-info">
+      <h4>HTTP POST</h4>
+      <p class="text-info">
+        <p><strong>POST TO</strong>: <span class="text-info">{{ baseLink }}/api/es/facets</span></p>
+        <p><strong>Data</strong></p>
+        <p><pre>{
+  "index_pattern": "",
+  "time_field": "",
+  "value_field": "",
+  "interval": "",
+  "from": "",
+  "to": "",
+  "series": {
+    "demoSeries1": [
+      "project:\"test\"",
+      "release:\"test\"",
+      "env:\"test\""
+    ],
+  }
+  "token": "", //token is used for authentication
+}</pre></p>
+      </p>
+    </div>
+    <hr>
+    <h4>Data Params</h4>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Options</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>index_pattern <small>*</small></td>
+          <td><i>String</i></td>
+          <td>The ES indice pattern</td>
+        </tr>
+        <tr>
+          <td>time_field</td>
+          <td><i>String. Default to "@timestamp"</i></td>
+          <td>The field name which contains metric timestamp</td>
+        </tr>
+        <tr>
+          <td>value_field</td>
+          <td><i>String. Default to "_value"</i></td>
+          <td>The field name which contains value</td>
+        </tr>
+        <tr>
+          <td>interval</td>
+          <td><i>Time with unit, such as 30s, 5m, 1d. Default to "5m"</i></td>
+          <td>The interval between each data points</td>
+        </tr>
+        <tr>
+          <td>from</td>
+          <td><i>UNIX Timestamp(in Milliseconds). Default to "24 hours ago"</i></td>
+          <td>Start time for series</td>
+        </tr>
+        <tr>
+          <td>to</td>
+          <td><i>UNIX Timestamp(in Milliseconds). Default to "now"</i></td>
+          <td>End time for series</td>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+    <h4>Series Params <small>*</small></h4>
+    <p>You could have multiple data series in the same chart, with different queries and filters, using params array <span class="label label-primary">series</span>.</p>
+    <p>Parameter Array <span class="label label-primary">series</span> must contains a series name like "<i>series.mySeries1</i>", duplicated name will be considered as relationship "AND".</p>
+    <p><strong>For example</strong></p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;<span class="label label-success">series.mySeries1</span> = project:"projectA" <span class="text-muted">&amp;</span> <span class="label label-success">series.mySeries1</span> = release:"releaseB" <span class="text-muted">&amp;</span> <span class="label label-success">series.mySeries1</span> = env:"production" <span class="text-muted">&amp;</span> </p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;<span class="label label-info">series.mySeries2</span> = project:"projectB" <span class="text-muted">&amp;</span> <span class="label label-info">series.mySeries2</span> = release:"releaseB" <span class="text-muted">&amp;</span> <span class="label label-info">series.mySeries2</span> = env:"development"</p>
+    <p>These series params will give you two individual series in the same chart, <i>mySeries1</i> and <i>mySeries2</i>. Use URL encoding if the queries contain special words.</p>
+
+    <br>
+    <h4>Style Params</h4>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Options</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>title</td>
+          <td>String</td>
+          <td>The main title of chart</td>
+        </tr>
+        <tr>
+          <td>yaxis</td>
+          <td>String</td>
+          <td>The Y-Axis title of chart</td>
+        </tr>
+        <tr>
+          <td>style_type</td>
+          <td><i><strong>area</strong> <span class="text-muted">|</span> line <span class="text-muted">|</span> column</i></td>
+          <td>The type of chart, should be one of area, line or column</td>
+        </tr>
+        <tr>
+          <td>style_value</td>
+          <td><i>min <span class="text-muted">|</span> <strong>mean</strong> <span class="text-muted">|</span> max <span class="text-muted">|</span> count <span class="text-muted">|</span> total</i></td>
+          <td>Which data series will be shown</td>
+        </tr>
+        <tr>
+          <td>style_stacking</td>
+          <td><i> <strong>(empty)</strong> <span class="text-muted">|</span> normal <span class="text-muted">|</span> percent</i></td>
+          <td>Leave this param empty if you want to disable it</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
