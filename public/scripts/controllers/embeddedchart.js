@@ -29,8 +29,8 @@ angular.module('graphEsApp')
       req.time_field = params.time_field || '@timestamp';
       req.value_field = params.value_field || '_value';
       req.interval = params.interval || '5m';
-      req.from = params.from || (+new Date()-86400000);
-      req.to = params.to || (+new Date());
+      req.from = params.from || '1 day ago';
+      req.to = params.to || 'now';
       req.style_type = params.style_type || 'area';
       req.style_value = params.style_value || 'mean';
       req.style_stacking = params.style_stacking || '';
