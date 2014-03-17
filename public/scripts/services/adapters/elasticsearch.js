@@ -365,6 +365,29 @@ angular.module('graphEsApp')
         });
       },
 
+      terms: function(req) {
+
+        var esQuery = {
+          size: 0,
+          query: {
+            match_all: {}
+          },
+          facets: {
+            main: {
+              terms: {
+                field: req.name,
+                size: req.len || 500,
+              }
+            }
+          }
+        };
+
+        var indice = moment(new Date().getTime() - 1800000).utc().format(req.pattern);
+
+        return $http({method: 'POST', url: '/__es/' + indice + '/_search', data: esQuery});
+        
+      },
+
     };
 
   }]);

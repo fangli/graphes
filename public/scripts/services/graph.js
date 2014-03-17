@@ -28,6 +28,10 @@ angular.module('graphEsApp')
         return adapter.simpleGet(req, cb, params);
       },
 
+      terms: function(req) {
+        return adapter.terms(req);
+      },
+
       // params
       // {
       //   "title": "The title of graph",

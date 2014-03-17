@@ -66,21 +66,32 @@ angular.module('graphEsApp')
     $scope.toggleDimension = function(dimension) {
       dimension.enabled = !dimension.enabled;
       if (dimension.enabled) {
-        // Enable dimension
-        List.get(List.getPattern(dimension.pattern))
-          .success(function(lists){
-            if (dimension.enabled) {
-              dimension.lists = {};
-              dimension.enableGroup = false;
-              dimension.tmpNew = '';
-              angular.forEach(lists.list, function(l){
-                dimension.lists[l] = false;
-              });
-            }
+        if (!dimension.lists){
+          // Enable dimension
+          Graph.terms({
+            name: List.getPattern(dimension.pattern),
+            pattern: $scope.settings.pattern,
           })
-          .error(function(){
-            window.alert('Could not get the list of filtering pattern!');
-          });
+            .success(function(data){
+              if (dimension.enabled) {
+                dimension.lists = {};
+                dimension.enableGroup = false;
+                dimension.tmpNew = '';
+                angular.forEach(data.facets.main.terms, function(l){
+                  if (l.term.trim()){
+                    dimension.lists[l.term] = false;
+                  }
+                });
+              }
+            })
+            .error(function(){
+              window.alert('Could not get the list of filtering pattern!');
+            });
+        } else {
+          for (var name in dimension.lists) {
+            dimension.lists[name] = false;
+          }
+        }
       }
     };
 
