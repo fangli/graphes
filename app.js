@@ -32,7 +32,7 @@ require('./controllers/esdataController')(app);
 require('./controllers/casLoginController')(app);
 
 // Handler frontend app
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'), {maxAge: 31536000000}));
 
 // Redirect rest requests to index.html
 app.use(function(req, res){
