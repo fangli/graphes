@@ -11,9 +11,17 @@ var  path = require('path');
 var app = express();
 var config = require('./config');
 app.set('port', config.listen_port);
+var MongoStore = require('connect-mongo')(express);
 
 app.use(express.cookieParser());
-app.use(express.session({ secret: config.cookie_secret }));
+app.use(express.session({
+  secret: config.cookie_secret,
+  store : new MongoStore({ db: 'SessionGraphES', auto_reconnect: true }),
+  cookie: {
+    maxAge: new Date(Date.now() + 7776000000),
+    expires: new Date(Date.now() + 7776000000),
+  }
+}));
 
 // Handle ES requests
 require('./models/cas').configureCas(express, app, config.cas_url);
