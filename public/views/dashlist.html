@@ -18,7 +18,7 @@
                 <button type="button" ng-confirm-click="Do you really want to delete this global dashboard?" confirmed-click="deleteDashboard(dash._id)" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Remove</button>
               </div>
               <div>
-                <a href="#/dash/id/{{ dash._id }}">{{ dash.name }}</a> &nbsp; <span class="text-muted">{{ dash.description }}</span>
+                <a tooltip-popup-delay="500" tooltip="Click to view the dashboard" href="#/dash/id/{{ dash._id }}">{{ dash.name }}</a> &nbsp; <span class="text-muted">{{ dash.description }}</span>
               </div>
             </div>
           </div>
@@ -29,11 +29,11 @@
 
   <div class="col-xs-12">
     <div class="panel panel-default">
-      <div class="panel-heading"><strong>Standard</strong> <small class="text-muted">Click <i  class="fa fa-star"></i> or <i class="fa fa-star-o"></i> to add or remove the favorite items under dropdown menu</small> </div>
+      <div class="panel-heading"><strong>Favorites</strong> <small class="text-muted">Click <i  class="fa fa-star"></i> or <i class="fa fa-star-o"></i> to add or remove the favorite items under dropdown menu</small> </div>
       <div class="panel-body">
         <div class="row">
           <div class="col-xs-4">
-            <input ng-model="$$$dashboardFilter" class="form-control col-xs-4" placeholder="Search and Filter">
+            <input tooltip-popup-delay="500" tooltip="Search dashboards by name" ng-model="$$$dashboardFilter" class="form-control col-xs-4" placeholder="Search and Filter">
           </div>
         </div>
       </div>
@@ -46,10 +46,10 @@
                 <button type="button" ng-confirm-click="Do you really want to delete this dashboard?" confirmed-click="deleteDashboard(dash._id)" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Remove</button>
               </div>
               <div>
-                <button ng-click="toggleFav(dash._id)" class="btn btn-xs btn-default">
+                <button tooltip-popup-delay="500" tooltip="Toggle favorite" ng-click="toggleFav(dash._id)" class="btn btn-xs btn-default">
                   <i ng-show="favList.indexOf(dash._id) !== -1" class="fa fa-star"></i>
                   <i ng-show="favList.indexOf(dash._id) === -1" class="fa fa-star-o"></i>
-                </button>&nbsp;&nbsp;&nbsp; <a href="#/dash/id/{{ dash._id }}">{{ dash.name }}</a> &nbsp; <span class="text-muted">{{ dash.description }}</span>
+                </button>&nbsp;&nbsp;&nbsp; <a tooltip-popup-delay="500" tooltip="Click to view the dashboard" href="#/dash/id/{{ dash._id }}">{{ dash.name }}</a> &nbsp; <span class="text-muted">{{ dash.description }}</span>
               </div>
             </div>
           </div>

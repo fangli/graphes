@@ -16,13 +16,13 @@
                     <div class="col-xs-7">
                       <div class="input-group input-group-sm">
                         <span class="input-group-addon"><i class="fa fa-filter"></i></span>
-                        <input ng-init="dashboardFilter=''" type="text" ng-focus-on="menuDashboardFilter" class="form-control" placeholder="Search..." ng-model="dashboardFilter">
+                        <input tooltip-popup-delay="500" tooltip="Search dashboards..." ng-init="dashboardFilter=''" type="text" ng-focus-on="menuDashboardFilter" class="form-control" placeholder="Search..." ng-model="dashboardFilter">
                       </div>
                     </div>
                     <div class="col-xs-5" style="padding-left:0;padding-right:0;">
-                      <button ng-click="refreshDashboardList()" class="btn btn-sm btn-default"><i ng-class="{'fa': true,'fa-refresh': true, 'fa-spin': config.isDashboardsRefreshing}"></i></button>
-                      <a ng-href="#/dash" class="btn btn-sm btn-default"><i class="fa fa-gear"></i></a>
-                      <a ng-href="#/dash/new" class="btn btn-sm btn-default"><i class="fa fa-plus-square-o"></i></a>
+                      <button tooltip-popup-delay="500" tooltip="Refresh Dashboard list menu" ng-click="refreshDashboardList()" class="btn btn-sm btn-default"><i ng-class="{'fa': true,'fa-refresh': true, 'fa-spin': config.isDashboardsRefreshing}"></i></button>
+                      <a tooltip-popup-delay="500" tooltip="Dashboard manager" ng-href="#/dash" class="btn btn-sm btn-default"><i class="fa fa-gear"></i></a>
+                      <a tooltip-popup-delay="500" tooltip="Create a new dashboard" ng-href="#/dash/new" class="btn btn-sm btn-default"><i class="fa fa-plus-square-o"></i></a>
                     </div>
                   </div>
                 </li>
@@ -57,13 +57,13 @@
                     <div class="col-xs-7">
                       <div class="input-group input-group-sm">
                         <span class="input-group-addon"><i class="fa fa-filter"></i></span>
-                        <input ng-init="schemaFilter=''" type="text" ng-focus-on="menuSchemaFilter" class="form-control" placeholder="Search..." ng-model="schemaFilter">
+                        <input tooltip-popup-delay="500" tooltip="Search workbench schemas..." ng-init="schemaFilter=''" type="text" ng-focus-on="menuSchemaFilter" class="form-control" placeholder="Search..." ng-model="schemaFilter">
                       </div>
                     </div>
                     <div class="col-xs-5" style="padding-left:0;padding-right:0;">
-                      <button ng-click="refreshSchemaList()" class="btn btn-sm btn-default"><i ng-class="{'fa': true,'fa-refresh': true, 'fa-spin': config.isSchemasRefreshing}"></i></button>
-                      <a ng-href="#/workbench/schema" class="btn btn-sm btn-default"><i class="fa fa-gear"></i></a>
-                      <a ng-href="#/workbench/schema/new" class="btn btn-sm btn-default"><i class="fa fa-plus-square-o"></i></a>
+                      <button tooltip-popup-delay="500" tooltip="Reload workbench schemas" ng-click="refreshSchemaList()" class="btn btn-sm btn-default"><i ng-class="{'fa': true,'fa-refresh': true, 'fa-spin': config.isSchemasRefreshing}"></i></button>
+                      <a tooltip-popup-delay="500" tooltip="Workbench schema manager" ng-href="#/workbench/schema" class="btn btn-sm btn-default"><i class="fa fa-gear"></i></a>
+                      <a tooltip-popup-delay="500" tooltip="Create a new workbench schema" ng-href="#/workbench/schema/new" class="btn btn-sm btn-default"><i class="fa fa-plus-square-o"></i></a>
                     </div>
                   </div>
                 </li>
